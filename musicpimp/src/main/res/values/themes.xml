@@ -1,0 +1,6 @@
+<resources>
+    <style name="PimpTheme" parent="@style/Theme.AppCompat">
+        <item name="basicTextViewStyle">@style/BasicTextView</item>
+        <item name="basicEditTextStyle">@style/BasicEditText</item>
+    </style>
+</resources>

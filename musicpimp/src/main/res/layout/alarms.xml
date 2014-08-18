@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/alarm_device_text"
+        android:text="@string/playback_device"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:id="@+id/alarm_player_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:prompt="@string/alarm_device" />
+
+    <TextView
+        android:id="@+id/alarm_feedback"
+        android:text="@string/empty_string"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ToggleButton
+        android:id="@+id/gcmToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textOn="@string/push_on"
+        android:textOff="@string/push_off"
+        android:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/alarms_loading_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/items_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp" />
+</LinearLayout>

@@ -1,0 +1,47 @@
+high prio:
+
+medium prio:
+
+background image is compressed when it does not fit on the screen, like in landscape mode on the xperia
+
+separat view file för tablets:
+- vertical list -> horizontal scroll
+-- testa med snabb emulator, nexus 7
+- problem: horizontal swipe-based navigation is not compatible with horizontal scrolling
+
+low prio:
+
+widget 2: display random covers like in WP8
+
+encrypt endpoint passwords in shared prefs
+
+pimp web play support
+- ok not to implement
+
+bug:
+the circle of the vertical volume seekbar drops to 0 if the volume is changed programmatically, although the bar works
+
+IAP flow
+App starts -> MainActivity
+Read the unlimited playback preference
+Read hasPurchase
+- if returns successfully, set allowUnlimited to result
+- if fails, do not modify preference
+-- so if the user is offline, the previously valid state applies
+
+User goes to IAP page -> InAppBillingActivity
+Preference listener that updates UI as required
+Read preference
+If true, display congrats, hide others
+If false
+- load inventory with specific SKU
+- display button, details
+User clicks button, perform purchase
+- on success, update UI
+- on failure, update UI
+
+release checklist:
+- update version
+- enable aggressive ProGuard caching
+- clean; packageRelease
+

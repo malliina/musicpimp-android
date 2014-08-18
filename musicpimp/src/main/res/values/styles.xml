@@ -1,0 +1,10 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="BasicTextView" parent="@android:style/Widget.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="BasicEditText" parent="@android:style/Widget.EditText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+</resources>

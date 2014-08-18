@@ -1,0 +1,229 @@
+<resources>
+    <string name="app_name">MusicPimp</string>
+    <string name="app_version">1.9.8</string>
+    <string name="name_and_version">MusicPimp 1.9.8</string>
+
+    <string name="action_prev">Previous</string>
+    <string name="action_play">Play</string>
+    <string name="action_next">Next</string>
+    <string name="action_downloads">Downloads</string>
+    <string name="action_about">About</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="action_beam">MusicBeamer</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_help">Help</string>
+    <string name="play_now">Play now</string>
+    <string name="stop_playback">Stop playback</string>
+
+    <string name="add_playlist">Add to playlist</string>
+    <string name="start_download">Download</string>
+    <string name="schedule_playback">Schedule playback</string>
+
+    <string name="pref_music_source">Music source</string>
+    <string name="pref_play_on">Play music on</string>
+    <string name="pref_folders">Local folders</string>
+    <string name="pref_downloads_dir">Download destination</string>
+    <string name="pref_set_cache_dir">Select the destination directory for downloads</string>
+    <string name="pref_cache_size">Cache size</string>
+    <string name="pref_set_cache">Set the cache size in GB</string>
+    <string name="folders_button_desc">Local music folders</string>
+    <string name="alarms_desc">Alarm clock</string>
+    <string name="beam_desc">Beam to MusicBeamer</string>
+    <string name="active_ends">Playback</string>
+    <string name="pref_endpoint_default">This device</string>
+    <string name="alarm_device">Play alarm on</string>
+    <string name="time">Time</string>
+    <string name="days">Days</string>
+    <string name="track">Track</string>
+    <string name="track_hint">Start typing the name of the track…</string>
+
+    <string name="beam_help">On a PC, go to https://beam.musicpimp.org</string>
+
+    <string name="endpoints_desc">Remote music endpoints</string>
+
+    <string name="add_endpoint">Add endpoint</string>
+    <string name="add_folder">Add folder</string>
+    <string name="add">Add</string>
+    <string name="scan">Scan</string>
+    <string name="scan_complete">Scan complete</string>
+    <string name="scan_no_results">No MusicPimp servers were found. You may need to configure the server manually.
+    </string>
+    <string name="invalid_pass_add_manually">Invalid password. No endpoint was added.</string>
+    <string name="generic_error_configure_manually">An error occurred. Please configure the endpoint manually instead.
+    </string>
+    <string name="manual_configuration">Manual configuration</string>
+    <string name="scan_subtext">Scan your LAN for endpoints</string>
+    <string name="add_local_subtext">Add a local music folder</string>
+    <string name="add_pc_subtext">Add a remote music endpoint</string>
+
+    <string name="add_folder_help">Specify the path to the music directory</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="folder_hint">/mnt/sdcard/… or /storage/…</string>
+    <string name="submit_changes">Submit changes</string>
+
+    <string name="subsonic">Subsonic</string>
+    <string name="musicpimp">MusicPimp</string>
+    <string name="form_name">Description</string>
+    <string name="form_name_hint">my home computer</string>
+    <string name="form_endpoint_type">Endpoint Type</string>
+    <string name="form_host">Host</string>
+    <string name="form_host_hint">192.168.0.2</string>
+    <string name="form_port">Port</string>
+    <string name="form_port_default">8456</string>
+    <string name="form_username">Username</string>
+    <string name="form_username_default">admin</string>
+    <string name="form_password">Password</string>
+    <string name="protocol">Protocol</string>
+    <string name="http">HTTP</string>
+    <string name="https">HTTPS</string>
+    <string name="test_connectivity_text">Test connectivity</string>
+    <string name="submit_text">Submit</string>
+    <string name="save">Save</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+    <string name="sunday">Sunday</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
+    <string name="push_on">Push notifications: ON</string>
+    <string name="push_off">Push notifications: OFF</string>
+    <string name="playback_device">Playback device</string>
+
+    <string name="no_track">The player has no track. Tap a track in the music library to start playback or change
+        player.
+    </string>
+    <string name="track_album" />
+    <string name="track_artist" />
+    <string name="volume">Volume</string>
+    <string name="next_track_label">Next up…</string>
+    <string name="empty_playlist">The playlist is empty. Add a track from the music library or change player.</string>
+
+    <string name="remove">Remove</string>
+    <string name="setVolume">Set volume</string>
+
+    <string name="developer_icon_info">Developed by Michael Skogberg.</string>
+    <string name="developed_by">Developed by Michael Skogberg. Contact me at info@musicpimp.org.</string>
+    <string name="visit_pimp_org">Visit www.musicpimp.org for more information.</string>
+    <string name="consider_reviewing">Consider reviewing this application in the marketplace. Thanks!</string>
+    <string name="view_tutorial">Tap here to open the tutorial shown on first use.</string>
+    <string name="view_purchase_info">View your purchase status or purchase MusicPimp Premium.</string>
+
+    <string name="item_icon_info">Music item icon</string>
+    <string name="icon_info">This is an icon.</string>
+
+    <string name="test_text">Test</string>
+    <string name="no_downloads">This app may download tracks in the background to enhance your user experience.
+        Currently, there are no ongoing downloads.
+    </string>
+
+    <string name="beam_choice_help">On a PC, go to https://beam.musicpimp.org and scan the screen with this device.
+        Alternatively, use the previous settings.
+    </string>
+    <string name="beam_opens_scanner_help">On a PC, go to https://beam.musicpimp.org and scan the screen with this
+        device.
+    </string>
+    <string name="beam_yes_scan">Yes, scan</string>
+    <string name="beam_cancel">Cancel</string>
+    <string name="beam_use_previous">Use previous settings</string>
+    <string name="beam_nothing_scanned">No code was scanned. To try again, go to https://beam.musicpimp.org and scan
+        the screen.
+    </string>
+    <string name="beam_format_error">A barcode was scanned, but its format was unexpected. Ensure that you have the
+        latest version of this app, then try again.
+    </string>
+
+    <string name="music_content_desc">Music item icon</string>
+    <string name="empty_folder">No MP3s in this folder</string>
+    <string name="unable_connect_source">Unable to connect to the music source. Check your network connectivity.
+    </string>
+    <string name="root_empty">No MP3s were found. To get started, add either a local music folder or a remote music
+        endpoint.
+    </string>
+    <string name="set_active_source">Set as active music source</string>
+    <string name="camera_required_none_found">This feature requires a camera to function, but no camera was found on
+        this device.
+    </string>
+
+
+    <!-- First use tutorial -->
+    <string name="tutorial_welcome_title">Getting started</string>
+    <string name="tutorial_welcome">Welcome to MusicPimp! This tutorial helps you get started.
+    </string>
+    <string name="tutorial_endpoints_title">Endpoints</string>
+    <string name="tutorial_local">If your music is stored locally on this device, add the local music folder(s) under
+        Settings > Local music folders.
+    </string>
+    <string name="tutorial_remote">If your music is available on a PC, add your PC as an endpoint under Settings >
+        Endpoints. You\'ll need to install the MusicPimp server software on your PC, available at www.musicpimp.org.
+    </string>
+    <string name="tutorial_beam_title">MusicBeamer</string>
+    <string name="tutorial_beam">Try streaming some music to any PC using MusicBeamer. We think you\'ll enjoy it.
+    </string>
+    <string name="tutorial_quit">Quit tutorial</string>
+    <string name="next">Next</string>
+    <string name="done">Done</string>
+
+    <string name="no_track_short">No track</string>
+
+    <string name="limit_title">Limit reached</string>
+    <string name="free_over_suggest_purchase">The free mode of this app lets you play a couple of tracks per day. A
+        one-time in-app purchase unlocks MusicPimp Premium which enables unlimited playback.
+    </string>
+    <string name="not_interested">Not interested</string>
+    <string name="go_premium">Get Premium</string>
+
+    <!-- In-app billing -->
+    <string name="google_play_missing">An error occurred. Please ensure that Google Play is installed.</string>
+    <string name="google_play_error">A Google Play error occurred. Please try again later.</string>
+    <string name="loading_iab">Loading status of purchased items… please ensure that you have network connectivity…
+    </string>
+    <string name="user_canceled">The operation was canceled. Try again later!</string>
+    <string name="item_unavailable">The expected item is currenltly unavailable. Try again later!</string>
+    <string name="check_connection">An error occurred. Please verify that you have a working network connection, then
+        try again.
+    </string>
+    <string name="purchase">Open purchase screen</string>
+    <string name="premium_ok_thanks">You have purchased MusicPimp Premium. Thank you!</string>
+    <string name="playback_limit_desc">Make a one-time purchase to unlock MusicPimp Premium. Currently, only a limited
+        number of tracks can be played per day.
+    </string>
+    <string name="payload_mismatch_info">An error occurred. The authenticity of the purchase could not be verified. If
+        this is unexpected, please contact info@musicpimp.org so we can sort it out.
+    </string>
+    <string name="cannot_determine_purchase">Unable to determine app purchase status right now. Please try again in a
+        moment.
+    </string>
+    <string name="cannot_read_purchase_status">Unable to read purchase status.</string>
+    <string name="cannot_read_user">Unable to read the current user ID.</string>
+
+    <string name="wifi_requred">WiFi connection required</string>
+    <string name="scan_requires_wifi">WiFi is not enabled. Please enable WiFi or add the endpoint manually
+        instead.
+    </string>
+
+    <!-- Generic messages -->
+    <string name="loading">Loading…</string>
+    <string name="generic_error_try_again">An error occurred. Please try again in a while.</string>
+    <string name="empty_string" />
+
+    <string-array name="empty_array">
+        <item />
+    </string-array>
+
+    <!-- Font Awesome -->
+    <string name="fa_external_link">&#xf08e;</string>
+    <string name="fa_envelope_o">&#xf003;</string>
+    <string name="fa_shopping_cart">&#xf07a;</string>
+    <string name="fa_star_o">&#xf006;</string>
+    <string name="fa_volume_off">&#xf026;</string>
+    <string name="fa_volume_down">&#xf027;</string>
+    <string name="fa_volume_up">&#xf028;</string>
+    <string name="fa_question">&#xf128;</string>
+
+    <!-- For finding out programmatically which layout is applied -->
+    <string name="layout_name">default</string>
+</resources>

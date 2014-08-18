@@ -1,0 +1,264 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:amazon="http://schemas.amazon.com/apk/res/android"
+    package="org.musicpimp"
+    android:versionCode="198"
+    android:versionName="@string/app_version"
+    android:installLocation="auto">
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="19" />
+
+    <supports-screens
+        android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Background audio, GCM, ADM -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Barcode scanning -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Temporary, remove if not needed -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Google Play IAP -->
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <!-- Samsung Apps IAP -->
+    <uses-permission android:name="com.sec.android.iap.permission.BILLING" />
+    <!-- GCM -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission
+        android:name="org.musicpimp.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <!-- ADM -->
+    <!-- This permission ensures that no other application can intercept your ADM messages. -->
+    <permission
+        android:name="org.musicpimp.permission.RECEIVE_ADM_MESSAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="org.musicpimp.permission.RECEIVE_ADM_MESSAGE" />
+    <!-- This permission allows your app access to receive push notifications from ADM. -->
+    <uses-permission android:name="com.amazon.device.messaging.permission.RECEIVE" />
+    <!-- GCM -->
+    <uses-permission android:name="org.musicpimp.permission.C2D_MESSAGE" />
+
+    <application
+        android:name="PimpApp"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/PimpTheme">
+
+        <!-- You must explicitly enable ADM and declare whether your app cannot work without
+         ADM (android:required="true") or can work without ADM (android:required="false").
+         If you specify android:required="false", your app must degrade gracefully if ADM
+         is unavailable. -->
+        <amazon:enable-feature
+            android:name="com.amazon.device.messaging"
+            android:required="false" />
+
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.MainActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".iap.amazon.AmazonIAPActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".iap.samsung.SamsungIapActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".iap.google.GooglePlayIAPActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.Endpoints">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.SettingsActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.LocalFolders">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.AlarmsActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.EditEndpointActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.VolumeActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.AboutActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.BeamScanActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.StopAlarm">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.EditAlarmActivity">
+            <meta-data
+                android:name="android.support.UI_OPTIONS"
+                android:value="splitActionBarWhenNarrow" />
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".ui.activities.ScannerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:label="@string/app_name"
+            android:name="com.google.zxing.client.android.CaptureActivity"
+            android:screenOrientation="landscape" />
+        <!-- Required activities by Samsung Apps IAP -->
+        <activity
+            android:name="com.sec.android.iap.lib.activity.InboxActivity"
+            android:theme="@style/Theme.Empty"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name="com.sec.android.iap.lib.activity.PaymentActivity"
+            android:theme="@style/Theme.Empty"
+            android:configChanges="orientation|screenSize" />
+        <activity
+            android:name="com.sec.android.iap.lib.activity.ItemActivity"
+            android:theme="@style/Theme.Empty"
+            android:configChanges="orientation|screenSize" />
+
+        <service android:name=".local.MediaService" />
+
+        <service android:name=".messaging.PimpGcmService" />
+        <!-- ADM -->
+        <service
+            android:name=".messaging.PimpAdmService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".messaging.PimpGcmReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="org.musicpimp" />
+            </intent-filter>
+        </receiver>
+        <!-- This permission ensures that only ADM can send your app registration broadcasts. -->
+        <receiver
+            android:name=".messaging.PimpAdmReceiver"
+            android:permission="com.amazon.device.messaging.permission.SEND">
+            <!-- To interact with ADM, your app must listen for the following intents. -->
+            <intent-filter>
+                <action android:name="com.amazon.device.messaging.intent.REGISTRATION" />
+                <action android:name="com.amazon.device.messaging.intent.RECEIVE" />
+                <!-- Replace the name in the category tag with your app's package name. -->
+                <category android:name="org.musicpimp" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ui.receivers.MusicIntentReceiver">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ui.receivers.RemoteControlReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.mle.android.receivers.DownloadEventReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+                <action android:name="android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ui.receivers.MusicControlAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="org.musicpimp.widget.PLAY_PAUSE" />
+                <action android:name="org.musicpimp.widget.SKIP" />
+                <action android:name="org.musicpimp.widget.UPDATE_TRACK" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget" />
+        </receiver>
+        <receiver android:name="com.amazon.inapp.purchasing.ResponseReceiver">
+            <intent-filter>
+                <action
+                    android:name="com.amazon.inapp.purchasing.NOTIFY"
+                    android:permission="com.amazon.inapp.purchasing.Permission.NOTIFY" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".ui.receivers.SyncingWLANConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+</manifest>
+

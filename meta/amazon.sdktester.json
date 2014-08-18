@@ -1,0 +1,14 @@
+{
+  "org.musicpimp.unlimited" : {
+
+    "itemType": "ENTITLED",
+
+    "price": 2.99,
+
+    "title": "MusicPimp Premium",
+
+    "description": "Unlocks the premium version. Removes all playback limits. Does not expire."
+
+  }
+
+}

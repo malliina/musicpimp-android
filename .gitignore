@@ -1,0 +1,10 @@
+.idea/
+.idea/*
+*.iml
+lib_managed/
+target/
+.idea_modules/
+*.log
+local.properties
+api_key.txt
+gen/*

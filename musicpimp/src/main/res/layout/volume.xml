@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/bg">
+
+    <TextView
+        android:id="@+id/setVolumeText"
+        android:text="@string/setVolume"
+        style="@style/BasicTextView"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp" />
+
+    <Button
+        android:id="@+id/volume_button"
+        android:text="@string/fa_volume_up"
+        android:textSize="40sp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/volume"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"
+        android:background="@drawable/selector_transparent_button" />
+
+    <com.mle.andro.ui.views.VerticalSeekBar
+        android:id="@+id/volume_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/volume_button"
+        android:layout_below="@id/setVolumeText" />
+</RelativeLayout>

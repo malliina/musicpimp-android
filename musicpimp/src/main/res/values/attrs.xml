@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="BasicTextView"/>
+    <declare-styleable name="BasicEditText"/>
+    <!--<declare-styleable name="BasicTheme">-->
+        <!--<attr name="basicTextViewStyle" format="reference"/>-->
+        <!--<attr name="basicEditTextStyle" format="reference"/>-->
+    <!--</declare-styleable>-->
+    <attr name="basicTextViewStyle" format="reference"/>
+    <attr name="basicEditTextStyle" format="reference"/>
+</resources>

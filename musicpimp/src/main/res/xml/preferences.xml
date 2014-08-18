@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+            android:key="pref_source"
+            android:title="@string/pref_music_source"
+            android:dialogTitle="@string/pref_music_source"
+            android:summary="@string/empty_string"
+            android:defaultValue="@string/pref_endpoint_default"/>
+    <ListPreference
+            android:key="pref_player"
+            android:title="@string/pref_play_on"
+            android:dialogTitle="@string/pref_play_on"
+            android:summary="@string/empty_string"
+            android:defaultValue="@string/pref_endpoint_default"/>
+    <ListPreference android:key="pref_downloads_dir"
+                    android:title="@string/pref_downloads_dir"
+                    android:dialogTitle="@string/pref_set_cache_dir"
+                    android:summary="@string/folder_hint"
+                    android:defaultValue="@string/empty_string"/>
+    <EditTextPreference android:key="pref_cache"
+                        android:title="@string/pref_cache_size"
+                        android:dialogTitle="@string/pref_set_cache"
+                        android:summary="@string/empty_string"
+                        android:defaultValue="5"
+                        android:numeric="integer"
+                        android:inputType="number"/>
+</PreferenceScreen>

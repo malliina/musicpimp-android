@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+    <string name="app_name">MusicPimp</string>
+    <string name="barcode_help">On a PC, go to http://beam.musicpimp.org. Scan the PC screen with this device.</string>
+    <string name="button_ok">OK</string>
+    <string name="msg_camera_framework_bug">Sorry, the camera encountered a problem. You may need to restart the
+        device.
+    </string>
+    <string name="rotate">Rotate</string>
+</resources>

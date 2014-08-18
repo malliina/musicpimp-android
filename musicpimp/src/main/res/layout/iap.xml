@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical"
+              android:background="@drawable/bg">
+    <TextView android:id="@+id/iab_result"
+              android:text="@string/loading_iab"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:textSize="24sp"
+              android:layout_margin="10dp"/>
+    <Button android:id="@+id/iab_purchase_button"
+            android:visibility="invisible"
+            android:drawablePadding="10dp"
+            android:text="@string/purchase"
+            android:textSize="24sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:contentDescription="@string/empty_string"
+            android:layout_marginTop="30dp"
+            android:layout_margin="10dp"/>
+</LinearLayout>
