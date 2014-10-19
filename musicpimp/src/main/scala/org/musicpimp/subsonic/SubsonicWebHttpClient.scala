@@ -1,12 +1,10 @@
 package org.musicpimp.subsonic
 
-import com.loopj.android.http.{TextHttpResponseHandler, AsyncHttpResponseHandler}
+import com.loopj.android.http.TextHttpResponseHandler
 import com.mle.android.http.HttpConstants.{ACCEPT, JSON}
 import com.mle.android.http.{BasicHttpClient, HttpResponse}
-import org.apache.http.Header
-import org.musicpimp.exceptions.SubsonicHttpException
 import org.musicpimp.http.Endpoint
-import play.api.libs.json.Json
+
 import scala.concurrent.Promise
 
 /**
@@ -27,32 +25,5 @@ class SubsonicWebHttpClient(endpoint: Endpoint) extends BasicHttpClient(endpoint
    * @return a custom HTTP response handler for Subsonic
    */
   override def textResponseHandler(promise: Promise[HttpResponse]): TextHttpResponseHandler =
-    new TextHttpResponseHandler() {
-      override def onSuccess(statusCode: Int, headers: Array[Header], responseString: String): Unit = {
-        val isFailure = (Json.parse(responseString) \ SubsonicJsonReaders.SUBSONIC_RESPONSE \ SubsonicJsonReaders.STATUS).asOpt[String].contains("failed")
-        if (isFailure) {
-          promise failure new SubsonicHttpException(responseString)
-        } else {
-          promise success HttpResponse(statusCode, Option(responseString))
-        }
-      }
-
-      override def onFailure(statusCode: Int, headers: Array[Header], responseString: String, throwable: Throwable): Unit = {
-        promise failure new SubsonicHttpException(responseString)
-      }
-    }
-//  {
-//      override def onSuccess(statusCode: Int, content: String): Unit = {
-//        val isFailure = (Json.parse(content) \ SubsonicJsonReaders.SUBSONIC_RESPONSE \ SubsonicJsonReaders.STATUS).asOpt[String].exists(_ == "failed")
-//        if (isFailure) {
-//          promise failure new SubsonicHttpException(content)
-//        } else {
-//          promise success HttpResponse(statusCode, Option(content))
-//        }
-//      }
-//
-//      override def onFailure(t: Throwable, content: String): Unit = {
-//        promise failure handleFailure(t, Option(content))
-//      }
-//    }
+    new SubsonicResponseHandler(promise)
 }

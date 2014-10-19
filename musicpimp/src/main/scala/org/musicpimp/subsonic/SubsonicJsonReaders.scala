@@ -2,7 +2,6 @@ package org.musicpimp.subsonic
 
 import android.net.Uri
 import com.mle.util.Version
-import concurrent.duration._
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonReaders
@@ -11,13 +10,15 @@ import org.musicpimp.json.Readers._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
+import scala.concurrent.duration._
+
 /**
  *
  * @author mle
  */
 class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
 
-  import SubsonicJsonReaders._
+  import org.musicpimp.subsonic.SubsonicJsonReaders._
 
   // media may be transcoded
   def uri(trackId: String): Uri = uri2("stream", trackId)
@@ -114,6 +115,7 @@ object SubsonicJsonReaders {
   val MESSAGE = "message"
   val VERSION = "version"
   val STATUS = "status"
+  val FAILED = "failed"
 
   implicit val subsonicVersionReader = new Reads[Version] {
     def reads(json: JsValue): JsResult[Version] =

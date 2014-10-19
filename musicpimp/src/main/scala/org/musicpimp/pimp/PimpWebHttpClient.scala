@@ -16,12 +16,10 @@ class PimpWebHttpClient(val endpoint: IEndpoint) extends BasicHttpClient(endpoin
   addHeaders(ACCEPT -> PimpConstants.JSONv18)
 
   /**
-   * Analyzes what went wrong with a failed HTTP request and returns a more appropriate
-   * exception.
+   * Analyzes what went wrong with a failed HTTP request and returns a more appropriate exception.
    *
-   * If the request was authorized, parses the response content as JSON and looks
-   * for a reason key, wrapping `t` and the reason in a
-   * [[org.musicpimp.exceptions.PimpHttpException]] if found.
+   * If the request was authorized, parses the response content as JSON and looks for a reason key, wrapping `t` and the
+   * reason in a [[org.musicpimp.exceptions.PimpHttpException]] if found.
    *
    * @param t the failure
    * @param content any content

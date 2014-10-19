@@ -4,11 +4,17 @@ import com.mle.android.exceptions.ExplainedHttpException
 import org.musicpimp.subsonic.SubsonicJsonReaders._
 import play.api.libs.json.Json
 
+import scala.util.Try
+
 /**
  *
  * @author mle
  */
-class SubsonicHttpException(content: String) extends ExplainedHttpException(Some(content)) {
-  val reasonOpt = (Json.parse(content) \ SUBSONIC_RESPONSE \ ERROR \ MESSAGE).asOpt[String]
+class SubsonicHttpException(content: Option[String]) extends ExplainedHttpException(content) {
+  val reasonOpt = for {
+    c <- content
+    json <- Try(Json parse c).toOption
+    message <- (json \ SUBSONIC_RESPONSE \ ERROR \ MESSAGE).asOpt[String]
+  } yield message
   val reason = "An error occurred while connecting to Subsonic. " + reasonOpt.getOrElse("")
 }

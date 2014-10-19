@@ -103,7 +103,7 @@ class EditEndpointActivity
     val feedbackView = findView(TR.testFeedback)
     feedbackView setText feedback
     feedbackView setVisibility View.VISIBLE
-    val progressVisibility = if (showProgress) View.VISIBLE else View.INVISIBLE
+    val progressVisibility = if (showProgress) View.VISIBLE else View.GONE
     testingProgressBar setVisibility progressVisibility
   }
 

@@ -1,4 +1,3 @@
-import android.Dependencies._
 import android.Keys._
 import sbt.Keys._
 import sbt._
@@ -29,10 +28,11 @@ object AndroidBuild extends Build {
     run <<= run in Android in app,
     commands <<= commands in app
   ) ++ android.Plugin.androidCommands: _*
-    ) aggregate(app, gcmLibProject)
+    ) aggregate(app)
+//  ) aggregate(app, gcmLibProject)
 
   lazy val app = Project("musicpimp", file("musicpimp")).settings(pimpSettings: _*)
-  lazy val gcmLibProject = Project("gcm_lib", file("google-play-services_lib")).settings(libraryProjectSettings: _*)
+//  lazy val gcmLibProject = Project("gcm_lib", file("google-play-services_lib")).settings(libraryProjectSettings: _*)
 
   val mleGroup = "com.github.malliina"
   val supportGroup = "com.android.support"
@@ -68,16 +68,18 @@ object AndroidBuild extends Build {
     ProguardCache(packages: _*) % org
 
   // I think androidBuild(scannerLib) means that scannerLib is a compile-time dependency
-  lazy val pimpSettings = android.Plugin.androidBuild(gcmLibProject) ++ apkSettings ++ commonSettings ++
+  //  lazy val pimpSettings = android.Plugin.androidBuild(gcmLibProject) ++ apkSettings ++ commonSettings ++
+  lazy val pimpSettings = android.Plugin.androidBuild ++ apkSettings ++ commonSettings ++
     googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++
     net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     scalaVersion := "2.11.2",
-    version := "1.9.8",
+    version := "1.9.9",
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
       mleGroup %% "util-android" % "0.9.1",
-      mleGroup %% "util-base" % "0.2.0"
+      mleGroup %% "util-base" % "0.2.0",
+      "com.google.android.gms" % "play-services" % "4.4.52"
     ),
     useProguard in Android := true,
     proguardCache in Android ++= Seq(
@@ -90,7 +92,8 @@ object AndroidBuild extends Build {
       cache("com.typesafe.play")("play"),
       cache("joda-time")("org.joda"),
       cache("org.joda")("org.joda"),
-      cache("com.fasterxml.jackson.core")("com.fasterxml.jackson")
+      cache("com.fasterxml.jackson.core")("com.fasterxml.jackson"),
+      cache("com.google.android.gms")("com.google.android.gms", "com.google.ads")
     ),
     proguardOptions in Android ++= Seq(
       // I think there's a problem because play-json depends on org.w3c.something, which is
@@ -104,9 +107,9 @@ object AndroidBuild extends Build {
       "-dontoptimize"
     ),
     apkbuildExcludes in Android ++= Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file"),
-    localAars in Android ++= Seq("scanner", "android-utils", "samsung-iap-lib").map(name => baseDirectory.value / "aar" / s"$name.aar"),
+    localAars in Android ++= Seq("scanner", "android-utils", "samsung-iap-lib").map(name => baseDirectory.value / "aar" / s"$name.aar")
     // did not compile when I added gcm_lib as an .aar
-    localProjects in Android <+= baseDirectory(b => AutoLibraryProject(b / ".." / "google-play-services_lib"))
+    //    localProjects in Android <+= baseDirectory(b => AutoLibraryProject(b / ".." / "google-play-services_lib"))
   ) ++ buildMetaSettings
 
   def rxSettings = {
@@ -218,12 +221,14 @@ object AndroidBuild extends Build {
   ).map(name => zxingPrefix + name)
 
   lazy val commonSettings = Seq(
-    scalaVersion := "2.11.1",
+    scalaVersion := "2.11.2",
     resolvers ++= Seq(
       // assumes you have installed "android support repository" from SDK Manager first
       "Local .aar maven repo" at new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository").toURI.toString
     ),
-    platformTarget in Android := "android-19"
+    platformTarget in Android := "android-19",
+    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+    scalacOptions += "-target:jvm-1.6"
   )
 
   def buildMetaSettings = sbtbuildinfo.Plugin.buildInfoSettings ++ Seq(
