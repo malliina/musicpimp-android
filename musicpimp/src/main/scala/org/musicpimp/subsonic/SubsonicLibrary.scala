@@ -6,6 +6,7 @@ import com.mle.util.Version
 import org.musicpimp.audio.SubsonicHttpClient._
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
+
 import scala.concurrent.Future
 
 /**
@@ -27,6 +28,12 @@ class SubsonicLibrary(endpoint: Endpoint)
 
   override def rootFolder: Future[Directory] =
     getWithCache(rootFolderId)(json.indexReader)
+
+  def search(term: String, limit: Int = defaultSearchLimit): Future[Seq[Track]] = get(buildPath("search2",
+    "query" -> term,
+    "songCount" -> s"$limit",
+    "artistCount" -> "0",
+    "albumCount" -> "0"))(json.searchResultReader)
 
   def resource(folderId: String): String =
     if (folderId == rootFolderId) buildPath("getIndexes")

@@ -17,8 +17,7 @@ abstract class RemoteMediaLibrary(val endpoint: Endpoint) extends MediaLibrary w
 
   override def invalidateCache(): Unit = cache.clear()
 
-  def get[T](path: String)(implicit fjs: Reads[T]): Future[T] =
-    client.getJson[T](path)
+  def get[T](resource: String)(implicit fjs: Reads[T]): Future[T] = client.getJson[T](resource)
 
   def getWithCache(id: String)(implicit fjs: Reads[Directory]): Future[Directory] = {
     // updates the cache only if the request returns successfully

@@ -1,9 +1,11 @@
 package org.musicpimp.audio
 
+import java.io.Closeable
+
 import com.mle.android.http.HttpResponse
 import com.mle.util.Utils.executionContext
 import com.mle.util.Version
-import java.io.Closeable
+
 import scala.concurrent.Future
 
 /**
@@ -11,6 +13,7 @@ import scala.concurrent.Future
  * @author mle
  */
 trait MediaLibrary extends Closeable {
+  val defaultSearchLimit = 100
   def isLocal: Boolean = false
 
   def invalidateCache(): Unit = ()
@@ -61,6 +64,8 @@ trait MediaLibrary extends Closeable {
     val subTracks = dir.flatMap(dir => Future.traverse(dir.folders)(tracksIn).map(_.flatten))
     Future.sequence(Seq(subTracks, shallowTracks)).map(_.flatten)
   }
+
+  def search(term: String): Future[Seq[Track]] = Future.successful(Nil)
 
   /**
    * The URI to the original media of `track`. Defaults to track.source. However, track.source is the playback URI,

@@ -29,6 +29,7 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
   private def uri2(methodName: String, trackId: String) =
     Uri.parse(endpoint.httpBaseUri + SubsonicHttpClient.buildPath(methodName, trackId))
 
+
   /**
    * The JSON entries may or may not exist, and the values can be strings,
    * integers, whatever, for the same key.
@@ -58,9 +59,10 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
   val indexReader = new Reads[Directory] {
     def reads(json: JsValue): JsResult[Directory] = {
       val content = json \ SUBSONIC_RESPONSE \ INDEXES
-      val folders = ensureIsArray(content \ INDEX).flatMap(_.as[Seq[Folder]](seqFolderReader))
-      val tracks = ensureIsArray(content \ CHILD).map(_.as[Track])
-      JsSuccess(Directory(folders, tracks))
+      for {
+        folders <- ensureValidateArray[Seq[Folder]](content \ INDEX)(artistGroupedFolderReader).map(_.flatten)
+        tracks <- ensureValidateArray[Track](content \ CHILD)
+      } yield Directory(folders, tracks)
     }
   }
 
@@ -69,31 +71,44 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
       val content = json \ SUBSONIC_RESPONSE \ DIRECTORY
       // the 'child' entry may or may not exist, may contain one element (no list), or an array of elements
       val jsonArray = ensureIsArray(content \ CHILD)
-      val (foldersJson, tracksJson) = jsonArray.partition(j => (j \ IS_DIR).as[Boolean])
-      JsSuccess(Directory(foldersJson.map(_.as[Folder](musicDirFolderReader)), tracksJson.map(_.as[Track])))
+      val (foldersJson, tracksJson) = jsonArray.partition(j => (j \ IS_DIR).validate[Boolean].getOrElse(false)) // ???
+      for {
+        folders <- validateArray2[Folder](foldersJson)(musicDirFolderReader)
+        tracks <- validateArray2[Track](tracksJson)
+      } yield Directory(folders, tracks)
+    }
+  }
+  val searchResultReader = new Reads[Seq[Track]] {
+    override def reads(json: JsValue): JsResult[Seq[Track]] = {
+      val result = json \ SEARCH_RESULT2
+      val songs = ensureIsArray(result \ SONG)
+      JsArray(songs).validate[Seq[Track]]
     }
   }
   // parses the subsonic response after you make a request with params "action=get"
   implicit val statusReader = new Reads[StatusEvent] {
     def reads(json: JsValue): JsResult[StatusEvent] = {
       val content = json \ SUBSONIC_RESPONSE \ JUKEBOX_PLAYLIST
-      val isPlaying = (content \ PLAYING).as[Boolean]
-      val volume = ((content \ GAIN).as[Float] * 100).toInt
-      val playlist = ensureIsArray(content \ ENTRY).map(_.as[Track])
-      val indexValue = (content \ CURRENT_INDEX).as[Int]
-      val index = if (indexValue >= 0) Some(indexValue) else None
-      JsSuccess(StatusEvent(
-        track = index.filter(_ < playlist.size).map(playlist),
-        state = if (isPlaying) PlayStates.Playing else PlayStates.Stopped,
-        position = (content \ POSITION).as[Int].seconds,
-        volume = volume,
-        mute = volume == 0,
-        playlist = playlist,
-        playlistIndex = index
-      ))
+      for {
+        isPlaying <- (content \ PLAYING).validate[Boolean]
+        volume <- (content \ GAIN).validate[Float].map(_ * 100).map(_.toInt)
+        playlist <- JsArray(ensureIsArray(content \ ENTRY)).validate[Seq[Track]]
+        indexValue <- (content \ CURRENT_INDEX).validate[Int]
+        position <- (content \ POSITION).validate[Int].map(_.seconds)
+      } yield {
+        val index = if (indexValue >= 0) Some(indexValue) else None
+        StatusEvent(
+          track = index.filter(_ < playlist.size).map(playlist),
+          state = if (isPlaying) PlayStates.Playing else PlayStates.Stopped,
+          position = position,
+          volume = volume,
+          mute = volume == 0,
+          playlist = playlist,
+          playlistIndex = index
+        )
+      }
     }
   }
-
 }
 
 object SubsonicJsonReaders {
@@ -116,6 +131,8 @@ object SubsonicJsonReaders {
   val VERSION = "version"
   val STATUS = "status"
   val FAILED = "failed"
+  val SEARCH_RESULT2 = "searchResult2"
+  val SONG = "song"
 
   implicit val subsonicVersionReader = new Reads[Version] {
     def reads(json: JsValue): JsResult[Version] =
@@ -128,14 +145,13 @@ object SubsonicJsonReaders {
     )(Folder)
 
   /**
-   * Flattens an array (or not) of artists grouped by their initial letter
-   * under an "artists" entry.
+   * Flattens an array (or not) of artists grouped by their initial letter under an "artists" entry.
    */
-  implicit val seqFolderReader = new Reads[Seq[Folder]] {
+  implicit val artistGroupedFolderReader = new Reads[Seq[Folder]] {
     def reads(json: JsValue): JsResult[Seq[Folder]] = {
       // this is a seq of json which is seq of (seq of json)
       val groupedArtists = json \\ ARTIST
-      JsSuccess(groupedArtists.flatMap(letter => ensureIsArray(letter).map(_.as[Folder])))
+      flatten(groupedArtists.map(letter => ensureValidateArray[Folder](letter)).toList).map(_.flatten)
     }
   }
 
@@ -162,9 +178,23 @@ object SubsonicJsonReaders {
    * @return a guaranteed sequence of json values, no bullshit
    */
   def ensureIsArray(json: JsValue): Seq[JsValue] = json match {
+    case JsString(v) if v.isEmpty => Seq.empty[JsValue]
     case JsArray(elements) => elements // JsArray extends JsValue
     case _: JsUndefined => Seq.empty[JsValue] // JsUndefined extends JsValue
     case single: JsValue => Seq(single)
     case _ => Seq.empty[JsValue]
+  }
+
+  def toArray(json: JsValue) = JsArray(ensureIsArray(json))
+
+  def ensureValidateArray[T](json: JsValue)(implicit reader: Reads[T]): JsResult[Seq[T]] =
+    validateArray2[T](ensureIsArray(json))
+
+  def validateArray2[T](json: Seq[JsValue])(implicit reader: Reads[T]): JsResult[Seq[T]] =
+    JsArray(json).validate[Seq[T]]
+
+  def flatten[T](results: List[JsResult[T]]): JsResult[List[T]] = results match {
+    case Nil => JsSuccess(Nil)
+    case head :: tail => head.flatMap(t => flatten(tail).map(r => t :: r))
   }
 }

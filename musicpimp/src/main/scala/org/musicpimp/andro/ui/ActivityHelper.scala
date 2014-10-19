@@ -7,12 +7,13 @@ import android.view.View
 import android.widget.Toast
 import com.mle.util.Utils
 import org.java_websocket.exceptions.WebsocketNotConnectedException
-import org.musicpimp.{TypedViewHolder, TypedResource}
+import org.musicpimp.util.PimpLog
+import org.musicpimp.{TypedResource, TypedViewHolder}
 
 /**
  * @author Michael
  */
-class ActivityHelper(activity: Activity) extends TypedViewHolder {
+class ActivityHelper(activity: Activity) extends TypedViewHolder with PimpLog {
   override def findViewById(id: Int): View = activity.findViewById(id)
 
   def prefs = PreferenceManager.getDefaultSharedPreferences(activity)
@@ -67,6 +68,7 @@ class ActivityHelper(activity: Activity) extends TypedViewHolder {
         showToast("Unable to perform action. The connection to the server has been lost.")
         default
       case e: Exception =>
+        warn(s"Failure", e)
         showToast("Unable to perform action. Please check your settings and try again.")
         default
     }

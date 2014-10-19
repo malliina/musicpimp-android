@@ -1,10 +1,12 @@
 package org.musicpimp.ui
 
+import java.io.File
+
 import android.app.DownloadManager
 import android.net.Uri
 import com.mle.android.http.{HttpConstants, HttpUtil}
 import com.mle.android.ui.DownloadHelper
-import java.io.File
+import com.mle.util.Utils
 import org.musicpimp.audio.{LibraryManager, Track}
 import org.musicpimp.network.DownloadSettings
 
@@ -48,7 +50,7 @@ trait DownloadProgressPolling extends DownloadHelper {
     val existsLocally = LibraryManager.localLibrary exists track
     //    info(s"Track $track with path: ${track.path} exists locally: $existsLocally")
     if (!existsLocally && source.isAbsolute && (source.getScheme == "http" || source.getScheme == "https")) {
-      Some(download(track))
+      download(track)
     } else {
       None
     }
@@ -61,7 +63,7 @@ trait DownloadProgressPolling extends DownloadHelper {
    * @param track track to download
    * @return a unique ID for the download
    */
-  def download(track: Track): Long = {
+  def download(track: Track): Option[Long] = {
     // creates destination directory
     val destinationFile = new File(DownloadSettings.downloadsDir, track.path)
     Option(destinationFile.getParentFile).map(_.mkdirs())
@@ -72,6 +74,6 @@ trait DownloadProgressPolling extends DownloadHelper {
       .addRequestHeader(HttpConstants.AUTHORIZATION, HttpUtil.authorizationValue(track.username, track.password))
     // only added in API level 11
     //    request.allowScanningByMediaScanner()
-    downloadManager enqueue request
+    Utils.opt[Long, SecurityException](downloadManager enqueue request)
   }
 }

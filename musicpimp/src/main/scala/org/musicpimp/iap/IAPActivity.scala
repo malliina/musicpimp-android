@@ -55,7 +55,7 @@ abstract class IAPActivity extends PreferenceListeningActivity with PimpLog {
 //    updateUI(hasPremium = false)
   }
 
-  def loadFeedback(hasPremium: Boolean) =
+  def loadFeedback(hasPremium: Boolean): Future[String] =
     if (hasPremium) Future.successful("You own MusicPimp Premium. Thank you!")
     else iapUtils.premiumInfo(this).map(i => s"Currently, only a limited number of tracks can be played per day. MusicPimp Premium is available and enables unlimited playback for ${i.price}.")
 
@@ -77,7 +77,7 @@ abstract class IAPActivity extends PreferenceListeningActivity with PimpLog {
     updateButton(hasPremium)
   }
 
-  def updateUI(hasPremium: Boolean) = onUiThread {
+  def updateUI(hasPremium: Boolean): Unit = onUiThread {
     setIabText(feedback(hasPremium))
     updateButton(hasPremium)
   }

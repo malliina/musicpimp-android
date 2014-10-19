@@ -1,17 +1,19 @@
 package org.musicpimp.pimp
 
+import java.io.File
+import java.net.{URLDecoder, URLEncoder}
+
 import android.net.Uri
 import com.mle.android.http.HttpResponse
 import com.mle.util.Utils.executionContext
 import com.mle.util.Version
-import concurrent.duration._
-import java.io.File
-import java.net.{URLEncoder, URLDecoder}
 import org.musicpimp.PimpApp
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
 import play.api.libs.json.{Json, Reads}
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 /**
  *
@@ -19,7 +21,7 @@ import scala.concurrent.Future
  */
 class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with PimpHttpClient {
 
-  import PimpLibrary._
+  import org.musicpimp.pimp.PimpLibrary._
 
   implicit val reader: Reads[Directory] = json.dirReader
 
@@ -33,11 +35,14 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
 
   def pingNoAuth: Future[Unit] = client getEmpty pingResource
 
-  def ping: Future[Version] =
-    get[Version](pingAuthResource)
+  def ping: Future[Version] = get[Version](pingAuthResource)
 
-  def folder(id: String): Future[Directory] =
-    getWithCache(id)
+  def folder(id: String): Future[Directory] = getWithCache(id)
+
+  def search(term: String, limit: Int = defaultSearchLimit): Future[Seq[Track]] = {
+    implicit val trackReader = json.pimpTrackReader
+    get[Seq[Track]](s"/search?term=$term&limit=$limit")
+  }
 
   def uri(trackId: String): Uri = json uri trackId
 

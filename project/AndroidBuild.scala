@@ -28,7 +28,7 @@ object AndroidBuild extends Build {
     run <<= run in Android in app,
     commands <<= commands in app
   ) ++ android.Plugin.androidCommands: _*
-    ) aggregate(app)
+    ) aggregate app
 //  ) aggregate(app, gcmLibProject)
 
   lazy val app = Project("musicpimp", file("musicpimp")).settings(pimpSettings: _*)
@@ -39,7 +39,7 @@ object AndroidBuild extends Build {
   val supportVersion = "19.1.0"
 
   def apkSettings = Seq(
-    appStore := AppStores.Amazon,
+    appStore := AppStores.GooglePlay,
     storeFileExtension := {
       appStore.value match {
         case AppStores.GooglePlay => "-google"
