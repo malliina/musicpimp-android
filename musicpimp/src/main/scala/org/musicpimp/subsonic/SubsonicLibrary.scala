@@ -2,10 +2,11 @@ package org.musicpimp.subsonic
 
 import android.net.Uri
 import com.mle.android.http.HttpResponse
-import com.mle.util.Version
+import com.mle.util.{Utils, Version}
 import org.musicpimp.audio.SubsonicHttpClient._
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
+import org.musicpimp.util.PimpLog
 
 import scala.concurrent.Future
 
@@ -15,7 +16,7 @@ import scala.concurrent.Future
  */
 class SubsonicLibrary(endpoint: Endpoint)
   extends RemoteMediaLibrary(endpoint)
-  with SubsonicHttpClient {
+  with SubsonicHttpClient with PimpLog {
 
   private val json = new SubsonicJsonReaders(endpoint)
 
@@ -29,11 +30,18 @@ class SubsonicLibrary(endpoint: Endpoint)
   override def rootFolder: Future[Directory] =
     getWithCache(rootFolderId)(json.indexReader)
 
-  def search(term: String, limit: Int = defaultSearchLimit): Future[Seq[Track]] = get(buildPath("search2",
-    "query" -> term,
-    "songCount" -> s"$limit",
-    "artistCount" -> "0",
-    "albumCount" -> "0"))(json.searchResultReader)
+  override def search(term: String, limit: Int): Future[Seq[Track]] = {
+    val resource = buildPath("search2",
+      "query" -> term,
+      "songCount" -> s"$limit",
+      "artistCount" -> "0",
+      "albumCount" -> "0")
+    info(s"Get: $resource")
+    val ret = get(resource)(json.searchResultReader)
+    import Utils.executionContext
+    ret.onComplete(t => info(s"Complete: $t"))
+    ret
+  }
 
   def resource(folderId: String): String =
     if (folderId == rootFolderId) buildPath("getIndexes")

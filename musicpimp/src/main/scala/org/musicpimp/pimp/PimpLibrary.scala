@@ -39,7 +39,7 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
 
   def folder(id: String): Future[Directory] = getWithCache(id)
 
-  def search(term: String, limit: Int = defaultSearchLimit): Future[Seq[Track]] = {
+  override def search(term: String, limit: Int): Future[Seq[Track]] = {
     implicit val trackReader = json.pimpTrackReader
     get[Seq[Track]](s"/search?term=$term&limit=$limit")
   }

@@ -91,7 +91,7 @@ class EditEndpointActivity
       showFeedbackText("Testing...", showProgress = true)
       session.ping
         .map(version => showFeedbackText(s"$endpointName ${version.version} at your service."))
-        .recover(testFailedFeedback andThen (msg => showFeedbackText(msg)))
+        .recover(testFailedFeedback(endpoint) andThen (msg => showFeedbackText(msg)))
         .onComplete(_ => session.close())
     })
   }
@@ -107,7 +107,7 @@ class EditEndpointActivity
     testingProgressBar setVisibility progressVisibility
   }
 
-  val testFailedFeedback: PartialFunction[Throwable, String] = {
+  def testFailedFeedback(endpoint:Endpoint): PartialFunction[Throwable, String] = {
     case ehe: ExplainedHttpException =>
       ehe.reason
     case pe: ExplainedException =>
@@ -125,14 +125,14 @@ class EditEndpointActivity
           s"A network error occurred. HTTP error $errorCode."
       }
     case _: UnknownHostException =>
-      "Unable to connect. Unable to resolve host."
+      s"Unable to connect to ${endpoint.httpBaseUri}. Unable to resolve host."
     case _: ConnectTimeoutException =>
-      "Unable to connect. Timed out."
+      s"Unable to connect to ${endpoint.httpBaseUri}. Timed out."
     case hhce: HttpHostConnectException =>
       warn(hhce.getMessage, hhce)
-      "Unable to connect"
+      s"Unable to connect to ${endpoint.httpBaseUri}."
     case ioe: IOException =>
-      "Unable to connect."
+      s"Unable to connect to ${endpoint.httpBaseUri}."
     case jre: JsResultException =>
       warn("JSON failure", jre)
       "The format of the response was unexpected."

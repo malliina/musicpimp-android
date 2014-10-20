@@ -14,6 +14,7 @@ import scala.concurrent.Future
  */
 trait MediaLibrary extends Closeable {
   val defaultSearchLimit = 100
+
   def isLocal: Boolean = false
 
   def invalidateCache(): Unit = ()
@@ -65,7 +66,9 @@ trait MediaLibrary extends Closeable {
     Future.sequence(Seq(subTracks, shallowTracks)).map(_.flatten)
   }
 
-  def search(term: String): Future[Seq[Track]] = Future.successful(Nil)
+  def search(term: String, limit: Int): Future[Seq[Track]] = Future.successful(Nil)
+
+  def search(term: String): Future[Seq[Track]] = search(term, defaultSearchLimit)
 
   /**
    * The URI to the original media of `track`. Defaults to track.source. However, track.source is the playback URI,

@@ -3,10 +3,11 @@ package org.musicpimp.ui
 import android.app.{Activity, DownloadManager}
 import android.content.IntentFilter
 import android.support.v4.app.Fragment
+import com.mle.andro.ui.adapters.BaseArrayAdapter
 import com.mle.android.receivers.DownloadCompleteListener
 import com.mle.android.ui.DownloadStatus
 import org.musicpimp.andro.ui.ActivityHelper
-import org.musicpimp.ui.adapters.MusicItemAdapter
+import org.musicpimp.ui.adapters.{MusicItemAdapterBase, LibraryItemAdapter}
 
 /**
  * This trait updates the download progress of music items loaded into an adapter.
@@ -36,7 +37,7 @@ trait MusicDownloadUpdating extends DownloadProgressPolling {
    */
   override def onDownloadProgressUpdate(downloads: Seq[DownloadStatus]): Unit =
     for {
-      adapter <- adapterOpt[MusicItemAdapter].toSeq
+      adapter <- adapterOpt[MusicItemAdapterBase[_]].toSeq
       download <- downloads
       trackItem <- adapter.findTrack(download.localPath)
     } {
@@ -47,7 +48,7 @@ trait MusicDownloadUpdating extends DownloadProgressPolling {
   def onDownloadComplete(id: Long): Unit = {
     for {
       download <- queryStatus(id)
-      adapter <- adapterOpt[MusicItemAdapter]
+      adapter <- adapterOpt[MusicItemAdapterBase[_]]
       trackItem <- adapter.findTrack(download.localPath)
     } {
       trackItem.progress = trackItem.progress.copy(transferring = false)
@@ -58,20 +59,4 @@ trait MusicDownloadUpdating extends DownloadProgressPolling {
   def adapterOpt[T]: Option[T]
 }
 
-/**
- * Download progress updater that starts polling on `onResume` and stops
- * polling on `onPause`.
- */
-trait MusicDownloadUpdatingFragment extends Fragment with MusicDownloadUpdating {
-  override def onResume() {
-    super.onResume()
-    activity.registerReceiver(downloadCompleteListener, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-    startPollDownloadProgress()
-  }
 
-  override def onPause() {
-    activity.unregisterReceiver(downloadCompleteListener)
-    stopPollDownloadProgress()
-    super.onPause()
-  }
-}

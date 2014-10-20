@@ -14,7 +14,7 @@ import scala.util.Try
 /**
  * @author Michael
  */
-class SubsonicResponseHandler(promise: Promise[HttpResponse]) extends TextHttpResponseHandler with PimpLog {
+class SubsonicResponseHandler(promise: Promise[HttpResponse]) extends TextHttpResponseHandler {
   override def onSuccess(statusCode: Int, headers: Array[Header], responseString: String): Unit = {
     val content = Option(responseString)
     val isFailure: Boolean = (for {
@@ -30,6 +30,7 @@ class SubsonicResponseHandler(promise: Promise[HttpResponse]) extends TextHttpRe
   }
 
   override def onFailure(statusCode: Int, headers: Array[Header], responseString: String, throwable: Throwable): Unit = {
+//    info(s"Failed response: $responseString")
     promise failure Option(throwable).getOrElse(new SubsonicHttpException(Option(responseString)))
   }
 }

@@ -210,6 +210,10 @@ class MainActivity
       activityHelper.trueToastException(player.playNext())
     case R.id.action_previous =>
       activityHelper.trueToastException(player.playPrevious())
+    case R.id.action_search =>
+//      navigate(classOf[SearchableActivity])
+      onSearchRequested()
+      true
     case R.id.action_refresh =>
       //      val dialog: Option[ProgressDialog] = None
       //      onUiThread(Some(ProgressDialog.show(this, "Refreshing", "Looking for MusicPimp servers...")))

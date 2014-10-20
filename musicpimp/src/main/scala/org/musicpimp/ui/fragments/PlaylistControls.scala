@@ -9,9 +9,8 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{TextView, ListView, AdapterView}
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import org.musicpimp.audio._
-import org.musicpimp.ui.MusicDownloadUpdatingFragment
 import org.musicpimp.ui.adapters.TrackItem
-import org.musicpimp.ui.adapters.{DownloadProgress, MusicItemAdapter}
+import org.musicpimp.ui.adapters.{DownloadProgress, LibraryItemAdapter}
 import org.musicpimp.{R, TR}
 
 /**
@@ -119,7 +118,7 @@ trait PlaylistControls extends PlaybackFragment with MusicDownloadUpdatingFragme
     // the current playlist index is automatically highlighted.
     // So when the index has changed, we just redecorate the items
     // for the correct item to be highlighted.
-    activityHelper.onUiThread(adapterOpt[MusicItemAdapter].foreach(_.notifyDataSetChanged()))
+    activityHelper.onUiThread(adapterOpt[LibraryItemAdapter].foreach(_.notifyDataSetChanged()))
   }
 
   def showPlaylistItems(listView: ListView, items: Seq[Track]) {
@@ -130,7 +129,7 @@ trait PlaylistControls extends PlaybackFragment with MusicDownloadUpdatingFragme
         feedback setVisibility View.VISIBLE
       }
     })
-    val adapter = new MusicItemAdapter(getActivity, Seq.empty, trackItems) {
+    val adapter = new LibraryItemAdapter(getActivity, Seq.empty, trackItems) {
       override def decorate(view: View, item: MusicItem, position: Int): Unit = {
         super.decorate(view, item, position)
         val color = playlistIndex.filter(_ == position).fold(DEFAULT_COLOR)(_ => HIGHLIGHT_COLOR)

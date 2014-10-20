@@ -7,6 +7,7 @@ import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonReaders
 import org.musicpimp.json.JsonStrings._
 import org.musicpimp.json.Readers._
+import org.musicpimp.util.PimpLog
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -16,7 +17,7 @@ import scala.concurrent.duration._
  *
  * @author mle
  */
-class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
+class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with PimpLog {
 
   import org.musicpimp.subsonic.SubsonicJsonReaders._
 
@@ -80,9 +81,7 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
   }
   val searchResultReader = new Reads[Seq[Track]] {
     override def reads(json: JsValue): JsResult[Seq[Track]] = {
-      val result = json \ SEARCH_RESULT2
-      val songs = ensureIsArray(result \ SONG)
-      JsArray(songs).validate[Seq[Track]]
+      ensureValidateArray[Track](json \ SUBSONIC_RESPONSE \ SEARCH_RESULT2 \ SONG)
     }
   }
   // parses the subsonic response after you make a request with params "action=get"

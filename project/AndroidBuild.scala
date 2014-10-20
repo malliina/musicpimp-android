@@ -29,17 +29,15 @@ object AndroidBuild extends Build {
     commands <<= commands in app
   ) ++ android.Plugin.androidCommands: _*
     ) aggregate app
-//  ) aggregate(app, gcmLibProject)
 
   lazy val app = Project("musicpimp", file("musicpimp")).settings(pimpSettings: _*)
-//  lazy val gcmLibProject = Project("gcm_lib", file("google-play-services_lib")).settings(libraryProjectSettings: _*)
 
   val mleGroup = "com.github.malliina"
   val supportGroup = "com.android.support"
   val supportVersion = "19.1.0"
 
   def apkSettings = Seq(
-    appStore := AppStores.GooglePlay,
+    appStore := AppStores.Amazon,
     storeFileExtension := {
       appStore.value match {
         case AppStores.GooglePlay => "-google"
@@ -73,7 +71,7 @@ object AndroidBuild extends Build {
     googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++
     net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     scalaVersion := "2.11.2",
-    version := "1.9.9",
+    version := "2.0.0",
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,

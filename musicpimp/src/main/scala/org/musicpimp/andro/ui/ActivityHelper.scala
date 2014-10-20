@@ -13,7 +13,7 @@ import org.musicpimp.{TypedResource, TypedViewHolder}
 /**
  * @author Michael
  */
-class ActivityHelper(activity: Activity) extends TypedViewHolder with PimpLog {
+class ActivityHelper(val activity: Activity) extends TypedViewHolder with PimpLog {
   override def findViewById(id: Int): View = activity.findViewById(id)
 
   def prefs = PreferenceManager.getDefaultSharedPreferences(activity)

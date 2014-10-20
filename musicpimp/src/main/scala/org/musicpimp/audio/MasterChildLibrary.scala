@@ -64,7 +64,7 @@ class MasterChildLibrary(master: MediaLibrary, child: MediaLibrary) extends Mult
 
   def cacheContains(trackId: String): Boolean = subLibraries.exists(_.cacheContains(trackId))
 
-  override protected def mapReduce(libraries: Seq[MediaLibrary], f: (MediaLibrary) => Future[Directory]): Future[Directory] =
+  override protected def mapReduce(libraries: Seq[MediaLibrary], f: MediaLibrary => Future[Directory]): Future[Directory] =
     if (libraries.size > 1) {
       Future.sequence(libraries.map(lib => f(lib).fallbackTo(Future.successful(Directory.empty))))
         .map(dirs => dirs(0) addDistinct dirs(1))

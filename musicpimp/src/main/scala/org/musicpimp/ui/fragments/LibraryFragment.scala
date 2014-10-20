@@ -1,30 +1,27 @@
 package org.musicpimp.ui.fragments
 
-import android.os.{Parcelable, Bundle}
+import java.io.IOException
+
+import android.os.{Bundle, Parcelable}
 import android.support.v4.app.FragmentActivity
 import android.view.ContextMenu.ContextMenuInfo
-import android.view.{ContextMenu, View, MenuItem}
-import android.widget.AdapterView.AdapterContextMenuInfo
+import android.view.{ContextMenu, MenuItem, View}
 import android.widget._
 import com.fasterxml.jackson.core.JsonParseException
-import com.mle.andro.ui.adapters.StaticIconOneLineAdapter
-import com.mle.andro.ui.adapters.TwoPartItem
+import com.mle.andro.ui.adapters.{StaticIconOneLineAdapter, TwoPartItem}
 import com.mle.android.exceptions.ExplainedHttpException
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import com.mle.android.ui.fragments.DefaultFragment
 import com.mle.util.Utils.executionContext
-import java.io.IOException
 import org.apache.http.client.HttpResponseException
 import org.musicpimp.audio._
-import org.musicpimp.http.EndpointTypes
 import org.musicpimp.ui._
 import org.musicpimp.ui.activities._
-import org.musicpimp.ui.adapters.TrackItem
-import org.musicpimp.ui.adapters.{DownloadProgress, MusicItemAdapter}
+import org.musicpimp.ui.adapters.{DownloadProgress, LibraryItemAdapter, TrackItem}
 import org.musicpimp.ui.dialogs.AddFolderDialog
 import org.musicpimp.ui.fragments.LibraryFragment.LIST_STATE
-import org.musicpimp.util.{PimpLog, Messaging, Keys}
-import org.musicpimp.{TR, R}
+import org.musicpimp.util.{Keys, Messaging, PimpLog}
+import org.musicpimp.{R, TR}
 
 /**
  *
@@ -39,12 +36,17 @@ class LibraryFragment
   override val layoutId: Int = R.layout.library
 
   lazy val endpointHelper = new EndpointHelper(getActivity)
+  lazy val actions = new MusicActions(endpointHelper)
 
   private var latestLibrary: MediaLibrary = LibraryManager.active
 
   def library = LibraryManager.active
 
   def player = PlayerManager.active
+
+  //  def lv = endpointHelper.findView(TR.)
+
+  def absList = endpointHelper.findView(TR.listView).asInstanceOf[AbsListView]
 
   def findListView = tryFindView[AbsListView](R.id.listView)
 
@@ -163,7 +165,7 @@ class LibraryFragment
   def saveListState = findListView.flatMap(l => Option(l.onSaveInstanceState()))
 
   def showPathAndLoadFolder(listView: AbsListView, folder: Option[FolderMeta]): Unit = onUiThread {
-    endpointHelper.findView(TR.`pathText`) setText folder.fold("")(_.path)
+    endpointHelper.findView(TR.pathText) setText folder.fold("")(_.path)
     loadFolder(listView, folder.map(_.id))
   }
 
@@ -184,7 +186,7 @@ class LibraryFragment
   private def showDirectory(dir: Directory, listView: AbsListView, folderId: Option[String]): Unit = {
     val folders = dir.folders
     val trackItems = dir.tracks.map(TrackItem(_, DownloadProgress.empty))
-    val adapter = new MusicItemAdapter(activity, folders, trackItems)
+    val adapter = new LibraryItemAdapter(activity, folders, trackItems)
     val feedback = findFeedbackView
     val loadingBar = findProgressBar
     onUiThread {
@@ -251,99 +253,22 @@ class LibraryFragment
 
   override def onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
     super.onCreateContextMenu(menu, v, menuInfo)
-    val isPimp = LibraryManager.activeEndpoint(prefs).endpointType == EndpointTypes.MusicPimp
-    val menuResource = if (isPimp) R.menu.track_context else R.menu.track_context_no_scheduling
-    activity.getMenuInflater.inflate(menuResource, menu)
+    actions.inflate(menu, activity.getMenuInflater)
   }
 
   override def onContextItemSelected(item: MenuItem): Boolean = {
-    def menuInfo = item.getMenuInfo.asInstanceOf[AdapterContextMenuInfo]
-    endpointHelper.toastOnException(default = true) {
-      item.getItemId match {
-        case R.id.play_selected =>
-          itemAt(menuInfo.position).foreach {
-            case TrackItem(track, _) =>
-              play(track)
-            case folder: Folder =>
-              val tracksFuture = library tracksIn folder
-              tracksFuture.filter(_.size > 0) foreach (tracks => {
-                play(tracks.head)
-                add(tracks.tail)
-              })
-          }
-          true
-        case R.id.add_playlist =>
-          itemAt(menuInfo.position).foreach {
-            case TrackItem(track, _) =>
-              add(track)
-            case folder: Folder =>
-              val tracksFuture = library tracksIn folder
-              tracksFuture foreach add
-          }
-          true
-        case R.id.download =>
-          itemAt(menuInfo.position).foreach {
-            case TrackItem(track, _) =>
-              downloadIfNotExists(track)
-            case folder: Folder =>
-              //              info(s"Downloading folder: ${folder.title}")
-              library.tracksIn(folder).map(downloadIfNotExists).onFailure {
-                case e: Exception => showToast(s"An error occurred. ${e.getMessage}")
-              }
-          }
-          true
-        case R.id.schedule_playback =>
-          itemAt(menuInfo.position).foreach {
-            case TrackItem(track, _) =>
-              val e = LibraryManager.activeEndpoint(prefs)
-              if (e.endpointType == EndpointTypes.MusicPimp) {
-                navigate(classOf[EditAlarmActivity],
-                  Keys.ENDPOINT -> e.id,
-                  Keys.TRACK_ID -> track.id,
-                  Keys.TRACK_TITLE -> track.title)
-              } else {
-                showToast("Set your MusicPimp server as the active music library first.")
-              }
-            case _ =>
-              showToast("Please select a track instead.")
-          }
-          true
-        case _ =>
-          super.onContextItemSelected(item)
-      }
-    }
+    actions.onContextItemSelected(item, absList, i => super.onContextItemSelected(i))
   }
-
-  def itemAt(index: Int) = findListView.map(_.getAdapter.getItem(index).asInstanceOf[MusicItem])
 
   def onItemSelected(av: AdapterView[_], index: Int) {
     val item = av getItemAtPosition index
     endpointHelper.toastOnException(()) {
       item match {
         case TrackItem(track, _) =>
-          play(track)
+          actions.play(track)
         case f: Folder =>
           navigate(f)
       }
-    }
-  }
-
-  def play(track: Track): Unit = withDownload(track, player.setAndPlay)
-
-  def add(track: Track): Unit = withDownload(track, player.add)
-
-  private def withDownload(t: Track, f: Track => Unit): Unit = {
-    f(t)
-    if (player.isLocal) {
-      downloadIfNotExists(t)
-    }
-  }
-
-  def add(tracks: Seq[Track]) {
-    //    info(s"Adding ${tracks.size} tracks to playlist")
-    player add tracks
-    if (player.isLocal) {
-      downloadIfNotExists(tracks)
     }
   }
 
