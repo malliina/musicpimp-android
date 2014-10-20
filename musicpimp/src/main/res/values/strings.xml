@@ -65,6 +65,9 @@
 
     <string name="subsonic">Subsonic</string>
     <string name="musicpimp">MusicPimp</string>
+    <string name="cloud">Cloud</string>
+    <string name="cloud_id">Cloud ID</string>
+    <string name="cloud_id_hint">my cloud id</string>
     <string name="form_name">Description</string>
     <string name="form_name_hint">my home computer</string>
     <string name="form_endpoint_type">Endpoint Type</string>

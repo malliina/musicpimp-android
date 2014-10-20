@@ -42,6 +42,8 @@ trait LayoutBaseActivity extends Activity {
 
   def findView[A](tr: TypedResource[A]): A = activityHelper.findView(tr)
 
+  def tryFindView[A](tr: TypedResource[A]): Option[A] = activityHelper.tryFindView(tr)
+
   def itemAt[T](index: Int, listResource: TypedResource[ListView]): T =
     findView(listResource).getAdapter.getItem(index).asInstanceOf[T]
 

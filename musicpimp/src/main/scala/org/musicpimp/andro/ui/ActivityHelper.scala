@@ -29,8 +29,7 @@ class ActivityHelper(val activity: Activity) extends TypedViewHolder with PimpLo
    * @tparam A type of view
    * @return the view wrapped in an Option, or None if it could not be obtained
    */
-  def tryFindView[A](tr: TypedResource[A]): Option[A] =
-    tryFindView[A](tr.id)
+  def tryFindView[A](tr: TypedResource[A]): Option[A] = tryFindView[A](tr.id)
 
   def navigate[T <: Activity](destActivity: Class[T], parameters: (String, String)*) {
     val intent = new Intent(activity, destActivity)

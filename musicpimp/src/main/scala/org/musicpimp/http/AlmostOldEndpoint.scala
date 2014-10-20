@@ -17,7 +17,7 @@ case class AlmostOldEndpoint(name: String,
                              ssid: Option[String] = None,
                              autoSync: Boolean = true,
                              protocol: Protocols.Protocol = Protocols.Http) extends IEndpoint {
-  def toEndpoint = Endpoint(Endpoint.newID, name, host, port, username, password, endpointType, ssid, autoSync, protocol)
+  def toEndpoint = Endpoint(Endpoint.newID, name, host, port, username, password, endpointType,None, ssid, autoSync, protocol)
 }
 
 object AlmostOldEndpoint {

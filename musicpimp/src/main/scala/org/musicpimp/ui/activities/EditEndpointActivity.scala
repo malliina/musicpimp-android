@@ -6,7 +6,8 @@ import java.net.UnknownHostException
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.view.View
-import android.widget.EditText
+import android.widget.CompoundButton.OnCheckedChangeListener
+import android.widget.{CompoundButton, EditText}
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.{HttpConstants, Protocols}
 import com.mle.android.ui.Implicits.action2clickListener
@@ -46,29 +47,95 @@ class EditEndpointActivity
 
   def testingProgressBar = findView(TR.testingProgressBar)
 
+  def cloudText = tryFindView(TR.end_cloud)
+
+  def cloudTextLabel = tryFindView(TR.end_cloud_text)
+
+  def nameText = tryFindView(TR.end_name)
+
+  def nameTextLabel = tryFindView(TR.end_name_text)
+
+  def hostText = tryFindView(TR.end_host)
+
+  def hostTextLabel = tryFindView(TR.end_host_text)
+
+  def portText = tryFindView(TR.end_port)
+
+  def portTextLabel = tryFindView(TR.end_port_text)
+
+  def pimpRadio = findView(TR.musicpimp_radio)
+
+  def cloudRadio = findView(TR.cloud_radio)
+
+  def subsonicRadio = findView(TR.subsonic_radio)
+
+  def protocolGroup = tryFindView(TR.protocol_radio_group)
+
+  def protocolLabel = tryFindView(TR.protocol_text)
+
   override protected def onCreate2(savedInstanceState: Option[Bundle]) {
     testButton setOnClickListener ((v: View) => testClicked(v))
     submitButton setOnClickListener ((v: View) => endpointSubmitted(v))
+    pimpRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
+      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
+        if (isChecked) {
+          arrangeViews(isCloud = false)
+        }
+      }
+    })
+    cloudRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
+      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
+        if (isChecked) {
+          arrangeViews(isCloud = true)
+        }
+      }
+    })
+    subsonicRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
+      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
+        if (isChecked) {
+          arrangeViews(isCloud = false)
+        }
+      }
+    })
+
     patient = for {
       bundle <- extras
       endpointName <- Option(bundle.getString(Keys.ENDPOINT))
       endpoint <- settings.endpoints.find(_.name == endpointName)
     } yield endpoint
     patient.foreach(populateFields)
-    activityHelper.findView(TR.active_check) setChecked !patient.isDefined
+    findView(TR.active_check) setChecked !patient.isDefined
+    arrangeViews(cloudRadio.isChecked)
+  }
+
+  def arrangeViews(isCloud: Boolean) = {
+    val (nonCloudVis, cloudVis) = if (isCloud) (View.GONE, View.VISIBLE) else (View.VISIBLE, View.GONE)
+    adjustVisibility(nonCloudVis, hostText, hostTextLabel, portText, portTextLabel, protocolGroup, protocolLabel)
+    adjustVisibility(cloudVis, cloudText, cloudTextLabel)
+  }
+
+  def adjustVisibility(visibility: Int, views: Option[View]*) = onUiThread {
+    views.flatten.foreach(_ setVisibility visibility)
   }
 
   def endpointSubmitted(view: View): Unit = errorHandled {
-    val endpoint = buildEndpointFromInput(patient.map(_.id))
-    val saveFunc: Endpoint => Option[String] =
-      patient.fold((e: Endpoint) => settings.addEndpoint(e))(p => (e: Endpoint) => settings.updateEndpoint(p, e))
-    settings.saveEndpoint(endpoint, saveFunc, activityHelper.findView(TR.active_check).isChecked)
-      .foreach(errorMessage => activityHelper.showToast(errorMessage))
-    finish()
+    val endpointEither = buildEndpointFromInput(patient.map(_.id))
+    foldFeedback(endpointEither, endpoint => {
+      val saveFunc: Endpoint => Option[String] =
+        patient.fold((e: Endpoint) => settings.addEndpoint(e))(p => (e: Endpoint) => settings.updateEndpoint(p, e))
+      settings.saveEndpoint(endpoint, saveFunc, activityHelper.findView(TR.active_check).isChecked)
+        .foreach(errorMessage => activityHelper.showToast(errorMessage))
+      finish()
+    })
   }
 
   def testClicked(view: View): Unit =
-    errorHandled(testEndpoint(buildEndpointFromInput(None)))
+    errorHandled {
+      foldFeedback(buildEndpointFromInput(None), testEndpoint)
+    }
+
+  def foldFeedback(either: Either[String, Endpoint], f: Endpoint => Unit) =
+    either.fold(err => showFeedbackText(err), f)
 
   def errorHandled[T](f: => T): Unit =
     try {
@@ -107,7 +174,7 @@ class EditEndpointActivity
     testingProgressBar setVisibility progressVisibility
   }
 
-  def testFailedFeedback(endpoint:Endpoint): PartialFunction[Throwable, String] = {
+  def testFailedFeedback(endpoint: Endpoint): PartialFunction[Throwable, String] = {
     case ehe: ExplainedHttpException =>
       ehe.reason
     case pe: ExplainedException =>
@@ -167,23 +234,41 @@ class EditEndpointActivity
     findView(TR.https_radio) setChecked ssl
   }
 
-  def buildEndpointFromInput(idOpt: Option[String]): Endpoint = {
-    val isPimp = findView(TR.musicpimp_radio).isChecked
-    val endType = if (isPimp) EndpointTypes.MusicPimp else EndpointTypes.Subsonic
-    val name = readText(TR.end_name)
-    val host = readText(TR.end_host)
-    val port = readText(TR.end_port).toInt
-    val user = readText(TR.end_username)
-    val pass = readText(TR.end_password)
-    val ssl = findView(TR.https_radio).isChecked
-    val protocol = if (ssl) Protocols.Https else Protocols.Http
-    val id = idOpt getOrElse Endpoint.newID
-    Endpoint(id, name, host, port, user, pass, endType, PimpWifiHelpers.ssid(this, host), protocol = protocol)
+  def buildEndpointFromInput(idOpt: Option[String]): Either[String, Endpoint] = {
+    import org.musicpimp.http.EndpointTypes.{Cloud, MusicPimp, Subsonic}
+    val endType =
+      if (findView(TR.musicpimp_radio).isChecked) MusicPimp
+      else if (findView(TR.cloud_radio).isChecked) Cloud
+      else Subsonic
+    if (endType == EndpointTypes.Cloud) {
+      for {
+        cloudID <- readText(TR.end_cloud)
+        name <- readText(TR.end_name)
+        user <- readText(TR.end_username)
+        pass <- readText(TR.end_password)
+      } yield {
+        Endpoint.forCloud(idOpt, name, cloudID, user, pass)
+      }
+    } else {
+      for {
+        name <- readText(TR.end_name)
+        host <- readText(TR.end_host)
+        port <- readText(TR.end_port).map(_.toInt).right
+        user <- readText(TR.end_username)
+        pass <- readText(TR.end_password)
+      } yield {
+        val ssl = findView(TR.https_radio).isChecked
+        val protocol = if (ssl) Protocols.Https else Protocols.Http
+        val id = idOpt getOrElse Endpoint.newID
+        val isPimp = endType == EndpointTypes.MusicPimp
+        Endpoint(id, name, host, port, user, pass, endType, None, PimpWifiHelpers.ssid(this, host).filter(_ => isPimp), protocol = protocol, autoSync = isPimp)
+      }
+    }
   }
 
-  private def readText(id: TypedResource[_ <: EditText]) =
-    Option(findView(id).getText.toString).filter(_.length > 0)
-      .getOrElse(throw new ExplainedException(s"Please verify that all the fields are filled in properly."))
+  private def readText(id: TypedResource[_ <: EditText]): Either.RightProjection[String, String] =
+    tryFindView(id).flatMap(editText => Option(editText.getText.toString)).filter(_.length > 0).map(Right.apply)
+      .getOrElse(Left("Please verify that all the fields are filled in properly.")).right
 
   private def setText(id: TypedResource[_ <: EditText], text: String): Unit =
     findView(id) setText text

@@ -1,8 +1,10 @@
 package org.musicpimp.http
 
+import java.util.UUID
+
 import com.mle.android.http.{IEndpoint, Protocols}
 import com.mle.json.SimpleFormat
-import java.util.UUID
+import org.java_websocket.util.Base64
 import org.musicpimp.beam.BeamCode
 import play.api.libs.json.Json
 
@@ -17,6 +19,7 @@ case class Endpoint(id: String,
                     username: String,
                     password: String,
                     endpointType: EndpointTypes.EndpointType = EndpointTypes.MusicPimp,
+                    cloudID: Option[String] = None,
                     ssid: Option[String] = None,
                     autoSync: Boolean = true,
                     protocol: Protocols.Protocol = Protocols.Http) extends IEndpoint {
@@ -32,6 +35,17 @@ case class Endpoint(id: String,
     baseUri(httpScheme)
   }
 
+  def authValue =
+    if (endpointType != EndpointTypes.Cloud) {
+      authHeader("Basic", s"$username:$password")
+    } else {
+      val cid = cloudID getOrElse ""
+      authHeader("Pimp", s"$cid:$username:$password")
+    }
+
+  def authHeader(word: String, unencoded: String) =
+    "Basic " + Base64.encodeBytes(unencoded.getBytes("UTF-8"))
+
   private def baseUri(scheme: String) = s"$scheme://$host:$port"
 
   def httpUri(path: String) = httpBaseUri + path
@@ -44,7 +58,10 @@ object Endpoint {
   def newID = UUID.randomUUID().toString
 
   def fromBeamCode(beamCode: BeamCode) =
-    new Endpoint(newID, beamName, beamCode.host, beamCode.port, beamCode.user, beamPassword, EndpointTypes.MusicBeamer)
+    Endpoint(newID, beamName, beamCode.host, beamCode.port, beamCode.user, beamPassword, EndpointTypes.MusicBeamer, None, autoSync = false)
+
+  def forCloud(id:Option[String], name: String, cloudID: String, user: String, pass: String) =
+    Endpoint(id getOrElse newID, name, "cloud.musicpimp.org", 443, user, pass, EndpointTypes.Cloud, Some(cloudID), None, autoSync = false, Protocols.Https)
 
   implicit object endTypeFormat extends SimpleFormat[EndpointTypes.EndpointType](EndpointTypes.withName)
 

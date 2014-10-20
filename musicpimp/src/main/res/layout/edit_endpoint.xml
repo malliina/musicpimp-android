@@ -27,14 +27,27 @@
                 android:layout_height="wrap_content"
                 android:text="@string/musicpimp"
                 android:checked="true" />
-
+            <RadioButton
+                android:id="@+id/cloud_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cloud" />
             <RadioButton
                 android:id="@+id/subsonic_radio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/subsonic" />
         </RadioGroup>
+        <TextView
+            android:id="@+id/end_cloud_text"
+            style="@style/BasicTextView"
+            android:text="@string/cloud_id" />
 
+        <EditText
+            android:id="@+id/end_cloud"
+            style="@style/BasicEditText"
+            android:inputType="text"
+            android:hint="@string/cloud_id_hint" />
         <TextView
             android:id="@+id/end_name_text"
             style="@style/BasicTextView"
@@ -95,6 +108,7 @@
             android:text="@string/protocol" />
 
         <RadioGroup
+            android:id="@+id/protocol_radio_group"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
