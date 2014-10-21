@@ -3,7 +3,7 @@ package org.musicpimp.ui
 import android.app.{ProgressDialog, Activity}
 import android.support.v4.app.{FragmentActivity, DialogFragment}
 import com.mle.android.network.WifiHelpers
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.network.EndpointScanner

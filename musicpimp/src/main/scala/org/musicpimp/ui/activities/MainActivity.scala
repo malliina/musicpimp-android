@@ -1,6 +1,5 @@
 package org.musicpimp.ui.activities
 
-import MainActivity.isFirstActivityCreate
 import android.app.Activity
 import android.content.SharedPreferences
 import android.hardware.Camera
@@ -15,20 +14,21 @@ import android.widget.Spinner
 import com.mle.android.receivers.DownloadEventReceiver
 import com.mle.android.util.AndroUtils
 import com.mle.android.util.PreferenceImplicits.RichPrefs
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.PimpApp.AppStores
 import org.musicpimp.audio.PlayStates.PlayState
 import org.musicpimp.audio._
 import org.musicpimp.beam.BeamCode
 import org.musicpimp.http.Endpoint
 import org.musicpimp.local.LocalLibrary
-import org.musicpimp.network.{EndpointScanner, DownloadSettings}
+import org.musicpimp.network.{DownloadSettings, EndpointScanner}
 import org.musicpimp.ui.SpinnerHelper
+import org.musicpimp.ui.activities.MainActivity.isFirstActivityCreate
 import org.musicpimp.ui.adapters.PimpPagerAdapter
 import org.musicpimp.ui.dialogs._
 import org.musicpimp.usage.PimpUsageController
-import org.musicpimp.util.{PimpLog, Messaging, Keys}
-import org.musicpimp.{TypedResource, TR, PimpApp, R}
+import org.musicpimp.util.{Keys, Messaging, PimpLog}
+import org.musicpimp.{PimpApp, R, TR, TypedResource}
 
 /**
  *

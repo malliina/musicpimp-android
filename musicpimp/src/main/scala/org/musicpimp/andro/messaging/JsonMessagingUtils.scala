@@ -2,7 +2,7 @@ package org.musicpimp.andro.messaging
 
 import JsonMessagingUtils._
 import android.content.Context
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.{AlarmsClient, PimpWebHttpClient}
 import play.api.libs.json.Json

@@ -10,7 +10,7 @@ import com.mle.android.exceptions.AndroidException
 import com.mle.android.http.HttpResponse
 import com.mle.android.ui.Implicits._
 import com.mle.concurrent.FutureImplicits.RichFuture
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio._
 import org.musicpimp.pimp.Alarms._

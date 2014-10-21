@@ -8,7 +8,7 @@ import com.mle.android.network.WifiHelpers
 import com.mle.concurrent.Futures
 import com.mle.network.NetworkDevice
 import com.mle.util.{Lists, Utils}
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.util.{Keys, PimpSettings}
 

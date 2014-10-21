@@ -2,7 +2,7 @@ package org.musicpimp.subsonic
 
 import SubsonicPlayer._
 import com.mle.util.Scheduling
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import concurrent.duration._
 import java.util.concurrent.ScheduledFuture
 import org.musicpimp.audio._

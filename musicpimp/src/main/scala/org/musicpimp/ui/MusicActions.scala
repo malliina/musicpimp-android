@@ -10,7 +10,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{AbsListView, AdapterView}
 import com.mle.android.http.{HttpConstants, HttpUtil}
 import com.mle.util.Utils
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio._

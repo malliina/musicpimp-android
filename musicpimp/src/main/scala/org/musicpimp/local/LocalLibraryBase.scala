@@ -2,7 +2,7 @@ package org.musicpimp.local
 
 import android.net.Uri
 import com.mle.android.http.{AuthHttpClient, HttpResponse}
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import com.mle.util.Version
 import concurrent.duration._
 import java.io.{FileNotFoundException, File}

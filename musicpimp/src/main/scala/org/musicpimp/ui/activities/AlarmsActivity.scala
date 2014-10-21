@@ -4,21 +4,22 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.{Menu, View}
 import android.widget.CompoundButton.OnCheckedChangeListener
-import android.widget.{Spinner, CompoundButton, ArrayAdapter}
+import android.widget.{ArrayAdapter, CompoundButton, Spinner}
 import com.mle.android.messaging.MessagingException
 import com.mle.android.util.PreferenceImplicits.RichPrefs
 import com.mle.concurrent.FutureImplicits.RichFuture
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio.{LibraryManager, PlayerManager}
-import org.musicpimp.http.{EndpointTypes, Endpoint}
+import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.pimp.Alarms.Alarm
 import org.musicpimp.pimp.AlarmsClient
 import org.musicpimp.ui.SpinnerHelper
 import org.musicpimp.ui.adapters.AlarmsAdapter
-import org.musicpimp.util.{PimpLog, PimpSettings, Keys}
-import org.musicpimp.{PimpApp, TypedResource, TR, R}
+import org.musicpimp.util.{Keys, PimpLog, PimpSettings}
+import org.musicpimp.{PimpApp, R, TR, TypedResource}
+
 import scala.concurrent.Future
 
 /**
@@ -217,11 +218,14 @@ class AlarmsActivity extends ItemsManager[Alarm] {
     override def spinnerChoices: Seq[String] =
       settingsHelper.userAddedEndpoints.filter(e => e.endpointType == EndpointTypes.MusicPimp || e.endpointType == EndpointTypes.Cloud).map(_.name)
 
-    override def initialSpinnerSelection(choices: Seq[String]): Option[String] =
+    override def initialSpinnerSelection(choices: Seq[String]): Option[String] = {
+      def pref(key: String) = activityHelper.prefs.get(key).filter(choices.contains)
       currentEndpoint.map(_.name).filter(choices.contains) orElse
-        activityHelper.prefs.get(PlayerManager.prefKey).filter(choices.contains) orElse
-        activityHelper.prefs.get(LibraryManager.prefKey).filter(choices.contains) orElse
+        pref(PlayerManager.prefKey) orElse
+        pref(LibraryManager.prefKey) orElse
         choices.headOption
+    }
+
 
     override def onSpinnerItemSelected(endpointName: String): Unit = {
       settingsHelper.userAddedEndpoints.find(_.name == endpointName)

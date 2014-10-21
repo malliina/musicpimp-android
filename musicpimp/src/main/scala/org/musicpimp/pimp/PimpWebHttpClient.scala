@@ -2,12 +2,13 @@ package org.musicpimp.pimp
 
 import android.content.Context
 import com.mle.android.http.HttpConstants.ACCEPT
-import com.mle.android.http.{HttpResponse, BasicHttpClient, IEndpoint}
+import com.mle.android.http.HttpResponse
 import org.apache.http.client.HttpResponseException
 import org.musicpimp.exceptions.PimpHttpException
 import org.musicpimp.http.Endpoint
 import org.musicpimp.network.BasicHttpClient2
 import play.api.libs.json.{Json, Writes}
+
 import scala.concurrent.Future
 
 /**

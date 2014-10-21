@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import com.amazon.device.messaging.ADM
 import com.mle.android.exceptions.AndroidException
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.messaging.AdmEvents
 import org.musicpimp.messaging.AdmMessages.{RegistrationError, Unregistered, Registered, AdmMessage}
 import scala.concurrent.{Promise, Future}

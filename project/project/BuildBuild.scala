@@ -19,7 +19,7 @@ object BuildBuild extends Build {
 
   def sbtPlugins = Seq(
     "com.hanhuy.sbt" % "android-sdk-plugin" % "1.3.6",
-    "com.github.mpeltonen" % "sbt-idea" % "1.6.0",
+    "com.hanhuy.sbt" % "sbt-idea" % "1.7.0-SNAPSHOT",
     "com.timushev.sbt" % "sbt-updates" % "0.1.6",
     "com.eed3si9n" % "sbt-buildinfo" % "0.3.0",
     "net.virtual-void" % "sbt-dependency-graph" % "0.7.4"

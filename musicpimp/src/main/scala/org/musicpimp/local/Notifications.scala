@@ -4,7 +4,7 @@ import android.app.{NotificationManager, PendingIntent}
 import android.content.{Context, Intent}
 import android.graphics.BitmapFactory
 import android.support.v4.app.{TaskStackBuilder, NotificationCompat}
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.audio.Track
 import org.musicpimp.network.DiscoGs

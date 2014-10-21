@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import com.mle.android.iap.IapException
 import com.mle.android.ui.Implicits.action2clickListener
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.ui.activities.PreferenceListeningActivity
 import org.musicpimp.util.{Keys, PimpLog}
 import org.musicpimp.{R, TR}

@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonStrings._
 import org.musicpimp.json.Readers._
@@ -10,7 +10,7 @@ import play.api.libs.json._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 /**
  *
@@ -85,11 +85,8 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
    */
   def volume(volume: Int): Unit = sendValued(VOLUME, volume)
 
-  override def open() = {
-    val ret = Try(socket.connect) match {
-      case Success(fut) => fut
-      case Failure(t) => Future.failed[Unit](t)
-    }
+  override def open(): Future[Unit] = {
+    val ret: Future[Unit] = socket.connect()
     val uri = endpoint.wsBaseUri
     info(s"Connecting to: $uri...")
     ret.map(_ => info(s"Connected to: $uri.")).recover {
@@ -106,7 +103,7 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
   private def closeSocket(): Unit = Try(socket.close())
 
   protected def send[T](message: T)(implicit writer: Writes[T]): Unit = {
-    socket send message
+    socket.sendMessage(message)
     //    Try(socket send message).recover {
     //      case _: WebsocketNotConnectedException =>
     //        // tries to reconnect once

@@ -4,7 +4,7 @@ import java.io._
 
 import android.os.Environment
 import com.mle.android.http.QuickHttpClient
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import com.mle.util.WebUtils
 
 import scala.concurrent.Future

@@ -2,7 +2,7 @@ package org.musicpimp.beam
 
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.HttpResponse
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.apache.http.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.beam.BeamPlayer._

@@ -1,7 +1,7 @@
 package org.musicpimp.pimp
 
 import com.mle.android.http.{AuthHttpClient, HttpResponse}
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.audio._
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.json.JsonStrings

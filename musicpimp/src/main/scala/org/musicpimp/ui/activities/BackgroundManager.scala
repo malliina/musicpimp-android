@@ -4,7 +4,7 @@ import android.app.Activity
 import android.graphics.drawable.Drawable
 import android.view.View
 import com.mle.concurrent.FutureImplicits.RichFuture
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.TR
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio.Track

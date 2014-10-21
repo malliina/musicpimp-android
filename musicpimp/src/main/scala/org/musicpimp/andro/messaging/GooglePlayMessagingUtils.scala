@@ -7,7 +7,7 @@ import com.google.android.gms.common.{ConnectionResult, GooglePlayServicesUtil}
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.mle.android.util.PreferenceImplicits._
 import com.mle.android.util.UtilLog
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import scala.concurrent.Future
 
 /**

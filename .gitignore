@@ -8,3 +8,4 @@ target/
 local.properties
 api_key.txt
 gen/*
+*.class

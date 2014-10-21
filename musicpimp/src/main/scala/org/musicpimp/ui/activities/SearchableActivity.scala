@@ -8,7 +8,7 @@ import android.view.{ContextMenu, MenuItem, View}
 import android.widget.{AbsListView, ArrayAdapter}
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import com.mle.concurrent.FutureImplicits.RichFuture
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.audio.LibraryManager
 import org.musicpimp.ui.MusicActions
 import org.musicpimp.ui.adapters.{DownloadProgress, SearchAdapter, TrackItem}

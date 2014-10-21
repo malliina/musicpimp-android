@@ -75,8 +75,8 @@ object AndroidBuild extends Build {
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
-      mleGroup %% "util-android" % "0.9.1",
-      mleGroup %% "util-base" % "0.2.0",
+      mleGroup %% "util-android" % "0.9.3",
+      mleGroup %% "util-base" % "0.3.0",
       "com.google.android.gms" % "play-services" % "4.4.52"
     ),
     useProguard in Android := true,

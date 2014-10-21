@@ -1,7 +1,7 @@
 package org.musicpimp.ui.dialogs
 
 import android.app.AlertDialog.Builder
-import android.app.{ProgressDialog, Activity, Dialog}
+import android.app.{Activity, Dialog, ProgressDialog}
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.text.InputType
@@ -9,7 +9,7 @@ import android.widget.EditText
 import com.mle.andro.ui.dialogs.DefaultDialog
 import com.mle.android.exceptions.UnauthorizedHttpException
 import com.mle.android.ui.ActivityUtils
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.http.Endpoint

@@ -11,7 +11,7 @@ import android.widget.{CompoundButton, EditText}
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.{HttpConstants, Protocols}
 import com.mle.android.ui.Implicits.action2clickListener
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.apache.http.client.HttpResponseException
 import org.apache.http.conn.{ConnectTimeoutException, HttpHostConnectException}
 import org.musicpimp.http.{Endpoint, EndpointTypes}

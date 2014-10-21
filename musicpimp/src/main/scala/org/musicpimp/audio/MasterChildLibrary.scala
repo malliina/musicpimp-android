@@ -2,7 +2,7 @@ package org.musicpimp.audio
 
 import com.mle.android.http.HttpResponse
 import com.mle.concurrent.Futures
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import com.mle.util.Version
 import concurrent.duration.DurationInt
 import org.musicpimp.util.Messaging

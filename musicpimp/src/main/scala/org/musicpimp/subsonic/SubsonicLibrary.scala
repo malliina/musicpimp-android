@@ -2,7 +2,8 @@ package org.musicpimp.subsonic
 
 import android.net.Uri
 import com.mle.android.http.HttpResponse
-import com.mle.util.{Utils, Version}
+import com.mle.concurrent.ExecutionContexts.cached
+import com.mle.util.Version
 import org.musicpimp.audio.SubsonicHttpClient._
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
@@ -38,7 +39,6 @@ class SubsonicLibrary(endpoint: Endpoint)
       "albumCount" -> "0")
     info(s"Get: $resource")
     val ret = get(resource)(json.searchResultReader)
-    import Utils.executionContext
     ret.onComplete(t => info(s"Complete: $t"))
     ret
   }

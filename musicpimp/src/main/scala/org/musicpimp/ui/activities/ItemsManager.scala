@@ -3,12 +3,13 @@ package org.musicpimp.ui.activities
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.view.ContextMenu.ContextMenuInfo
-import android.view.{Menu, MenuItem, ContextMenu, View}
+import android.view.{ContextMenu, Menu, MenuItem, View}
 import android.widget.AdapterView.AdapterContextMenuInfo
-import android.widget.{ArrayAdapter, ListView, AdapterView}
+import android.widget.{AdapterView, ArrayAdapter, ListView}
 import com.mle.android.ui.Implicits.action2itemClickListener2
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.{R, TR}
+
 import scala.concurrent.Future
 
 /**

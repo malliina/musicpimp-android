@@ -12,7 +12,7 @@ import com.mle.andro.ui.adapters.{StaticIconOneLineAdapter, TwoPartItem}
 import com.mle.android.exceptions.ExplainedHttpException
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import com.mle.android.ui.fragments.DefaultFragment
-import com.mle.util.Utils.executionContext
+import com.mle.concurrent.ExecutionContexts.cached
 import org.apache.http.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.ui._
