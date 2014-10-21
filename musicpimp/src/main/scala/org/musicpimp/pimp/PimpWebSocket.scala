@@ -14,7 +14,7 @@ class PimpWebSocket(endpoint: Endpoint, wsResource: String, handler: JsValue => 
     endpoint.wsBaseUri + wsResource,
     endpoint.username,
     endpoint.password,
-    HttpConstants.ACCEPT -> PimpConstants.JSONv18) {
+    HttpConstants.ACCEPT -> PimpConstants.JSONv18, HttpConstants.AUTHORIZATION -> endpoint.authValue) {
 
   override def onMessage(json: JsValue): Unit = handler(json)
 }

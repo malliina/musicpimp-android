@@ -10,6 +10,7 @@ import com.mle.util.Version
 import org.musicpimp.PimpApp
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
+import org.musicpimp.util.PimpLog
 import play.api.libs.json.{Json, Reads}
 
 import scala.concurrent.Future
@@ -19,7 +20,7 @@ import scala.concurrent.duration._
  *
  * @author mle
  */
-class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with PimpHttpClient {
+class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with PimpHttpClient with PimpLog {
 
   import org.musicpimp.pimp.PimpLibrary._
 
@@ -51,9 +52,9 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
     else s"$baseResource/$folderId"
 
   def upload(request: TrackUploadRequest): Future[HttpResponse] = {
-    //    info(s"Instructing $endpoint to upload $request...")
+    info(s"Instructing $endpoint to upload $request...")
     longTimeoutClient.post(PimpApp.context, beamStreamResource, Json.toJson(request)).map(response => {
-      //      info(s"Instructed $endpoint to upload track ${request.track} to MusicBeamer.")
+      info(s"Instructed $endpoint to upload track ${request.track} to MusicBeamer.")
       response
     })
   }

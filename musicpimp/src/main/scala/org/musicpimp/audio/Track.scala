@@ -2,8 +2,9 @@ package org.musicpimp.audio
 
 import android.net.Uri
 import com.mle.json.JsonFormats
-import org.musicpimp.json.JsonStrings
-import play.api.libs.json.{JsValue, Writes, Json}
+import org.musicpimp.http.Endpoint
+import play.api.libs.json.{JsValue, Json, Writes}
+
 import scala.concurrent.duration.Duration
 
 /**
@@ -32,12 +33,15 @@ case class Track(id: String,
                  size: Long,
                  source: Uri,
                  username: String,
-                 password: String) extends MusicItem
+                 password: String,
+                 cloudID: Option[String]) extends MusicItem {
+  lazy val authValue = Endpoint.header(cloudID, username, password)
+}
 
 object TrackHelp {
   implicit val dur = JsonFormats.duration
 
-  import JsonStrings._
+  import org.musicpimp.json.JsonStrings._
 
   object json extends Writes[Track] {
     override def writes(o: Track): JsValue = Json.obj(

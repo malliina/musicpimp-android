@@ -160,7 +160,7 @@ class MusicActions(utils: ActivityHelper) extends PimpLog{
       .setTitle(track.title)
       .setDescription("MusicPimp download")
       .setDestinationUri(Uri fromFile destinationFile)
-      .addRequestHeader(HttpConstants.AUTHORIZATION, HttpUtil.authorizationValue(track.username, track.password))
+      .addRequestHeader(HttpConstants.AUTHORIZATION, track.authValue)
     // only added in API level 11
     //    request.allowScanningByMediaScanner()
     Utils.opt[Long, SecurityException](downloadManager enqueue request)

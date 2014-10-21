@@ -37,14 +37,11 @@ case class Endpoint(id: String,
 
   def authValue =
     if (endpointType != EndpointTypes.Cloud) {
-      authHeader("Basic", s"$username:$password")
+      Endpoint.basicHeader(username,password)
     } else {
-      val cid = cloudID getOrElse ""
-      authHeader("Pimp", s"$cid:$username:$password")
+      Endpoint.cloudHeader(cloudID.getOrElse(""), username, password)
     }
 
-  def authHeader(word: String, unencoded: String) =
-    "Basic " + Base64.encodeBytes(unencoded.getBytes("UTF-8"))
 
   private def baseUri(scheme: String) = s"$scheme://$host:$port"
 
@@ -60,7 +57,7 @@ object Endpoint {
   def fromBeamCode(beamCode: BeamCode) =
     Endpoint(newID, beamName, beamCode.host, beamCode.port, beamCode.user, beamPassword, EndpointTypes.MusicBeamer, None, autoSync = false)
 
-  def forCloud(id:Option[String], name: String, cloudID: String, user: String, pass: String) =
+  def forCloud(id: Option[String], name: String, cloudID: String, user: String, pass: String) =
     Endpoint(id getOrElse newID, name, "cloud.musicpimp.org", 443, user, pass, EndpointTypes.Cloud, Some(cloudID), None, autoSync = false, Protocols.Https)
 
   implicit object endTypeFormat extends SimpleFormat[EndpointTypes.EndpointType](EndpointTypes.withName)
@@ -68,4 +65,15 @@ object Endpoint {
   implicit object protocolFormat extends SimpleFormat[Protocols.Protocol](Protocols.withName)
 
   implicit val endFormat = Json.format[Endpoint]
+
+  def header(cloudID: Option[String], user: String, pass: String): String = {
+    cloudID.fold(basicHeader(user, pass))(cid => cloudHeader(cid, user, pass))
+  }
+
+  def cloudHeader(cloudID: String, user: String, pass: String) = authHeader("Pimp", s"$cloudID:$user:$pass")
+
+  def basicHeader(user: String, pass: String) = authHeader("Basic", s"$user:$pass")
+
+  def authHeader(word: String, unencoded: String) =
+    s"$word " + Base64.encodeBytes(unencoded.getBytes("UTF-8"))
 }

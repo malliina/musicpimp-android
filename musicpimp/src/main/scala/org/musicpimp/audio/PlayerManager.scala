@@ -2,18 +2,19 @@ package org.musicpimp.audio
 
 import com.mle.android.exceptions.ExplainedException
 import org.musicpimp.beam.BeamPlayer
-import org.musicpimp.http.{EndpointTypes, Endpoint}
+import org.musicpimp.http.Endpoint
 import org.musicpimp.local.{LimitedLocalPlayer, LocalPlayer}
 import org.musicpimp.pimp._
 import org.musicpimp.subsonic.SubsonicPlayer
-import org.musicpimp.usage.{BeamLimiter, SubsonicLimiter, PimpLimiter, PimpUsageController}
-import org.musicpimp.util.Keys
+import org.musicpimp.usage.{BeamLimiter, PimpLimiter, PimpUsageController, SubsonicLimiter}
+import org.musicpimp.util.{Keys, PimpLog}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
  *
  * @author mle
  */
-trait PlayerManager extends EndpointManager[Player] {
+trait PlayerManager extends EndpointManager[Player] with PimpLog {
   val localPlayer =
     if (PimpUsageController.allowUnlimited) LocalPlayer
     else LimitedLocalPlayer
@@ -26,12 +27,15 @@ trait PlayerManager extends EndpointManager[Player] {
    * TODO return Future[Player] that completes when the player has been opened and fallback to LocalPlayer if opening fails.
    */
   override def buildEndpoint(e: Endpoint): Player = {
-    import EndpointTypes._
+    import org.musicpimp.http.EndpointTypes._
     val isPremium = PimpUsageController.allowUnlimited
     val p = e.endpointType match {
       case Local =>
         localPlayer
       case MusicPimp =>
+        if (isPremium) new PimpServerPlayer(e)
+        else new PimpServerPlayer(e) with PimpLimiter
+      case Cloud =>
         if (isPremium) new PimpServerPlayer(e)
         else new PimpServerPlayer(e) with PimpLimiter
       case MusicBeamer =>
@@ -43,7 +47,6 @@ trait PlayerManager extends EndpointManager[Player] {
       case other =>
         throw new ExplainedException(s"Unsupported player endpoint: $other")
     }
-    // TODO: exception handling
     p.open()
     p
   }

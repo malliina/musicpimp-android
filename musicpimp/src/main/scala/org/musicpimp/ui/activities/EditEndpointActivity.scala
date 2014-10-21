@@ -150,6 +150,7 @@ class EditEndpointActivity
   def testEndpoint(endpoint: Endpoint): Unit = {
     val maybeSession = endpoint.endpointType match {
       case EndpointTypes.MusicPimp => Some(new PimpLibrary(endpoint))
+      case EndpointTypes.Cloud => Some(new PimpLibrary(endpoint))
       case EndpointTypes.Subsonic => Some(new SubsonicLibrary(endpoint))
       case other => None
     }
@@ -210,12 +211,15 @@ class EditEndpointActivity
   def populateFields(endpoint: Endpoint) {
     endpoint.endpointType match {
       case EndpointTypes.MusicPimp =>
-        setEndTypeRadios(pimp = true, sub = false)
+        setEndTypeRadios(pimp = true, cloud = false, sub = false)
+      case EndpointTypes.Cloud =>
+        setEndTypeRadios(pimp = false, cloud = true, sub = false)
       case EndpointTypes.Subsonic =>
-        setEndTypeRadios(pimp = false, sub = true)
+        setEndTypeRadios(pimp = false, cloud = false, sub = true)
       case _ =>
-        setEndTypeRadios(pimp = false, sub = false)
+        setEndTypeRadios(pimp = false, cloud = false, sub = false)
     }
+    endpoint.cloudID.foreach(id => setText(TR.end_cloud, id))
     setText(TR.end_name, endpoint.name)
     setText(TR.end_host, endpoint.host)
     setText(TR.end_port, endpoint.port.toString)
@@ -224,8 +228,9 @@ class EditEndpointActivity
     setProtocolRadios(ssl = endpoint.protocol == Protocols.Https)
   }
 
-  def setEndTypeRadios(pimp: Boolean, sub: Boolean) {
+  def setEndTypeRadios(pimp: Boolean, cloud: Boolean, sub: Boolean) {
     findView(TR.musicpimp_radio).setChecked(pimp)
+    findView(TR.cloud_radio).setChecked(cloud)
     findView(TR.subsonic_radio).setChecked(sub)
   }
 

@@ -11,7 +11,7 @@ import com.mle.concurrent.FutureImplicits.RichFuture
 import com.mle.util.Utils.executionContext
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.andro.util.Implicits.RichBundle
-import org.musicpimp.audio.PlayerManager
+import org.musicpimp.audio.{LibraryManager, PlayerManager}
 import org.musicpimp.http.{EndpointTypes, Endpoint}
 import org.musicpimp.pimp.Alarms.Alarm
 import org.musicpimp.pimp.AlarmsClient
@@ -215,11 +215,12 @@ class AlarmsActivity extends ItemsManager[Alarm] {
   class AlarmSpinner(activity: Activity) extends SpinnerHelper(activity) with PimpLog {
 
     override def spinnerChoices: Seq[String] =
-      settingsHelper.userAddedEndpoints.filter(_.endpointType == EndpointTypes.MusicPimp).map(_.name)
+      settingsHelper.userAddedEndpoints.filter(e => e.endpointType == EndpointTypes.MusicPimp || e.endpointType == EndpointTypes.Cloud).map(_.name)
 
     override def initialSpinnerSelection(choices: Seq[String]): Option[String] =
       currentEndpoint.map(_.name).filter(choices.contains) orElse
         activityHelper.prefs.get(PlayerManager.prefKey).filter(choices.contains) orElse
+        activityHelper.prefs.get(LibraryManager.prefKey).filter(choices.contains) orElse
         choices.headOption
 
     override def onSpinnerItemSelected(endpointName: String): Unit = {

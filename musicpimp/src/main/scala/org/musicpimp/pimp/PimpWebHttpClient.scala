@@ -5,6 +5,8 @@ import com.mle.android.http.HttpConstants.ACCEPT
 import com.mle.android.http.{HttpResponse, BasicHttpClient, IEndpoint}
 import org.apache.http.client.HttpResponseException
 import org.musicpimp.exceptions.PimpHttpException
+import org.musicpimp.http.Endpoint
+import org.musicpimp.network.BasicHttpClient2
 import play.api.libs.json.{Json, Writes}
 import scala.concurrent.Future
 
@@ -12,7 +14,7 @@ import scala.concurrent.Future
  *
  * @author mle
  */
-class PimpWebHttpClient(val endpoint: IEndpoint) extends BasicHttpClient(endpoint) {
+class PimpWebHttpClient(val endpoint: Endpoint) extends BasicHttpClient2(endpoint) {
   addHeaders(ACCEPT -> PimpConstants.JSONv18)
 
   /**

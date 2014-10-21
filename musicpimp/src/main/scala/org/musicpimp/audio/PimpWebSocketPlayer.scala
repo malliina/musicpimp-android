@@ -1,20 +1,23 @@
 package org.musicpimp.audio
 
-import concurrent.duration._
+import com.mle.util.Utils.executionContext
 import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonStrings._
 import org.musicpimp.json.Readers._
 import org.musicpimp.pimp._
+import org.musicpimp.util.PimpLog
 import play.api.libs.json._
-import scala.util.Try
+
+import scala.concurrent.Future
+import scala.concurrent.duration._
+import scala.util.{Failure, Success, Try}
 
 /**
  *
  * @author mle
  */
 abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: String)
-  extends Player
-  with PimpHttpClient {
+  extends Player with PimpHttpClient with PimpLog {
 
   var socket = newWebSocket
 
@@ -64,7 +67,7 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
       )
     } catch {
       case e: Exception =>
-//        warn(s"JSON error ${e.getClass.getName}: ${e.getMessage} caused by JSON: $json\n${e.getStackTraceString}")
+      //        warn(s"JSON error ${e.getClass.getName}: ${e.getMessage} caused by JSON: $json\n${e.getStackTraceString}")
     }
 
   def onWebSocketEvent(event: PlayerEvent): Unit =
@@ -82,7 +85,18 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
    */
   def volume(volume: Int): Unit = sendValued(VOLUME, volume)
 
-  override def open() = socket.connect
+  override def open() = {
+    val ret = Try(socket.connect) match {
+      case Success(fut) => fut
+      case Failure(t) => Future.failed[Unit](t)
+    }
+    val uri = endpoint.wsBaseUri
+    info(s"Connecting to: $uri...")
+    ret.map(_ => info(s"Connected to: $uri.")).recover {
+      case t: Throwable => warn(s"Connection to: $uri failed.", t)
+    }
+    ret
+  }
 
   override def close() = {
     client.close()

@@ -8,6 +8,7 @@ import org.musicpimp.json.JsonStrings._
 import org.musicpimp.json.Readers._
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+
 import scala.concurrent.duration._
 
 /**
@@ -28,8 +29,9 @@ class PimpJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
       (JsPath \ DURATION).read[Duration] and
       (JsPath \ SIZE).read[Long] and
       (JsPath \ ID).read[String].map(uri) and
-      constant(username) and
-      constant(password)
+      constantT(username) and
+      constantT(password) and
+      constantT(cloudID)
     )(Track)
 
   implicit val folderFormat = Json.format[Folder]
@@ -45,4 +47,6 @@ class PimpJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
       (__ \ PLAYLIST).read[Seq[Track]] and
       (__ \ INDEX).read[Int].map(i => if (i >= 0) Some(i) else None)
     )(StatusEvent.apply _)
+
+
 }

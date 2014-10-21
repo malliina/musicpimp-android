@@ -53,8 +53,9 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with
       (JsPath \ DURATION).read[Duration] and
       (JsPath \ SIZE).read[Long] and
       (JsPath \ ID).read[Int].map(i => uri(i.toString)) and
-      constant(username) and
-      constant(password)
+      constantT(username) and
+      constantT(password) and
+      constantT(cloudID)
     )(Track)
 
   val indexReader = new Reads[Directory] {

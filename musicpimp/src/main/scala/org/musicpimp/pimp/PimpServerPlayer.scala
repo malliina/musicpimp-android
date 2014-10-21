@@ -2,13 +2,14 @@ package org.musicpimp.pimp
 
 import com.mle.android.http.{AuthHttpClient, HttpResponse}
 import com.mle.util.Utils.executionContext
-import concurrent.duration._
 import org.musicpimp.audio._
-import org.musicpimp.http.Endpoint
+import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.json.JsonStrings
 import org.musicpimp.json.JsonStrings._
 import play.api.libs.json.Json
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 /**
  * TODO take Rx into use.
@@ -16,7 +17,7 @@ import scala.concurrent.Future
  * @author mle
  */
 class PimpServerPlayer(endpoint: Endpoint)
-  extends PimpWebSocketPlayer(endpoint, PimpServerPlayer.wsResource)
+  extends PimpWebSocketPlayer(endpoint, if (endpoint.endpointType == EndpointTypes.Cloud) PimpServerPlayer.cloudSocketResource else PimpServerPlayer.wsResource)
   with Player
   with SelfSubscription
   with PimpHttpClient {
@@ -60,7 +61,9 @@ class PimpServerPlayer(endpoint: Endpoint)
 
   def setAndPlay(track: Track): Unit = {
     if (LibraryManager.active.isLocal) {
-      upload(track)
+      if (endpoint.endpointType == EndpointTypes.MusicPimp) {
+        upload(track)
+      }
     } else {
       sendTrack(PLAY, track)
     }
@@ -78,7 +81,7 @@ class PimpServerPlayer(endpoint: Endpoint)
 
   def playPrevious(): Unit = sendSimple(PREV)
 
-  def upload(track: Track): Future[HttpResponse] = {
+  private def upload(track: Track): Future[HttpResponse] = {
     val file = LibraryManager.localLibrary.path(track)
     val httpClient = new AuthHttpClient(endpoint.username, endpoint.password)
     httpClient.httpClient setTimeout (6 minutes).toMillis.toInt
@@ -90,7 +93,7 @@ class PimpServerPlayer(endpoint: Endpoint)
 }
 
 object PimpServerPlayer {
-  val (wsResource, streamResource) = ("/ws/playback", "/playback/server")
+  val (wsResource, streamResource, cloudSocketResource) = ("/ws/playback", "/playback/server", "/mobile/ws")
 }
 
 case class TrackCommand(cmd: String, track: String)

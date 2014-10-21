@@ -1,16 +1,18 @@
 package org.musicpimp.local
 
+import java.io.File
+
 import android.content.SharedPreferences
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
 import com.mle.file.DiskHelpers
 import com.mle.storage._
-import java.io.File
 import org.musicpimp.PimpApp
-import org.musicpimp.audio.{Folder, Track, Directory}
+import org.musicpimp.audio.{Directory, Folder, Track}
 import org.musicpimp.pimp.PimpLibrary
 import org.musicpimp.util.{Keys, PimpLog}
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
@@ -89,7 +91,7 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
       val relative = relativize(path)
       tagReader setDataSource path
       def get(metaKey: Int) = tagReader.extractMetadata(metaKey)
-      import MediaMetadataRetriever._
+      import android.media.MediaMetadataRetriever._
       Some(Track(
         PimpLibrary.encode(relative),
         (Option(get(METADATA_KEY_TITLE)) getOrElse file.getName).trim,
@@ -100,7 +102,8 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
         file.length(),
         Uri.fromFile(file),
         "",
-        ""
+        "",
+        None
       ))
     } catch {
       /**

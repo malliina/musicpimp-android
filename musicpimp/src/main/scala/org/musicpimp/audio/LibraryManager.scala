@@ -25,6 +25,7 @@ trait LibraryManager extends EndpointManager[MediaLibrary] {
   override def buildEndpoint(e: Endpoint): MediaLibrary = e.endpointType match {
     case EndpointTypes.Local => localLibrary
     case EndpointTypes.MusicPimp => new MasterChildLibrary(new PimpLibrary(e), localLibrary)
+    case EndpointTypes.Cloud => new MasterChildLibrary(new PimpLibrary(e), localLibrary)
     case EndpointTypes.Subsonic => new SubsonicLibrary(e)
     case EndpointTypes.MusicBeamer => throw new ExplainedException("A MusicBeamer endpoint cannot function as a music library.")
     case other => throw new ExplainedException(s"Unsupported library endpoint: $other")

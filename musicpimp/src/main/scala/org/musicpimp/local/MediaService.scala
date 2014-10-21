@@ -9,6 +9,7 @@ import android.os.{Build, Handler, PowerManager, IBinder}
 import android.widget.Toast
 import com.mle.android.http.{HttpConstants, HttpUtil}
 import org.musicpimp.audio.{PlayerManager, Track}
+import org.musicpimp.http.Endpoint
 import org.musicpimp.ui.receivers.{MusicIntentReceiver, RemoteControlReceiver}
 import scala.util.Try
 
@@ -142,7 +143,7 @@ class MediaService
             // injects the credentials into the query parameters because custom HTTP headers are not supported
             val trackUriString = trackUri.toString
             val prefix = if (trackUriString contains "?") "&" else "?"
-            val queryParams = s"${prefix}u=${track.username}&p=${track.password}"
+            val queryParams = s"${prefix}u=${track.username}&p=${track.password}&s=${track.cloudID.getOrElse("")}"
             val uriWithQueryParams = trackUriString + queryParams
             Uri.parse(uriWithQueryParams)
           } else {
@@ -151,7 +152,7 @@ class MediaService
         player.setDataSource(ctx, uri)
       } else {
         val headers = Map(
-          HttpConstants.AUTHORIZATION -> HttpUtil.authorizationValue(track.username, track.password)
+          HttpConstants.AUTHORIZATION -> track.authValue
         )
         // The overload with headers was added in API level 14
         player.setDataSource(ctx, trackUri, collection.JavaConversions.mapAsJavaMap(headers))
