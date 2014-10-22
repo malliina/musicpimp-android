@@ -8,9 +8,9 @@ import android.net.Uri
 import android.view.{ContextMenu, MenuInflater, MenuItem}
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{AbsListView, AdapterView}
-import com.mle.android.http.{HttpConstants, HttpUtil}
-import com.mle.util.Utils
+import com.mle.android.http.HttpConstants
 import com.mle.concurrent.ExecutionContexts.cached
+import com.mle.util.Utils
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio._
@@ -20,10 +20,12 @@ import org.musicpimp.ui.activities.EditAlarmActivity
 import org.musicpimp.ui.adapters.TrackItem
 import org.musicpimp.util.{Keys, PimpLog}
 
+import scala.util.Try
+
 /**
  * @author Michael
  */
-class MusicActions(utils: ActivityHelper) extends PimpLog{
+class MusicActions(utils: ActivityHelper) extends PimpLog {
   def downloadManager = utils.activity.getSystemService(Context.DOWNLOAD_SERVICE).asInstanceOf[DownloadManager]
 
   def library = LibraryManager.active
@@ -96,6 +98,7 @@ class MusicActions(utils: ActivityHelper) extends PimpLog{
       }
     }
   }
+
   def onItemSelected(av: AdapterView[_], index: Int) {
     val item = av getItemAtPosition index
     utils.toastOnException(()) {
@@ -137,22 +140,23 @@ class MusicActions(utils: ActivityHelper) extends PimpLog{
   def downloadIfNotExists(track: Track): Option[Long] = {
     val source = track.source
     val existsLocally = LibraryManager.localLibrary exists track
-    //    info(s"Track $track with path: ${track.path} exists locally: $existsLocally")
+//    info(s"Track $track with path: ${track.path} exists locally: $existsLocally")
     if (!existsLocally && source.isAbsolute && (source.getScheme == "http" || source.getScheme == "https")) {
-      download(track)
+      val ret = download(track)
+      ret.left.map(e => warn("Unable to start download.", e))
+      ret.right.toOption
     } else {
       None
     }
   }
 
   /**
-   * Enqueues a request to download `track` to the local device. The download
-   * is handled by the download manager app.
+   * Enqueues a request to download `track` to the local device. The download is handled by the download manager app.
    *
    * @param track track to download
    * @return a unique ID for the download
    */
-  def download(track: Track): Option[Long] = {
+  def download(track: Track): Either[SecurityException, Long] = {
     // creates destination directory
     val destinationFile = new File(DownloadSettings.downloadsDir, track.path)
     Option(destinationFile.getParentFile).map(_.mkdirs())
@@ -163,6 +167,6 @@ class MusicActions(utils: ActivityHelper) extends PimpLog{
       .addRequestHeader(HttpConstants.AUTHORIZATION, track.authValue)
     // only added in API level 11
     //    request.allowScanningByMediaScanner()
-    Utils.opt[Long, SecurityException](downloadManager enqueue request)
+    Utils.optionally[Long, SecurityException](downloadManager enqueue request)
   }
 }

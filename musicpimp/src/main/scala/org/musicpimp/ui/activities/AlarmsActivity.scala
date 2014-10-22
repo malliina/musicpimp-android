@@ -3,18 +3,18 @@ package org.musicpimp.ui.activities
 import android.app.Activity
 import android.os.Bundle
 import android.view.{Menu, View}
-import android.widget.CompoundButton.OnCheckedChangeListener
-import android.widget.{ArrayAdapter, CompoundButton, Spinner}
+import android.widget.{ArrayAdapter, Spinner}
 import com.mle.android.messaging.MessagingException
 import com.mle.android.util.PreferenceImplicits.RichPrefs
-import com.mle.concurrent.FutureImplicits.RichFuture
 import com.mle.concurrent.ExecutionContexts.cached
+import com.mle.concurrent.FutureImplicits.RichFuture
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio.{LibraryManager, PlayerManager}
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.pimp.Alarms.Alarm
 import org.musicpimp.pimp.AlarmsClient
+import org.musicpimp.ui.Implicits.fun2checkedChangeListener
 import org.musicpimp.ui.SpinnerHelper
 import org.musicpimp.ui.adapters.AlarmsAdapter
 import org.musicpimp.util.{Keys, PimpLog, PimpSettings}
@@ -26,7 +26,7 @@ import scala.concurrent.Future
  *
  * @author mle
  */
-class AlarmsActivity extends ItemsManager[Alarm] {
+class AlarmsActivity extends ItemsManager[Alarm] with PimpLog {
 
   lazy val alarmSpinner = new AlarmSpinner(this)
 
@@ -55,16 +55,9 @@ class AlarmsActivity extends ItemsManager[Alarm] {
   override protected def onCreate2(bundle: Option[Bundle]): Unit = {
     super.onCreate2(bundle)
     if (isMessagingEnabled) {
-      gcmToggleView.setOnCheckedChangeListener(new OnCheckedChangeListener {
-        override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
-          selectedEndpoint.foreach(e => {
-            if (isChecked) registerMessaging(e) else unregisterMessaging(e)
-          })
-          //          selectedEndpoint.fold(warn(s"No endpoint found, cannot toggle GCM."))(e => {
-          //            if (isChecked) registerMessaging(e) else unregisterMessaging(e)
-          //          })
-        }
-      })
+      gcmToggleView.setOnCheckedChangeListener((isChecked: Boolean) => selectedEndpoint.foreach(e => {
+        if (isChecked) registerMessaging(e) else unregisterMessaging(e)
+      }))
     }
     currentEndpoint =
       for {
@@ -133,9 +126,10 @@ class AlarmsActivity extends ItemsManager[Alarm] {
         }
         showViews()
       }).recoverAll(t => {
-        //        warn(errorOccurredMessage, t)
+        warn(errorOccurredMessage, t)
         hideViews()
-        setFeedback(s"$errorOccurredMessage ${t.getMessage}")
+        val explanation = Option(t.getMessage) getOrElse ""
+        setFeedback(s"$errorOccurredMessage $explanation")
       })
     }
   }
@@ -169,8 +163,8 @@ class AlarmsActivity extends ItemsManager[Alarm] {
   private def registerMessaging(endpoint: Endpoint): Unit = {
     withMessaging(endpoint, messaging => {
       messaging.tryRegister(this)
-      //        .map(id => info(s"Registered for push notifications with device ID: $id"))
-      //        .recoverAll(t => warn(errorOccurredMessage, t))
+        .map(id => info(s"Registered for push notifications with device ID: $id"))
+        .recoverAll(t => warn(errorOccurredMessage, t))
     })
   }
 

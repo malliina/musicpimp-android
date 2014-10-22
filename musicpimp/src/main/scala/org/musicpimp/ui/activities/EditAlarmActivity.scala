@@ -19,7 +19,6 @@ import org.musicpimp.ui.fragments.TimePickerFragment
 import org.musicpimp.util.{PimpSettings, PimpLog, Keys}
 import org.musicpimp.{R, TR}
 import rx.lang.scala.Subscription
-import scala.Some
 import scala.concurrent.Future
 
 /**

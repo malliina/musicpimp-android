@@ -6,13 +6,14 @@ import com.mle.android.http.HttpResponse
 import com.mle.util.Version
 import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.Alarms._
+import org.musicpimp.util.PimpLog
 import play.api.libs.json.Writes
 import scala.concurrent.Future
 
 /**
  * @author KING MICHAEL
  */
-class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) {
+class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) with PimpLog {
   val player = new PimpServerPlayer(endpoint)
 
   def ping: Future[Version] = getJson[Version](PimpLibrary.pingAuthResource)
@@ -27,7 +28,9 @@ class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) {
 
   def stop(ctx: Context): Future[HttpResponse] = postAlarmBody(ctx, ShortestCmd(STOP))
 
-  protected def postAlarmBody[T](ctx: Context, body: T)(implicit writer: Writes[T]) = postBody(ctx, alarmsResource, body)
+  protected def postAlarmBody[T](ctx: Context, body: T)(implicit writer: Writes[T]) = {
+    postBody(ctx, alarmsResource, body)
+  }
 
   def connect() = player.open()
 

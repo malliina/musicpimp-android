@@ -36,6 +36,8 @@ class PimpWebHttpClient(val endpoint: Endpoint) extends BasicHttpClient2(endpoin
     handler.applyOrElse(t, (fail: Throwable) => fail)
   }
 
-  def postBody[T](ctx: Context, uri: String, body: T)(implicit writes: Writes[T]): Future[HttpResponse] =
-    post(ctx, uri, Json.toJson(body))
+  def postBody[T](ctx: Context, uri: String, body: T)(implicit writes: Writes[T]): Future[HttpResponse] = {
+    val json = Json toJson body
+    post(ctx, uri, json)
+  }
 }

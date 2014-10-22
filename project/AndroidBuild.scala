@@ -75,7 +75,7 @@ object AndroidBuild extends Build {
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
-      mleGroup %% "util-android" % "0.9.3",
+      mleGroup %% "util-android" % "0.9.4",
       mleGroup %% "util-base" % "0.3.0",
       "com.google.android.gms" % "play-services" % "4.4.52"
     ),
@@ -111,16 +111,16 @@ object AndroidBuild extends Build {
   ) ++ buildMetaSettings
 
   def rxSettings = {
-    val rxGroup = "com.netflix.rxjava"
-    val rxVersion = "0.19.6"
+    val rxGroup = "io.reactivex"
+    val rxVersion = "0.22.0"
     Seq(
       libraryDependencies ++= Seq(
-        rxGroup % "rxjava-core" % rxVersion,
-        rxGroup % "rxjava-scala" % rxVersion,
-        rxGroup % "rxjava-android" % rxVersion
+//        rxGroup % "rxjava-core" % rxVersion,
+        rxGroup %% "rxscala" % rxVersion,
+        rxGroup % "rxandroid" % rxVersion
       ),
       proguardCache in Android += cache(rxGroup)("rx"),
-      proguardOptions in Android ++= Seq("-dontwarn sun.misc.Unsafe")
+      proguardOptions in Android ++= Seq("-dontwarn sun.misc.Unsafe, rx.lang.scala.**")
     )
   }
 

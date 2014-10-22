@@ -6,8 +6,7 @@ import java.net.UnknownHostException
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.view.View
-import android.widget.CompoundButton.OnCheckedChangeListener
-import android.widget.{CompoundButton, EditText}
+import android.widget.EditText
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.{HttpConstants, Protocols}
 import com.mle.android.ui.Implicits.action2clickListener
@@ -18,6 +17,7 @@ import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.network.PimpWifiHelpers
 import org.musicpimp.pimp.PimpLibrary
 import org.musicpimp.subsonic.SubsonicLibrary
+import org.musicpimp.ui.Implicits.fun2checkedChangeListener
 import org.musicpimp.util.{Keys, PimpLog, PimpSettings}
 import org.musicpimp.{R, TR, TypedResource}
 import play.api.libs.json.JsResultException
@@ -76,28 +76,9 @@ class EditEndpointActivity
   override protected def onCreate2(savedInstanceState: Option[Bundle]) {
     testButton setOnClickListener ((v: View) => testClicked(v))
     submitButton setOnClickListener ((v: View) => endpointSubmitted(v))
-    pimpRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
-      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
-        if (isChecked) {
-          arrangeViews(isCloud = false)
-        }
-      }
-    })
-    cloudRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
-      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
-        if (isChecked) {
-          arrangeViews(isCloud = true)
-        }
-      }
-    })
-    subsonicRadio.setOnCheckedChangeListener(new OnCheckedChangeListener {
-      override def onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean): Unit = {
-        if (isChecked) {
-          arrangeViews(isCloud = false)
-        }
-      }
-    })
-
+    pimpRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(!isChecked))
+    cloudRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(isChecked))
+    subsonicRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(!isChecked))
     patient = for {
       bundle <- extras
       endpointName <- Option(bundle.getString(Keys.ENDPOINT))

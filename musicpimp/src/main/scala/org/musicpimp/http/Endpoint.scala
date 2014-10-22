@@ -37,7 +37,7 @@ case class Endpoint(id: String,
 
   def authValue =
     if (endpointType != EndpointTypes.Cloud) {
-      Endpoint.basicHeader(username,password)
+      Endpoint.basicHeader(username, password)
     } else {
       Endpoint.cloudHeader(cloudID.getOrElse(""), username, password)
     }
@@ -51,6 +51,10 @@ case class Endpoint(id: String,
 object Endpoint {
   val beamName = "MusicBeamer"
   val beamPassword = "beam"
+  val isDev = false
+  val (cloudHost, cloudPort, cloudProtocol) =
+    if (isDev) ("10.0.2.2", 9000, Protocols.Http)
+    else ("cloud.musicpimp.org", 443, Protocols.Https)
 
   def newID = UUID.randomUUID().toString
 
@@ -58,7 +62,7 @@ object Endpoint {
     Endpoint(newID, beamName, beamCode.host, beamCode.port, beamCode.user, beamPassword, EndpointTypes.MusicBeamer, None, autoSync = false)
 
   def forCloud(id: Option[String], name: String, cloudID: String, user: String, pass: String) =
-    Endpoint(id getOrElse newID, name, "cloud.musicpimp.org", 443, user, pass, EndpointTypes.Cloud, Some(cloudID), None, autoSync = false, Protocols.Https)
+    Endpoint(id getOrElse newID, name, cloudHost, cloudPort, user, pass, EndpointTypes.Cloud, Some(cloudID), None, autoSync = false, cloudProtocol)
 
   implicit object endTypeFormat extends SimpleFormat[EndpointTypes.EndpointType](EndpointTypes.withName)
 
