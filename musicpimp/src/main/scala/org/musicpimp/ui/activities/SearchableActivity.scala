@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.{ContextMenu, MenuItem, View}
-import android.widget.{AbsListView, ArrayAdapter}
+import android.widget.{ListAdapter, AdapterView, AbsListView, ArrayAdapter}
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import com.mle.concurrent.FutureImplicits.RichFuture
 import com.mle.concurrent.ExecutionContexts.cached
@@ -75,19 +75,21 @@ class SearchableActivity extends LayoutBaseActivity with MusicDownloadUpdatingAc
     loadItems.map(adapter => {
       onUiThread {
         progressBar setVisibility GONE
-        findListView setAdapter adapter
+        findListView.asInstanceOf[AdapterView[ListAdapter]] setAdapter adapter
         if (adapter.isEmpty) {
           feedback setVisibility VISIBLE
           feedback setText emptyFeedback(ctx)
         } else {
           feedback setVisibility GONE
         }
+        onSearchRequested()
       }
     }).recoverAll(t => {
       onUiThread {
         feedback setText "An error occurred."
         feedback setVisibility VISIBLE
         progressBar setVisibility GONE
+        onSearchRequested()
       }
       warn("Search failure", t)
     })
