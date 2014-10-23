@@ -44,17 +44,13 @@ class LibraryFragment
 
   def player = PlayerManager.active
 
-  //  def lv = endpointHelper.findView(TR.)
-
-  def absList = endpointHelper.findView(TR.listView).asInstanceOf[AbsListView]
-
   def findListView = tryFindView[AbsListView](R.id.listView)
 
-  def findFeedbackView = endpointHelper.findView(TR.feedbackText)
+  def findFeedbackView = endpointHelper.tryFindView(TR.feedbackText)
 
-  def findProgressBar = endpointHelper.findView(TR.loadingBar)
+  def findProgressBar = endpointHelper.tryFindView(TR.loadingBar)
 
-  def findHelpListView = endpointHelper.findView(TR.helpListView)
+  def findHelpListView = endpointHelper.tryFindView(TR.helpListView)
 
   // scroll position maintenance
   private var listScrollState: Option[Parcelable] = None
@@ -83,19 +79,20 @@ class LibraryFragment
 
   def initHelpListView() {
     val helpAdapter = new StaticIconOneLineAdapter(getActivity, R.layout.help_item, helpItems)
-    val list = findHelpListView
-    list setAdapter helpAdapter
-    list.setOnItemClickListener((av: AdapterView[_], index: Int) => {
-      val item = (av getItemAtPosition index).asInstanceOf[TwoPartItem]
-      item.secondResource match {
-        case R.string.scan_subtext =>
-          endpointHelper.startScan()
-        case R.string.add_pc_subtext =>
-          endpointHelper.addClicked()
-        case R.string.add_local_subtext =>
-          new AddFolderDialog().show(activity.asInstanceOf[FragmentActivity].getSupportFragmentManager, "add_folder")
-          Messaging.reload()
-      }
+    findHelpListView.foreach(list => {
+      list setAdapter helpAdapter
+      list.setOnItemClickListener((av: AdapterView[_], index: Int) => {
+        val item = (av getItemAtPosition index).asInstanceOf[TwoPartItem]
+        item.secondResource match {
+          case R.string.scan_subtext =>
+            endpointHelper.startScan()
+          case R.string.add_pc_subtext =>
+            endpointHelper.addClicked()
+          case R.string.add_local_subtext =>
+            new AddFolderDialog().show(activity.asInstanceOf[FragmentActivity].getSupportFragmentManager, "add_folder")
+            Messaging.reload()
+        }
+      })
     })
   }
 
@@ -170,10 +167,8 @@ class LibraryFragment
   }
 
   def loadFolder(listView: AbsListView, folderId: Option[String]) = {
-    val loadingBar = findProgressBar
     hideFeedbackAndHelp()
-    loadingBar setVisibility View.VISIBLE
-
+    show(findProgressBar)
     refreshFolder(listView, folderId)
   }
 
@@ -183,6 +178,14 @@ class LibraryFragment
       .onFailure(constructFeedback andThen showFeedbackAndHideLoading)
   }
 
+  def hide[T <: View](views: Option[T]*) = views.flatten.foreach(_ setVisibility View.GONE)
+
+  def show[T <: View](views: Option[T]*) = views.flatten.foreach(_ setVisibility View.VISIBLE)
+
+  def adjustVis[T <: View](view: Option[T], vis: Int) = view.foreach(_ setVisibility vis)
+
+  def setFeedback(text: Int) = findFeedbackView.foreach(_.setText(text))
+
   private def showDirectory(dir: Directory, listView: AbsListView, folderId: Option[String]): Unit = {
     val folders = dir.folders
     val trackItems = dir.tracks.map(TrackItem(_, DownloadProgress.empty))
@@ -190,28 +193,28 @@ class LibraryFragment
     val feedback = findFeedbackView
     val loadingBar = findProgressBar
     onUiThread {
-      loadingBar setVisibility View.GONE
+      hide(loadingBar)
       // AbsListView.setAdapter is only defined in API level 11, however,
       // AbsListView is an AdapterView[ListAdapter], for which setAdapter
       // is defined already in API level 1. So by upcasting we can use
       // setAdapter also for API levels below 11.
       listView.asInstanceOf[AdapterView[ListAdapter]] setAdapter adapter
       if (dir.isEmpty) {
-        feedback setVisibility View.VISIBLE
+        show(feedback)
         val isRoot = folderId.isEmpty
         // shows a special, more helpful message if the root folder is empty in
         // which case the user has probably not configured any music source yet
         val (feedbackText, helpVisibility) =
           if (isRoot) (R.string.root_empty, View.VISIBLE)
           else (R.string.empty_folder, View.GONE)
-        feedback setText feedbackText
-        findHelpListView setVisibility helpVisibility
+        setFeedback(feedbackText)
+        adjustVis(findHelpListView, helpVisibility)
         // An empty folder may have been returned if the connection to the master library has failed.
         // We don't know from the API, because MultiLibrary.folder(...) never fails. So we ping
         // to check if the (master) library responds.
         library.ping.recover {
           case _: IOException => onUiThread {
-            feedback setText R.string.unable_connect_source
+            setFeedback(R.string.unable_connect_source)
           }
         }
       } else {
@@ -223,8 +226,7 @@ class LibraryFragment
   }
 
   def hideFeedbackAndHelp() {
-    findFeedbackView setVisibility View.GONE
-    findHelpListView setVisibility View.GONE
+    hide(findFeedbackView, findHelpListView)
   }
 
   private val constructFeedback: PartialFunction[Throwable, String] = {
@@ -245,10 +247,10 @@ class LibraryFragment
 
   private def showFeedbackAndHideLoading(text: String): Unit = onUiThread {
     //    warn(s"Failed to load library: $text")
-    findProgressBar setVisibility View.GONE
+    hide(findProgressBar)
     val feedback = findFeedbackView
-    feedback setText text
-    feedback setVisibility View.VISIBLE
+    feedback.foreach(_.setText(text))
+    show(feedback)
   }
 
   override def onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenuInfo) {
@@ -257,7 +259,9 @@ class LibraryFragment
   }
 
   override def onContextItemSelected(item: MenuItem): Boolean = {
-    actions.onContextItemSelected(item, absList, i => super.onContextItemSelected(i))
+    findListView.map(absList => {
+      actions.onContextItemSelected(item, absList, i => super.onContextItemSelected(i))
+    }).contains(true)
   }
 
   def onItemSelected(av: AdapterView[_], index: Int) {

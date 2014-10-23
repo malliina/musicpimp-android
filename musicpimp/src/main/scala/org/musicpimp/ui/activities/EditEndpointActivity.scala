@@ -5,8 +5,9 @@ import java.net.UnknownHostException
 
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
+import android.text.{Editable, TextWatcher}
 import android.view.View
-import android.widget.EditText
+import android.widget.{EditText, RadioButton}
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.{HttpConstants, Protocols}
 import com.mle.android.ui.Implicits.action2clickListener
@@ -76,9 +77,11 @@ class EditEndpointActivity
   override protected def onCreate2(savedInstanceState: Option[Bundle]) {
     testButton setOnClickListener ((v: View) => testClicked(v))
     submitButton setOnClickListener ((v: View) => endpointSubmitted(v))
-    pimpRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(!isChecked))
-    cloudRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(isChecked))
-    subsonicRadio.setOnCheckedChangeListener((isChecked: Boolean) => arrangeViews(!isChecked))
+    arrangeOnChecked(pimpRadio, isCloud = false)
+    arrangeOnChecked(cloudRadio, isCloud = true)
+    arrangeOnChecked(subsonicRadio, isCloud = false)
+    def arrangeOnChecked(radio: RadioButton, isCloud: Boolean) =
+      radio.setOnCheckedChangeListener((isChecked: Boolean) => if (isChecked) arrangeViews(isCloud))
     patient = for {
       bundle <- extras
       endpointName <- Option(bundle.getString(Keys.ENDPOINT))
@@ -87,12 +90,32 @@ class EditEndpointActivity
     patient.foreach(populateFields)
     findView(TR.active_check) setChecked !patient.isDefined
     arrangeViews(cloudRadio.isChecked)
+    // syncs the name with the cloud ID if necessary
+    cloudText.foreach(_.addTextChangedListener(new TextWatcher {
+      var updateName = false
+
+      override def beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int): Unit = {
+        updateName = nameText.exists(_.getText.toString == s.toString)
+      }
+
+      override def onTextChanged(s: CharSequence, start: Int, before: Int, count: Int): Unit = ()
+
+      override def afterTextChanged(s: Editable): Unit = {
+        if (updateName) {
+          val text = s.toString
+          nameText.foreach(name => name setText text)
+        }
+      }
+    }))
   }
 
   def arrangeViews(isCloud: Boolean) = {
-    val (nonCloudVis, cloudVis) = if (isCloud) (View.GONE, View.VISIBLE) else (View.VISIBLE, View.GONE)
+    val (nonCloudVis, cloudVis, focusWinner) =
+      if (isCloud) (View.GONE, View.VISIBLE, cloudText)
+      else (View.VISIBLE, View.GONE, nameText)
     adjustVisibility(nonCloudVis, hostText, hostTextLabel, portText, portTextLabel, protocolGroup, protocolLabel)
     adjustVisibility(cloudVis, cloudText, cloudTextLabel)
+    focusWinner.foreach(_.requestFocus())
   }
 
   def adjustVisibility(visibility: Int, views: Option[View]*) = onUiThread {
