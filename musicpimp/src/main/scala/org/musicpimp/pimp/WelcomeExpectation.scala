@@ -1,5 +1,6 @@
 package org.musicpimp.pimp
 
+import com.mle.concurrent.ExecutionContexts.cached
 import com.mle.concurrent.Futures
 import com.mle.ws.SocketClient
 import org.musicpimp.json.JsonStrings.{EVENT, WELCOME}
