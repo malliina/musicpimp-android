@@ -13,7 +13,13 @@ class PimpWebSocket(endpoint: Endpoint, wsResource: String, handler: JsValue => 
   extends JsonWebSocketClient(
     endpoint.wsBaseUri + wsResource,
     Some(MySslSocketFactory.trustAllSslContext()),
-    HttpConstants.ACCEPT -> PimpConstants.JSONv18, HttpConstants.AUTHORIZATION -> endpoint.authValue) {
+    HttpConstants.ACCEPT -> PimpConstants.JSONv18,
+    HttpConstants.AUTHORIZATION -> endpoint.authValue)
+  with WelcomeExpectation {
 
   override def onMessage(json: JsValue): Unit = handler(json)
+}
+
+object PimpWebSocket {
+  val connectionClosed = new Exception("Connection closed.")
 }

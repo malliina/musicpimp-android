@@ -93,7 +93,7 @@ class PimpServerPlayer(endpoint: Endpoint)
 }
 
 object PimpServerPlayer {
-  val (wsResource, streamResource, cloudSocketResource) = ("/ws/playback", "/playback/server", "/mobile/ws")
+  val (wsResource, streamResource, cloudSocketResource) = ("/ws/playback2", "/playback/server", "/mobile/ws2")
 }
 
 case class TrackCommand(cmd: String, track: String)

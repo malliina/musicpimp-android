@@ -2,7 +2,7 @@ package org.musicpimp.messaging
 
 import android.content.Intent
 import com.amazon.device.messaging.ADMMessageHandlerBase
-import org.musicpimp.messaging.AdmMessages.{AdmMessage, RegistrationError, Unregistered, Registered}
+import org.musicpimp.messaging.AdmMessages.{AdmMessage, Registered, RegistrationError, Unregistered}
 import org.musicpimp.util.PimpLog
 import rx.lang.scala.{Observable, Subject}
 
@@ -31,11 +31,14 @@ class PimpAdmService extends ADMMessageHandlerBase(classOf[PimpAdmService].getNa
   /**
    * @param id registration ID
    */
-  override def onRegistered(id: String): Unit = AdmEvents.publish(Registered(id)) // serverMessenger.registerId(this, id)
+  override def onRegistered(id: String): Unit = publishMaybe(id, Registered.apply)
 
-  override def onUnregistered(id: String): Unit = AdmEvents.publish(Unregistered(id)) //serverMessenger.unregisterId(this, id)
+  override def onUnregistered(id: String): Unit = publishMaybe(id, Unregistered.apply)
 
-  override def onRegistrationError(id: String): Unit = AdmEvents.publish(RegistrationError(id)) //warn(s"ADM registration error for ID: $id")
+  override def onRegistrationError(id: String): Unit = publishMaybe(id, RegistrationError.apply)
+
+  private def publishMaybe(idOpt: String, f: String => AdmMessage) =
+    Option(idOpt).foreach(realID => AdmEvents.publish(f(realID)))
 }
 
 object AdmEvents {
