@@ -14,10 +14,10 @@ import rx.lang.scala.{Observable, Subject}
  * enable the desired API, this class thus implements the Observer pattern and publishes received registration ID
  * events to AdmEvents. Other code modules may then profit as follows:
  *
- * 1) subscribe to registration events using AdmEvents.addHandler(...)
+ * 1) subscribe to registration events provided by `AdmEvents.events`
  * 2) call ADM.startRegister()
  * 3) wait for an event
- * 4) once an event is received, unsubscribe from events using AdmEvents.removeHandler(...)
+ * 4) once an event is received, unsubscribe
  *
  * See [[org.musicpimp.andro.messaging.AmazonMessaging]] for an implementation that provides a
  * [[scala.concurrent.Future]]-based API for registration IDs.

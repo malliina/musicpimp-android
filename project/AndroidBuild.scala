@@ -4,6 +4,7 @@ import sbt._
 import sbtbuildinfo.Plugin._
 
 object AndroidBuild extends Build {
+  val usedScalaVersion = "2.11.4"
 
   object AppStores extends Enumeration {
     type AppStore = Value
@@ -19,7 +20,7 @@ object AndroidBuild extends Build {
   val packageStore = taskKey[File]("Builds a package ready to be uploaded to an app store")
 
   lazy val root = Project(id = "pimp", base = file(".")) settings (Seq(
-    scalaVersion := "2.11.2",
+    scalaVersion := usedScalaVersion,
     packageT in Compile <<= packageT in Android in app,
     packageStore <<= packageRelease in Android in app,
     packageRelease <<= packageRelease in Android in app,
@@ -37,7 +38,7 @@ object AndroidBuild extends Build {
   val supportVersion = "19.1.0"
 
   def apkSettings = Seq(
-    appStore := AppStores.Amazon,
+    appStore := AppStores.GooglePlay,
     storeFileExtension := {
       appStore.value match {
         case AppStores.GooglePlay => "-google"
@@ -65,13 +66,11 @@ object AndroidBuild extends Build {
   def cacheSeq(org: String)(packages: Seq[String]) =
     ProguardCache(packages: _*) % org
 
-  // I think androidBuild(scannerLib) means that scannerLib is a compile-time dependency
-  //  lazy val pimpSettings = android.Plugin.androidBuild(gcmLibProject) ++ apkSettings ++ commonSettings ++
   lazy val pimpSettings = android.Plugin.androidBuild ++ apkSettings ++ commonSettings ++
     googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++
     net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
-    scalaVersion := "2.11.2",
-    version := "2.0.0",
+    scalaVersion := usedScalaVersion,
+    version := "2.0.1",
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
@@ -101,13 +100,12 @@ object AndroidBuild extends Build {
       // maybe fixes processEncodedAnnotation bs
       "-keep class " + (keptClasses mkString ","),
       // both below are required by Amazon IAP
-      "-keepattributes *Annotation*",
-      "-dontoptimize"
+      "-keepattributes *Annotation*,Signature",
+      "-dontoptimize",
+      "-dontnote " + (dontNoteClasses mkString ",")
     ),
     apkbuildExcludes in Android ++= Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file"),
     localAars in Android ++= Seq("scanner", "android-utils", "samsung-iap-lib").map(name => baseDirectory.value / "aar" / s"$name.aar")
-    // did not compile when I added gcm_lib as an .aar
-    //    localProjects in Android <+= baseDirectory(b => AutoLibraryProject(b / ".." / "google-play-services_lib"))
   ) ++ buildMetaSettings
 
   def rxSettings = {
@@ -115,7 +113,6 @@ object AndroidBuild extends Build {
     val rxVersion = "0.22.0"
     Seq(
       libraryDependencies ++= Seq(
-//        rxGroup % "rxjava-core" % rxVersion,
         rxGroup %% "rxscala" % rxVersion,
         rxGroup % "rxandroid" % rxVersion
       ),
@@ -131,7 +128,7 @@ object AndroidBuild extends Build {
     ),
     proguardOptions in Android ++= Seq(
       """-keep class * extends java.util.ListResourceBundle {
-            protected Object[][] getContents();
+            protected java.lang.Object[][] getContents();
         }""",
       """-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
             public static final *** NULL;
@@ -142,7 +139,8 @@ object AndroidBuild extends Build {
         }""",
       """-keepnames class * implements android.os.Parcelable {
             public static final ** CREATOR;
-        }"""
+        }""",
+      "-dontnote com.google.android.gms.ads.**,com.google.android.gms.plus.PlusOneButton,com.google.android.gms.maps.internal.u,com.google.android.gms.internal.ku"
     )
   )
 
@@ -164,7 +162,8 @@ object AndroidBuild extends Build {
       "-dontwarn com.amazon.device.messaging.**",
       "-keep class com.amazon.device.messaging.** {*;}",
       "-keep public class * extends com.amazon.device.messaging.ADMMessageReceiver",
-      "-keep public class * extends com.amazon.device.messaging.ADMMessageHandlerBase"
+      "-keep public class * extends com.amazon.device.messaging.ADMMessageHandlerBase",
+      "-dontnote com.amazon.**"
     )
   )
 
@@ -180,7 +179,13 @@ object AndroidBuild extends Build {
     }
   }
 
-  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**")
+  def dontNoteClasses = Seq(
+    "com.fasterxml.**",
+    "org.joda.time.DateTimeZone,scala.reflect.**",
+    "scala.concurrent.util.Unsafe,scala.concurrent.stm.impl.**",
+    "scala.Enumeration$$anonfun$scala$Enumeration$$isValDef$1$1")
+  
+  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**")
 
   def zxingDep = "com.google.zxing" % "core" % "2.3.0"
 
@@ -219,7 +224,7 @@ object AndroidBuild extends Build {
   ).map(name => zxingPrefix + name)
 
   lazy val commonSettings = Seq(
-    scalaVersion := "2.11.2",
+    scalaVersion := usedScalaVersion,
     resolvers ++= Seq(
       // assumes you have installed "android support repository" from SDK Manager first
       "Local .aar maven repo" at new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository").toURI.toString

@@ -6,8 +6,9 @@ import com.amazon.device.messaging.ADM
 import com.mle.android.exceptions.AndroidException
 import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.messaging.AdmEvents
-import org.musicpimp.messaging.AdmMessages.{RegistrationError, Unregistered, Registered, AdmMessage}
-import scala.concurrent.{Promise, Future}
+import org.musicpimp.messaging.AdmMessages.{AdmMessage, Registered, RegistrationError, Unregistered}
+
+import scala.concurrent.{Future, Promise}
 
 /**
  * @author Michael
@@ -37,14 +38,22 @@ trait AmazonMessaging extends IMessagingUtils {
   private def startRegistration(ctx: Context): Future[String] = withRegistration(ctx, _.startRegister())
 
   private def withRegistration(ctx: Context, f: ADM => Unit): Future[String] = {
-    val adm = new ADM(ctx)
     val p = Promise[String]()
     val subscription = AdmEvents.events.subscribe(msg => completePromise(p, msg))
+    val adm = new ADM(ctx)
     f(adm)
     val ret = p.future
     ret.onComplete(_ => subscription.unsubscribe())
     ret
   }
+
+  //  private def toFuture[T](obs: Observable[T]): Future[T] = {
+  //    val p = Promise[T]()
+  //    val sub = obs.head.subscribe(msg => p trySuccess msg)
+  //    val fut = p.future
+  //    fut.onComplete(_ => sub.unsubscribe())
+  //    fut
+  //  }
 
   private def completePromise(p: Promise[String], event: AdmMessage) = event match {
     case Registered(id) => p trySuccess id
