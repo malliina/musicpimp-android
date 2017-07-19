@@ -72,7 +72,7 @@ object AndroidBuild extends Build {
     googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++
     net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     scalaVersion := usedScalaVersion,
-    version := "2.0.1",
+    version := "2.0.2",
     resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
