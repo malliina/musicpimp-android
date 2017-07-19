@@ -18,8 +18,9 @@ object BuildBuild extends Build {
     Resolver.url(s"scalasbt $suffix", new URL(s"http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-$suffix"))(Resolver.ivyStylePatterns)
 
   def sbtPlugins = Seq(
+//    "org.scala-android" % "sbt-android" % "1.7.7",
     "com.hanhuy.sbt" % "android-sdk-plugin" % "1.3.10",
-    "com.hanhuy.sbt" % "sbt-idea" % "1.7.0-SNAPSHOT",
+//    "com.hanhuy.sbt" % "sbt-idea" % "1.7.0-SNAPSHOT",
     "com.timushev.sbt" % "sbt-updates" % "0.1.6",
     "com.eed3si9n" % "sbt-buildinfo" % "0.3.0",
     "net.virtual-void" % "sbt-dependency-graph" % "0.7.4"

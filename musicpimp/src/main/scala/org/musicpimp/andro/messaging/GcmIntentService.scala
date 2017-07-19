@@ -15,7 +15,7 @@ import com.mle.android.util.UtilLog
 abstract class GcmIntentService extends IntentService(classOf[GcmIntentService].getName) with UtilLog {
   override protected def onHandleIntent(intent: Intent): Unit = {
     Option(intent.getExtras)
-      .filter(_.isEmpty)
+      .filter(b => !b.isEmpty)
       .fold(warn(s"No extras in intent: $intent"))(extras => onExtras(extras, intent))
     WakefulBroadcastReceiver.completeWakefulIntent(intent)
   }

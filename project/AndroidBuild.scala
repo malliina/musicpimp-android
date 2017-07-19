@@ -6,6 +6,8 @@ import sbtbuildinfo.Plugin._
 object AndroidBuild extends Build {
   val usedScalaVersion = "2.11.4"
 
+  val localMavenDir = new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository")
+
   object AppStores extends Enumeration {
     type AppStore = Value
     val GooglePlay, Amazon, Samsung, None = Value
@@ -71,6 +73,7 @@ object AndroidBuild extends Build {
     net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
     scalaVersion := usedScalaVersion,
     version := "2.0.1",
+    resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
@@ -91,7 +94,17 @@ object AndroidBuild extends Build {
       cache("org.joda")("org.joda"),
       cache("com.fasterxml.jackson.core")("com.fasterxml.jackson"),
       cache("com.google.android.gms")("com.google.android.gms", "com.google.ads")
-    ),
+//      "android.support.v7",
+//      "android.support.v4",
+//      "com.mle",
+//      "com.loopj.android",
+//      "org.java_websocket",
+//      "play",
+//      "org.joda",
+//      "com.fasterxml.jackson",
+//      "com.google.android.gms",
+//      "com.google.ads"
+    ), //++ cachedZxingPackages,
     proguardOptions in Android ++= Seq(
       // I think there's a problem because play-json depends on org.w3c.something, which is
       // already included in Android by default, maybe I could try excluding org.w3c.* from
@@ -117,12 +130,13 @@ object AndroidBuild extends Build {
         rxGroup % "rxandroid" % rxVersion
       ),
       proguardCache in Android += cache(rxGroup)("rx"),
+//      proguardCache in Android += "rx",
       proguardOptions in Android ++= Seq("-dontwarn sun.misc.Unsafe, rx.lang.scala.**")
     )
   }
 
   def googlePlayServicesSettings = Seq(
-    resolvers += "Local google .aar maven repo" at new File(sys.env("ANDROID_HOME") + "/extras/google/m2repository").toURI.toString,
+    resolvers += "Local google .aar maven repo" at localMavenDir.toURI.toString,
     libraryDependencies ++= Seq(
       supportGroup % "support-v4" % supportVersion
     ),
@@ -227,7 +241,8 @@ object AndroidBuild extends Build {
     scalaVersion := usedScalaVersion,
     resolvers ++= Seq(
       // assumes you have installed "android support repository" from SDK Manager first
-      "Local .aar maven repo" at new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository").toURI.toString
+      // "Local .aar maven repo" at new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository").toURI.toString
+      "Local .aar maven repo" at localMavenDir.toURI.toString
     ),
     platformTarget in Android := "android-19",
     javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
