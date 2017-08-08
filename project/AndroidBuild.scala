@@ -69,8 +69,7 @@ object AndroidBuild extends Build {
     ProguardCache(packages: _*) % org
 
   lazy val pimpSettings = android.Plugin.androidBuild ++ apkSettings ++ commonSettings ++
-    googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++
-    net.virtualvoid.sbt.graph.Plugin.graphSettings ++ Seq(
+    googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
     scalaVersion := usedScalaVersion,
     version := "2.0.2",
     resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
