@@ -16,10 +16,6 @@ import play.api.libs.json.{Json, Reads}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with PimpHttpClient with PimpLog {
 
   import org.musicpimp.pimp.PimpLibrary._
@@ -41,7 +37,7 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
   def folder(id: String): Future[Directory] = getWithCache(id)
 
   override def search(term: String, limit: Int): Future[Seq[Track]] = {
-    implicit val trackReader = json.pimpTrackReader
+    implicit val trackReader: Reads[Track] = json.pimpTrackReader
     get[Seq[Track]](s"/search?term=$term&limit=$limit")
   }
 

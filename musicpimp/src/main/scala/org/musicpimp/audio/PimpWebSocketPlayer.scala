@@ -13,7 +13,9 @@ import scala.concurrent.duration._
 import scala.util.Try
 
 abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: String)
-  extends Player with PimpHttpClient with PimpLog {
+  extends Player
+    with PimpHttpClient
+    with PimpLog {
 
   var socket = newWebSocket
 
@@ -76,9 +78,8 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
   def mute(muted: Boolean): Unit = sendValued(MUTE, muted)
 
   /**
-   *
-   * @param volume [0, 100]
-   */
+    * @param volume [0, 100]
+    */
   def volume(volume: Int): Unit = sendValued(VOLUME, volume)
 
   override def open(): Future[Unit] = {
@@ -86,23 +87,23 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
     val uri = endpoint.wsBaseUri
     info(s"Connecting to: $uri...")
     ret.map(_ => info(s"Connected to: $uri.")).recover {
-      case t: Throwable => warn(s"Connection to: $uri failed.", t)
+      case e: Exception => warn(s"Connection to: $uri failed.", e)
     }
     ret
   }
 
-  override def close() = {
+  override def close(): Unit = {
     client.close()
     closeSocket()
   }
 
   private def closeSocket(): Unit = Try(socket.close())
 
-  protected def send[T](message: T)(implicit writer: Writes[T]): Unit = {
+  protected def send[T: Writes](message: T): Unit = {
     socket.sendMessage(message)
   }
 
-  protected def sendValued[T](cmd: String, value: T)(implicit writer: Writes[T]): Unit =
+  protected def sendValued[T: Writes](cmd: String, value: T): Unit =
     send(ValueCommand(cmd, value))
 
   protected def sendSimple(cmd: String): Unit = send(SimpleCommand(cmd))

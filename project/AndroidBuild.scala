@@ -82,10 +82,7 @@ object AndroidBuild extends Build {
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
-      mleGroup %% "util-android" % "0.9.5-SNAPSHOT",
-      mleGroup %% "util-base" % "0.6.0",
-      "com.typesafe.play" %% "play-json" % "2.3.8",
-      "org.java-websocket" % "Java-WebSocket" % "1.3.9",
+      aar(mleGroup %% "util-android" % "0.9.8"),
       "com.google.android.gms" % "play-services" % "4.4.52",
       "org.scalatest" %% "scalatest" % "3.0.5" % Test
     ),
@@ -93,7 +90,16 @@ object AndroidBuild extends Build {
     typedViewHolders := true,
     useProguard in Android := true,
     proguardCache in Android ++= Seq(
-      "com.google"
+      "com.google",
+      "org.joda",
+      "joda-time",
+      "io.reactivex",
+      "com.fasterxml.jackson",
+      "com.typesafe.play",
+      "com.google.zxing",
+      "android.support.v4",
+      "android.support.v7",
+      "com.loopj.android"
 //      cache(org = supportGroup, module = "appcompat-v7")(packagePrefix = "android.support.v7"),
 //      cache(supportGroup, "support-v4")("android.support.v4"),
 //      cacheSeq("com.google.zxing")(cachedZxingPackages),
@@ -127,7 +133,7 @@ object AndroidBuild extends Build {
     val rxGroup = "io.reactivex"
     Seq(
       libraryDependencies ++= Seq(
-        rxGroup %% "rxscala" % "0.26.5",
+        rxGroup %% "rxscala" % "0.24.1",
         rxGroup % "rxandroid" % "0.25.0"
       ),
 //      proguardCache in Android += cache(rxGroup)("rx"),
@@ -199,7 +205,7 @@ object AndroidBuild extends Build {
     "scala.concurrent.util.Unsafe,scala.concurrent.stm.impl.**",
     "scala.Enumeration$$anonfun$scala$Enumeration$$isValDef$1$1")
   
-  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**", "play.api.libs.**", "com.mle.ws.**")
+  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**", "play.api.libs.**")
 
   def zxingDep = "com.google.zxing" % "core" % "2.3.0"
 
