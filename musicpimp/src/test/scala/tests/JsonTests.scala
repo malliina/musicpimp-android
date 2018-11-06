@@ -4,10 +4,6 @@ import org.musicpimp.json.JsonStrings._
 import org.scalatest.FunSuite
 import play.api.libs.json.{JsValue, Writes, Json}
 
-/**
- *
- * @author mle
- */
 class JsonTests extends FunSuite {
   test("json") {
     case class GenericCommand[T](cmd: String, value: T)

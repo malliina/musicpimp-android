@@ -1,10 +1,11 @@
 import android.Keys._
+import android.AndroidApp
 import sbt.Keys._
 import sbt._
 import sbtbuildinfo.Plugin._
 
 object AndroidBuild extends Build {
-  val usedScalaVersion = "2.11.4"
+  val usedScalaVersion = "2.11.12"
 
   val localMavenDir = new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository")
 
@@ -21,19 +22,21 @@ object AndroidBuild extends Build {
   val apkFileName = settingKey[String]("Name of .apk, without the .apk extension")
   val packageStore = taskKey[File]("Builds a package ready to be uploaded to an app store")
 
-  lazy val root = Project(id = "pimp", base = file(".")) settings (Seq(
-    scalaVersion := usedScalaVersion,
-    packageT in Compile <<= packageT in Android in app,
-    packageStore <<= packageRelease in Android in app,
-    packageRelease <<= packageRelease in Android in app,
-    packageDebug <<= packageDebug in Android in app,
-    install <<= install in Android in app,
-    run <<= run in Android in app,
-    commands <<= commands in app
-  ) ++ android.Plugin.androidCommands: _*
-    ) aggregate app
+//  lazy val root = Project(id = "pimp", base = file(".")) settings (Seq(
+//    scalaVersion := usedScalaVersion,
+//    packageT in Compile <<= packageT in Android in app,
+//    packageStore <<= packageRelease in Android in app,
+//    packageRelease <<= packageRelease in Android in app,
+//    packageDebug <<= packageDebug in Android in app,
+//    install <<= install in Android in app,
+//    run <<= run in Android in app,
+//    commands <<= commands in app
+//  ) ++ android.Plugin.androidCommands: _*
+//    ) aggregate app
 
-  lazy val app = Project("musicpimp", file("musicpimp")).settings(pimpSettings: _*)
+  lazy val app = Project("musicpimp", file("musicpimp"))
+    .settings(pimpSettings: _*)
+    .enablePlugins(AndroidApp)
 
   val mleGroup = "com.github.malliina"
   val supportGroup = "com.android.support"
@@ -59,51 +62,50 @@ object AndroidBuild extends Build {
     }
   )
 
-  def cache(org: String, module: String)(packagePrefix: String, more: String*): ProguardCache =
-    cache(org)(packagePrefix, more: _*) % module
+//  def cache(org: String, module: String)(packagePrefix: String, more: String*): ProguardCache =
+//    cache(org)(packagePrefix, more: _*) % module
+//
+//  def cache(org: String)(packagePrefix: String, more: String*): ProguardCache =
+//    cacheSeq(org)(Seq(packagePrefix) ++ more)
+//
+//  def cacheSeq(org: String)(packages: Seq[String]) =
+//    ProguardCache(packages: _*) % org
 
-  def cache(org: String)(packagePrefix: String, more: String*): ProguardCache =
-    cacheSeq(org)(Seq(packagePrefix) ++ more)
-
-  def cacheSeq(org: String)(packages: Seq[String]) =
-    ProguardCache(packages: _*) % org
-
-  lazy val pimpSettings = android.Plugin.androidBuild ++ apkSettings ++ commonSettings ++
+  lazy val pimpSettings = apkSettings ++ commonSettings ++
     googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
     scalaVersion := usedScalaVersion,
     version := "2.0.2",
-    resolvers += "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
+    resolvers ++= Seq(
+      "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
+      "google" at "https://maven.google.com/"
+    ),
     libraryDependencies ++= Seq(
       aar(supportGroup % "appcompat-v7" % supportVersion),
       zxingDep,
-      mleGroup %% "util-android" % "0.9.4",
-      mleGroup %% "util-base" % "0.3.0",
-      "com.google.android.gms" % "play-services" % "4.4.52"
+      mleGroup %% "util-android" % "0.9.5-SNAPSHOT",
+      mleGroup %% "util-base" % "0.6.0",
+      "com.typesafe.play" %% "play-json" % "2.3.8",
+      "org.java-websocket" % "Java-WebSocket" % "1.3.9",
+      "com.google.android.gms" % "play-services" % "4.4.52",
+      "org.scalatest" %% "scalatest" % "3.0.5" % Test
     ),
+    typedResourcesAar := true,
+    typedViewHolders := true,
     useProguard in Android := true,
     proguardCache in Android ++= Seq(
-      cache(org = supportGroup, module = "appcompat-v7")(packagePrefix = "android.support.v7"),
-      cache(supportGroup, "support-v4")("android.support.v4"),
-      cacheSeq("com.google.zxing")(cachedZxingPackages),
-      cache(mleGroup)("com.mle"),
-      cache("com.loopj.android")("com.loopj.android"),
-      cache("org.java-websocket")("org.java_websocket"),
-      cache("com.typesafe.play")("play"),
-      cache("joda-time")("org.joda"),
-      cache("org.joda")("org.joda"),
-      cache("com.fasterxml.jackson.core")("com.fasterxml.jackson"),
-      cache("com.google.android.gms")("com.google.android.gms", "com.google.ads")
-//      "android.support.v7",
-//      "android.support.v4",
-//      "com.mle",
-//      "com.loopj.android",
-//      "org.java_websocket",
-//      "play",
-//      "org.joda",
-//      "com.fasterxml.jackson",
-//      "com.google.android.gms",
-//      "com.google.ads"
-    ), //++ cachedZxingPackages,
+      "com.google"
+//      cache(org = supportGroup, module = "appcompat-v7")(packagePrefix = "android.support.v7"),
+//      cache(supportGroup, "support-v4")("android.support.v4"),
+//      cacheSeq("com.google.zxing")(cachedZxingPackages),
+//      cache(mleGroup)("com.mle"),
+//      cache("com.loopj.android")("com.loopj.android"),
+//      cache("org.java-websocket")("org.java_websocket"),
+//      cache("com.typesafe.play")("play"),
+//      cache("joda-time")("org.joda"),
+//      cache("org.joda")("org.joda"),
+//      cache("com.fasterxml.jackson.core")("com.fasterxml.jackson"),
+//      cache("com.google.android.gms")("com.google.android.gms", "com.google.ads")
+    ),
     proguardOptions in Android ++= Seq(
       // I think there's a problem because play-json depends on org.w3c.something, which is
       // already included in Android by default, maybe I could try excluding org.w3c.* from
@@ -116,20 +118,19 @@ object AndroidBuild extends Build {
       "-dontoptimize",
       "-dontnote " + (dontNoteClasses mkString ",")
     ),
-    apkbuildExcludes in Android ++= Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file"),
+    packagingOptions in Android := PackagingOptions(excludes = Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file")),
+//    apkbuildExcludes in Android ++= Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file"),
     localAars in Android ++= Seq("scanner", "android-utils", "samsung-iap-lib").map(name => baseDirectory.value / "aar" / s"$name.aar")
   ) ++ buildMetaSettings
 
   def rxSettings = {
     val rxGroup = "io.reactivex"
-    val rxVersion = "0.22.0"
     Seq(
       libraryDependencies ++= Seq(
-        rxGroup %% "rxscala" % rxVersion,
-        rxGroup % "rxandroid" % rxVersion
+        rxGroup %% "rxscala" % "0.26.5",
+        rxGroup % "rxandroid" % "0.25.0"
       ),
-      proguardCache in Android += cache(rxGroup)("rx"),
-//      proguardCache in Android += "rx",
+//      proguardCache in Android += cache(rxGroup)("rx"),
       proguardOptions in Android ++= Seq("-dontwarn sun.misc.Unsafe, rx.lang.scala.**")
     )
   }
@@ -198,7 +199,7 @@ object AndroidBuild extends Build {
     "scala.concurrent.util.Unsafe,scala.concurrent.stm.impl.**",
     "scala.Enumeration$$anonfun$scala$Enumeration$$isValDef$1$1")
   
-  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**")
+  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**", "play.api.libs.**", "com.mle.ws.**")
 
   def zxingDep = "com.google.zxing" % "core" % "2.3.0"
 
@@ -252,10 +253,6 @@ object AndroidBuild extends Build {
     sourceGenerators in Compile <+= buildInfo,
     buildInfoPackage := "org.musicpimp",
     buildInfoKeys := Seq[BuildInfoKey](appStore, version)
-  )
-
-  lazy val libraryProjectSettings = android.Plugin.androidBuild ++ commonSettings ++ Seq(
-    libraryProject := true
   )
 
   /**

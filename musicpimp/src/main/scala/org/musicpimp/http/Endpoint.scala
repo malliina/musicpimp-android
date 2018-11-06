@@ -8,10 +8,6 @@ import org.java_websocket.util.Base64
 import org.musicpimp.beam.BeamCode
 import play.api.libs.json.Json
 
-/**
- *
- * @author mle
- */
 case class Endpoint(id: String,
                     name: String,
                     host: String,

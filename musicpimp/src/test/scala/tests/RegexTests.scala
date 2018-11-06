@@ -2,10 +2,6 @@ package tests
 
 import org.scalatest.FunSuite
 
-/**
- *
- * @author mle
- */
 class RegexTests extends FunSuite {
   test("regex") {
     val folderId = id("blaa/getMusicDirectory&id=50&blaa")

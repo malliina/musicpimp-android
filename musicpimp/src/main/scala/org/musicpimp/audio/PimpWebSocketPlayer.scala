@@ -12,10 +12,6 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.Try
 
-/**
- *
- * @author mle
- */
 abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: String)
   extends Player with PimpHttpClient with PimpLog {
 
@@ -104,24 +100,12 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
 
   protected def send[T](message: T)(implicit writer: Writes[T]): Unit = {
     socket.sendMessage(message)
-    //    Try(socket send message).recover {
-    //      case _: WebsocketNotConnectedException =>
-    //        // tries to reconnect once
-    //        Await.ready(reconnect, 5 seconds)
-    //        socket send message
-    //    }
   }
-
-  //  private def reconnect: Future[Unit] = {
-  //    closeSocket()
-  //    socket = newWebSocket
-  //    socket.connect
-  //  }
 
   protected def sendValued[T](cmd: String, value: T)(implicit writer: Writes[T]): Unit =
     send(ValueCommand(cmd, value))
 
-  protected def sendSimple(cmd: String) = send(SimpleCommand(cmd))
+  protected def sendSimple(cmd: String): Unit = send(SimpleCommand(cmd))
 
-  protected def sendTrack(cmd: String, track: Track) = send(TrackCommand(cmd, track.id))
+  protected def sendTrack(cmd: String, track: Track): Unit = send(TrackCommand(cmd, track.id))
 }
