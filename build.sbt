@@ -14,8 +14,9 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   scalaVersion := usedScalaVersion,
   version := "2.0.2",
   resolvers ++= Seq(
-    "typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
-    "google" at "https://maven.google.com/"
+    "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
+    "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
+    "Google" at "https://maven.google.com/"
   ),
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
