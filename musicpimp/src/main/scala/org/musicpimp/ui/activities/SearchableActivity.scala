@@ -7,7 +7,7 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.{ContextMenu, MenuItem, View}
 import android.widget.{ListAdapter, AdapterView, AbsListView, ArrayAdapter}
 import com.mle.android.ui.Implicits.action2itemClickListener2
-import com.mle.concurrent.FutureImplicits.RichFuture
+import com.mle.concurrent.FutureOps
 import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.audio.LibraryManager
 import org.musicpimp.ui.MusicActions
@@ -28,7 +28,7 @@ class SearchableActivity extends LayoutBaseActivity with MusicDownloadUpdatingAc
 
   def findListView = findView(TR.listView).asInstanceOf[AbsListView]
 
-  def tryFindListView = activityHelper.tryFindView[AbsListView](R.id.listView)
+  def tryFindListView = activityHelper.tryFindIntView[AbsListView](R.id.listView)
 
   def adapterOpt[T] = tryFindListView.flatMap(l => Option(l.getAdapter).map(_.asInstanceOf[T]))
 

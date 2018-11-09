@@ -11,10 +11,6 @@ import play.api.libs.json._
 
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 class PimpJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
 
   def uri(trackId: String): Uri =

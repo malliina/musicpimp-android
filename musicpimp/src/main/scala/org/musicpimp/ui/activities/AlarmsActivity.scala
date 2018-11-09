@@ -7,7 +7,7 @@ import android.widget.{ArrayAdapter, Spinner}
 import com.mle.android.messaging.MessagingException
 import com.mle.android.util.PreferenceImplicits.RichPrefs
 import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.concurrent.FutureImplicits.RichFuture
+import com.mle.concurrent.FutureOps
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio.{LibraryManager, PlayerManager}
@@ -22,10 +22,6 @@ import org.musicpimp.{PimpApp, R, TR, TypedResource}
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class AlarmsActivity extends ItemsManager[Alarm] with PimpLog {
 
   lazy val alarmSpinner = new AlarmSpinner(this)

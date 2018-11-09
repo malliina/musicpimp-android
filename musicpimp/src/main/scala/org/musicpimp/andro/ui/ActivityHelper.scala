@@ -8,17 +8,17 @@ import android.widget.Toast
 import com.mle.util.Utils
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.musicpimp.util.PimpLog
-import org.musicpimp.{TypedResource, TypedViewHolder}
+import org.musicpimp.{TypedFindView, TypedResource}
 
 /**
  * @author Michael
  */
-class ActivityHelper(val activity: Activity) extends TypedViewHolder with PimpLog {
+class ActivityHelper(val activity: Activity) extends TypedFindView with PimpLog {
   override def findViewById(id: Int): View = activity.findViewById(id)
 
   def prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
-  def tryFindView[A](id: Int): Option[A] = Option(activity findViewById id).map(_.asInstanceOf[A])
+  def tryFindIntView[A](id: Int): Option[A] = Option(activity findViewById id).map(_.asInstanceOf[A])
 
   /**
    * Returns the view with the given id if this fragment is attached and the view is found.
@@ -29,7 +29,7 @@ class ActivityHelper(val activity: Activity) extends TypedViewHolder with PimpLo
    * @tparam A type of view
    * @return the view wrapped in an Option, or None if it could not be obtained
    */
-  def tryFindView[A](tr: TypedResource[A]): Option[A] = tryFindView[A](tr.id)
+  def tryFindView[A](tr: TypedResource[A]): Option[A] = tryFindIntView[A](tr.id)
 
   def navigate[T <: Activity](destActivity: Class[T], parameters: (String, String)*) {
     val intent = new Intent(activity, destActivity)

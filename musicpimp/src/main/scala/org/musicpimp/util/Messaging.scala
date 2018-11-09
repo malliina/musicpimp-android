@@ -2,23 +2,18 @@ package org.musicpimp.util
 
 import com.mle.android.events.EventSource
 
-/**
- *
- * @author mle
- */
 trait Messaging extends EventSource[UIMessage] {
-  /**
-   * Fires the message.
-   *
-   * Exposes the message sending API so we can fire messages from anywhere.
-   *
-   * @param msg the message
-   */
-  def send(msg: String) = fire(BasicMessage(msg))
+  /** Fires the message.
+    *
+    * Exposes the message sending API so we can fire messages from anywhere.
+    *
+    * @param msg the message
+    */
+  def send(msg: String): Unit = fire(BasicMessage(msg))
 
-  def reload(silent: Boolean = true) = fire(Reload(silent))
+  def reload(silent: Boolean = true): Unit = fire(Reload(silent))
 
-  def limitExceeded() = fire(PlaybackLimitExceeded)
+  def limitExceeded(): Unit = fire(PlaybackLimitExceeded)
 }
 
 object Messaging extends Messaging

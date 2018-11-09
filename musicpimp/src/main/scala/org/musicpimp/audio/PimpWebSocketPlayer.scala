@@ -12,12 +12,10 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.Try
 
-/**
- *
- * @author mle
- */
 abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: String)
-  extends Player with PimpHttpClient with PimpLog {
+  extends Player
+    with PimpHttpClient
+    with PimpLog {
 
   var socket = newWebSocket
 
@@ -80,9 +78,8 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
   def mute(muted: Boolean): Unit = sendValued(MUTE, muted)
 
   /**
-   *
-   * @param volume [0, 100]
-   */
+    * @param volume [0, 100]
+    */
   def volume(volume: Int): Unit = sendValued(VOLUME, volume)
 
   override def open(): Future[Unit] = {
@@ -90,38 +87,26 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
     val uri = endpoint.wsBaseUri
     info(s"Connecting to: $uri...")
     ret.map(_ => info(s"Connected to: $uri.")).recover {
-      case t: Throwable => warn(s"Connection to: $uri failed.", t)
+      case e: Exception => warn(s"Connection to: $uri failed.", e)
     }
     ret
   }
 
-  override def close() = {
+  override def close(): Unit = {
     client.close()
     closeSocket()
   }
 
   private def closeSocket(): Unit = Try(socket.close())
 
-  protected def send[T](message: T)(implicit writer: Writes[T]): Unit = {
+  protected def send[T: Writes](message: T): Unit = {
     socket.sendMessage(message)
-    //    Try(socket send message).recover {
-    //      case _: WebsocketNotConnectedException =>
-    //        // tries to reconnect once
-    //        Await.ready(reconnect, 5 seconds)
-    //        socket send message
-    //    }
   }
 
-  //  private def reconnect: Future[Unit] = {
-  //    closeSocket()
-  //    socket = newWebSocket
-  //    socket.connect
-  //  }
-
-  protected def sendValued[T](cmd: String, value: T)(implicit writer: Writes[T]): Unit =
+  protected def sendValued[T: Writes](cmd: String, value: T): Unit =
     send(ValueCommand(cmd, value))
 
-  protected def sendSimple(cmd: String) = send(SimpleCommand(cmd))
+  protected def sendSimple(cmd: String): Unit = send(SimpleCommand(cmd))
 
-  protected def sendTrack(cmd: String, track: Track) = send(TrackCommand(cmd, track.id))
+  protected def sendTrack(cmd: String, track: Track): Unit = send(TrackCommand(cmd, track.id))
 }

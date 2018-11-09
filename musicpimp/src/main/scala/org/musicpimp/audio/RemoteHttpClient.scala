@@ -6,10 +6,6 @@ import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.{PimpWebHttpClient, PimpJsonReaders}
 import org.musicpimp.subsonic.SubsonicWebHttpClient
 
-/**
- *
- * @author mle
- */
 trait RemoteHttpClient extends Closeable {
   val endpoint: Endpoint
   val client: JsonHttpClient

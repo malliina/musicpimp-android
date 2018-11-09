@@ -11,16 +11,13 @@ import play.api.libs.json.Json
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/**
- * TODO take Rx into use.
- *
- * @author mle
- */
+/** TODO take Rx into use.
+  */
 class PimpServerPlayer(endpoint: Endpoint)
   extends PimpWebSocketPlayer(endpoint, if (endpoint.endpointType == EndpointTypes.Cloud) PimpServerPlayer.cloudSocketResource else PimpServerPlayer.wsResource)
-  with Player
-  with SelfSubscription
-  with PimpHttpClient {
+    with Player
+    with SelfSubscription
+    with PimpHttpClient {
 
   override protected def onPlayerEvent(event: PlayerEvent) = event match {
     case Welcomed =>
@@ -46,10 +43,10 @@ class PimpServerPlayer(endpoint: Endpoint)
   }
 
   /**
-   * Updates any listeners with the player state following the reception of a status event.
-   *
-   * @param status the player state
-   */
+    * Updates any listeners with the player state following the reception of a status event.
+    *
+    * @param status the player state
+    */
   protected def fireInitialStatusEvents(status: StatusEvent) {
     fireEvent(TrackChanged(status.track))
     fireEvent(PlayStateChanged(status.state))
@@ -84,7 +81,7 @@ class PimpServerPlayer(endpoint: Endpoint)
   private def upload(track: Track): Future[HttpResponse] = {
     val file = LibraryManager.localLibrary.path(track)
     val httpClient = new AuthHttpClient(endpoint.username, endpoint.password)
-    httpClient.httpClient setTimeout (6 minutes).toMillis.toInt
+    httpClient.httpClient setTimeout 6.minutes.toMillis.toInt
     httpClient.addHeaders(JsonStrings.TRACK_CAPITAL_T -> Json.stringify(Json.toJson(track)(TrackHelp.json)))
     val ret = httpClient.postFile(endpoint httpUri PimpServerPlayer.streamResource, file)
     ret.onComplete(_ => httpClient.close())

@@ -9,7 +9,7 @@ import com.mle.andro.ui.adapters.IconTwoLinesAdapter
 import com.mle.android.exceptions.AndroidException
 import com.mle.android.http.HttpResponse
 import com.mle.android.ui.Implicits._
-import com.mle.concurrent.FutureImplicits.RichFuture
+import com.mle.concurrent.FutureOps
 import com.mle.concurrent.ExecutionContexts.cached
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio._
@@ -21,9 +21,6 @@ import org.musicpimp.{R, TR}
 import rx.lang.scala.Subscription
 import scala.concurrent.Future
 
-/**
- * @author Michael.
- */
 class EditAlarmActivity
   extends FragmentActivity
   with LayoutBaseActivity

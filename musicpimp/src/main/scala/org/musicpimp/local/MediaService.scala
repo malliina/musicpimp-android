@@ -1,16 +1,16 @@
 package org.musicpimp.local
 
 import android.app.Service
-import android.content.{IntentFilter, ComponentName, Context, Intent}
+import android.content.{ComponentName, Context, Intent, IntentFilter}
 import android.media.{AudioManager, MediaPlayer}
 import android.net.Uri
 import android.net.wifi.WifiManager
-import android.os.{Build, Handler, PowerManager, IBinder}
+import android.os.{Build, Handler, IBinder, PowerManager}
 import android.widget.Toast
-import com.mle.android.http.{HttpConstants, HttpUtil}
+import com.mle.android.http.HttpConstants
 import org.musicpimp.audio.{PlayerManager, Track}
-import org.musicpimp.http.Endpoint
 import org.musicpimp.ui.receivers.{MusicIntentReceiver, RemoteControlReceiver}
+
 import scala.util.Try
 
 /**
@@ -24,8 +24,6 @@ import scala.util.Try
  * No methods of this class are called directly from other classes.
  * However, this class may call any other methods in the app as the background player
  * will run in the same process as the main app.
- *
- * @author mle
  */
 class MediaService
   extends Service
@@ -289,7 +287,7 @@ class MediaService
    */
   override def onBind(intent: Intent): IBinder = null
 
-  private def showToast(msg: String) = {
+  private def showToast(msg: String): Unit = {
     handlerOpt.foreach(_.post(new Runnable {
       def run(): Unit = {
         Toast.makeText(getApplicationContext, msg, Toast.LENGTH_LONG).show()
