@@ -1,7 +1,9 @@
 import sbt._
 
 object AndroidBuild {
-  def localMavenDir = new File(sys.env("ANDROID_HOME") + "/extras/android/m2repository")
+  def localMavenDir: File = sys.env.get("ANDROID_HOME")
+    .map(d => new File(s"$d/extras/android/m2repository"))
+    .getOrElse(IO.temporaryDirectory)
 
   object AppStores extends Enumeration {
     type AppStore = Value
