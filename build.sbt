@@ -4,7 +4,7 @@ lazy val app = Project("musicpimp", file("musicpimp"))
   .settings(pimpSettings: _*)
   .enablePlugins(AndroidApp)
 
-val mleGroup = "com.github.malliina"
+val malliinaGroup = "com.malliina"
 val supportGroup = "com.android.support"
 val supportVersion = "19.1.0"
 val usedScalaVersion = "2.11.12"
@@ -20,7 +20,7 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(mleGroup %% "util-android" % "0.9.8"),
+    aar(malliinaGroup %% "util-android" % "0.9.11"),
     "com.google.android.gms" % "play-services" % "4.4.52",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
   ),
