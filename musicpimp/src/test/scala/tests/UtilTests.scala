@@ -27,11 +27,11 @@ class UtilTests extends FunSuite {
   }
 
   def incr(i: Int): Option[Int] = {
-    println(s"Maybe incrementing $i")
+//    println(s"Maybe incrementing $i")
     val tmp = i % 2
-    println(s"tmp: $tmp")
+//    println(s"tmp: $tmp")
     if (i % 2 == 0) {
-      println("some yo")
+//      println("some yo")
       Some(i + 100)
     } else {
       None
