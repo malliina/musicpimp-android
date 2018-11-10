@@ -21,8 +21,9 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(malliinaGroup %% "util-android" % "0.9.11"),
+    aar(malliinaGroup %% "util-android" % "0.10.0"),
     "com.google.android.gms" % "play-services" % "4.4.52",
+//    "cz.msebera.android" % "httpclient" % "4.4.1.1",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
   ),
   typedResourcesAar := true,
@@ -38,7 +39,8 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
     "com.google.zxing",
     "android.support.v4",
     "android.support.v7",
-    "com.loopj.android"
+    "com.loopj.android",
+    "cz.msebera.android"
   ),
   proguardOptions in Android ++= Seq(
     // I think there's a problem because play-json depends on org.w3c.something, which is
@@ -83,7 +85,7 @@ lazy val commonSettings = Seq(
     // assumes you have installed "android support repository" from SDK Manager first
     "Local .aar maven repo" at localMavenDir.toURI.toString
   ),
-  platformTarget in Android := "android-19",
+  platformTarget in Android := "android-27",
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
   scalacOptions += "-target:jvm-1.6"
 )

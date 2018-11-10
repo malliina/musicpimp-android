@@ -9,13 +9,9 @@ import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.network.EndpointScanner
 import org.musicpimp.ui.activities.EditEndpointActivity
 import org.musicpimp.ui.dialogs.{AddEndpointManuallyDialog, MessageBoxDialog, EndpointDialog}
-import scala.Some
 import scala.concurrent._
 import scala.util.Try
 
-/**
- * @author Michael
- */
 class EndpointHelper(activity: Activity) extends ActivityHelper(activity) {
   private var progressDialog: Option[ProgressDialog] = None
 
@@ -58,6 +54,6 @@ class EndpointHelper(activity: Activity) extends ActivityHelper(activity) {
 
   // wraps in Try, because of: IllegalStateException: Can not perform this action after onSaveInstanceState
   // cast is safe as long as the activity is an ActionBarActivity, which is true for all usages atm
-  private def showDialog(d: DialogFragment, tag: String) =
+  private def showDialog(d: DialogFragment, tag: String): Unit =
     onUiThread(Try(d.show(activity.asInstanceOf[FragmentActivity].getSupportFragmentManager, tag)))
 }

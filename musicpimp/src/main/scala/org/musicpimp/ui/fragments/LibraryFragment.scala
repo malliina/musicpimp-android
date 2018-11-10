@@ -13,7 +13,7 @@ import com.mle.android.exceptions.ExplainedHttpException
 import com.mle.android.ui.Implicits.action2itemClickListener2
 import com.mle.android.ui.fragments.DefaultFragment
 import com.mle.concurrent.ExecutionContexts.cached
-import org.apache.http.client.HttpResponseException
+import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.ui._
 import org.musicpimp.ui.activities._
@@ -23,10 +23,6 @@ import org.musicpimp.ui.fragments.LibraryFragment.LIST_STATE
 import org.musicpimp.util.{Keys, Messaging, PimpLog}
 import org.musicpimp.{R, TR}
 
-/**
- *
- * @author mle
- */
 class LibraryFragment
   extends DefaultFragment
   with MusicDownloadUpdatingFragment
@@ -220,7 +216,7 @@ class LibraryFragment
       } else {
         hideFeedbackAndHelp()
       }
-      listScrollState.foreach(listView.onRestoreInstanceState)
+      listScrollState.foreach(p => listView.onRestoreInstanceState(p))
       listScrollState = None
     }
   }

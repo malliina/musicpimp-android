@@ -12,8 +12,8 @@ import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.{HttpConstants, Protocols}
 import com.mle.android.ui.Implicits.action2clickListener
 import com.mle.concurrent.ExecutionContexts.cached
-import org.apache.http.client.HttpResponseException
-import org.apache.http.conn.{ConnectTimeoutException, HttpHostConnectException}
+import cz.msebera.android.httpclient.client.HttpResponseException
+import cz.msebera.android.httpclient.conn.{ConnectTimeoutException, HttpHostConnectException}
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.network.PimpWifiHelpers
 import org.musicpimp.pimp.PimpLibrary
@@ -25,14 +25,10 @@ import play.api.libs.json.JsResultException
 
 import scala.concurrent.TimeoutException
 
-/**
- *
- * @author mle
- */
 class EditEndpointActivity
   extends ActionBarActivity
-  with LayoutBaseActivity
-  with PimpLog {
+    with LayoutBaseActivity
+    with PimpLog {
 
   lazy val settings = new PimpSettings(activityHelper.prefs)
 
@@ -80,15 +76,17 @@ class EditEndpointActivity
     arrangeOnChecked(pimpRadio, isCloud = false)
     arrangeOnChecked(cloudRadio, isCloud = true)
     arrangeOnChecked(subsonicRadio, isCloud = false)
+
     def arrangeOnChecked(radio: RadioButton, isCloud: Boolean) =
       radio.setOnCheckedChangeListener((isChecked: Boolean) => if (isChecked) arrangeViews(isCloud))
+
     patient = for {
       bundle <- extras
       endpointName <- Option(bundle.getString(Keys.ENDPOINT))
       endpoint <- settings.endpoints.find(_.name == endpointName)
     } yield endpoint
     patient.foreach(populateFields)
-    findView(TR.active_check) setChecked !patient.isDefined
+    findView(TR.active_check) setChecked patient.isEmpty
     arrangeViews(cloudRadio.isChecked)
     // syncs the name with the cloud ID if necessary
     cloudText.foreach(_.addTextChangedListener(new TextWatcher {
