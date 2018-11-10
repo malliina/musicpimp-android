@@ -4,10 +4,6 @@ import android.graphics.drawable.Drawable
 import android.graphics.{Bitmap, BitmapFactory}
 import java.io.File
 
-/**
- *
- * @author mle
- */
 trait CoverService {
   def client = DiscoGs.client
 

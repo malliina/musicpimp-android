@@ -11,10 +11,6 @@ import org.musicpimp.audio.{TrackUploadRequest, Track, MediaLibrary}
 import org.musicpimp.pimp.PimpLibrary
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 trait LocalLibraryBase extends MediaLibrary {
   override val isLocal = true
   val ping: Future[Version] = Future.successful(PimpApp.version)

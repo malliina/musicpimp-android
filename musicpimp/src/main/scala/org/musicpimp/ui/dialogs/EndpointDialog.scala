@@ -18,10 +18,6 @@ import org.musicpimp.ui.activities.EditEndpointActivity
 import org.musicpimp.util.PimpSettings
 import play.api.libs.json.Json
 
-/**
- *
- * @author mle
- */
 class EndpointDialog(e: Option[Endpoint])
   extends EditTextDialog(titleRes = Some(R.string.scan_complete)) {
 

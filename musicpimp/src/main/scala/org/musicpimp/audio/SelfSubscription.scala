@@ -2,9 +2,6 @@ package org.musicpimp.audio
 
 import java.io.Closeable
 
-/**
- * @author Michael
- */
 trait SelfSubscription extends PlayerBase with Closeable {
   protected val subscription = events.subscribe(e => onPlayerEvent(e))
   protected var playerStatus: StatusEvent = StatusEvent.empty

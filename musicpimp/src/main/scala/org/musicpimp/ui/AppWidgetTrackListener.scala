@@ -5,10 +5,6 @@ import org.musicpimp.PimpApp
 import org.musicpimp.audio.{Track, PlayStates, TrackListener}
 import org.musicpimp.ui.receivers.MusicControlAppWidgetProvider
 
-/**
- *
- * @author mle
- */
 class AppWidgetTrackListener extends TrackListener {
   def onTrackChanged(trackOpt: Option[Track]): Unit = {
     broadcastUpdateIntent()

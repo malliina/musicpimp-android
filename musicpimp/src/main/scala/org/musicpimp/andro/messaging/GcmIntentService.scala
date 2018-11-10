@@ -7,11 +7,8 @@ import android.support.v4.content.WakefulBroadcastReceiver
 import com.google.android.gms.gcm.GoogleCloudMessaging
 import com.mle.android.util.UtilLog
 
-/**
- * http://developer.android.com/google/gcm/client.html
- *
- * @author mle
- */
+/** http://developer.android.com/google/gcm/client.html
+  */
 abstract class GcmIntentService extends IntentService(classOf[GcmIntentService].getName) with UtilLog {
   override protected def onHandleIntent(intent: Intent): Unit = {
     Option(intent.getExtras)

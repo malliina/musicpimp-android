@@ -8,10 +8,6 @@ import org.musicpimp.R
 import org.musicpimp.audio.{Folder, MusicItem}
 import org.musicpimp.util.PimpLog
 
-/**
- *
- * @author mle
- */
 class LibraryItemAdapter(ctx: Context, folders: Seq[MusicItem], val tracks: Seq[TrackItem])
   extends IconOneLineAdapter[MusicItem](ctx, R.layout.music_item, folders ++ tracks)
   with MusicItemAdapterBase[MusicItem]

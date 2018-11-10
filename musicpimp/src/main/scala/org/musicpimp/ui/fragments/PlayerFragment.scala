@@ -10,10 +10,6 @@ import org.musicpimp.ui.Assets
 import org.musicpimp.ui.activities.VolumeActivity
 import org.musicpimp.{TR, R}
 
-/**
-*
-* @author mle
-*/
 class PlayerFragment extends PlaylistControls {
   override val layoutId: Int = R.layout.player
 

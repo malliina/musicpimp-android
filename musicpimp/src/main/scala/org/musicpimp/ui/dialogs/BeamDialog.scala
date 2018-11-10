@@ -35,4 +35,3 @@ class FirstTimeBeamDialog
 
 class ReturningBeamDialog
   extends BeamDialog(beam_choice_help, beam_use_previous, setOnNegative = true)
-

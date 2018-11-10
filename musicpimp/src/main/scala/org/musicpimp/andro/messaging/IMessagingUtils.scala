@@ -5,9 +5,6 @@ import android.content.Context
 import java.io.Closeable
 import scala.concurrent.Future
 
-/**
- * @author Michael
- */
 trait IMessagingUtils extends Closeable {
   /**
    * Obtains a registration ID from the app store's cloud service and registers the ID with the app publisher's

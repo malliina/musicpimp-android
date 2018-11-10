@@ -6,10 +6,6 @@ import android.widget.ListView
 import org.musicpimp.TypedResource
 import org.musicpimp.andro.ui.ActivityHelper
 
-/**
- *
- * @author mle
- */
 trait LayoutBaseActivity extends Activity {
 
   lazy val activityHelper = new ActivityHelper(this)
@@ -47,6 +43,6 @@ trait LayoutBaseActivity extends Activity {
   def itemAt[T](index: Int, listResource: TypedResource[ListView]): T =
     findView(listResource).getAdapter.getItem(index).asInstanceOf[T]
 
-  def navigate[T <: Activity](destActivity: Class[T], parameters: (String, String)*) =
+  def navigate[T <: Activity](destActivity: Class[T], parameters: (String, String)*): Unit =
     activityHelper.navigate(destActivity, parameters: _*)
 }

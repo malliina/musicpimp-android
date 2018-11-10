@@ -13,25 +13,24 @@ import org.musicpimp.ui.receivers.{MusicIntentReceiver, RemoteControlReceiver}
 
 import scala.util.Try
 
-/**
- * A background audio player. An implementation of:
- * http://developer.android.com/guide/topics/media/mediaplayer.html
- * http://developer.android.com/training/managing-audio/index.html
- *
- * This media player is solely controlled by sending <code>Intent</code>s to it, which are
- * received and handled in <code>onStartCommand(Intent,Int,Int)</code>.
- *
- * No methods of this class are called directly from other classes.
- * However, this class may call any other methods in the app as the background player
- * will run in the same process as the main app.
- */
+/** A background audio player. An implementation of:
+  * http://developer.android.com/guide/topics/media/mediaplayer.html
+  * http://developer.android.com/training/managing-audio/index.html
+  *
+  * This media player is solely controlled by sending <code>Intent</code>s to it, which are
+  * received and handled in <code>onStartCommand(Intent,Int,Int)</code>.
+  *
+  * No methods of this class are called directly from other classes.
+  * However, this class may call any other methods in the app as the background player
+  * will run in the same process as the main app.
+  */
 class MediaService
   extends Service
-  with MediaPlayer.OnPreparedListener
-  with MediaPlayer.OnErrorListener
-  with MediaPlayer.OnCompletionListener
-  with AudioManager.OnAudioFocusChangeListener
-  with MediaPlayer.OnInfoListener {
+    with MediaPlayer.OnPreparedListener
+    with MediaPlayer.OnErrorListener
+    with MediaPlayer.OnCompletionListener
+    with AudioManager.OnAudioFocusChangeListener
+    with MediaPlayer.OnInfoListener {
 
   import MediaService._
 
@@ -83,18 +82,17 @@ class MediaService
     })
 
     /**
-     *
-     * http://developer.android.com/guide/components/services.html
-     *
-     * START_STICKY If the system kills the service after onStartCommand() returns,
-     * recreate the service and call onStartCommand(), but do not redeliver the last intent.
-     * Instead, the system calls onStartCommand() with a null intent,
-     * unless there were pending intents to start the service, in which case,
-     * those intents are delivered.
-     *
-     * This is suitable for media players (or similar services) that are not executing commands,
-     * but running indefinitely and waiting for a job.
-     */
+      * http://developer.android.com/guide/components/services.html
+      *
+      * START_STICKY If the system kills the service after onStartCommand() returns,
+      * recreate the service and call onStartCommand(), but do not redeliver the last intent.
+      * Instead, the system calls onStartCommand() with a null intent,
+      * unless there were pending intents to start the service, in which case,
+      * those intents are delivered.
+      *
+      * This is suitable for media players (or similar services) that are not executing commands,
+      * but running indefinitely and waiting for a job.
+      */
     Service.START_STICKY
   }
 
@@ -160,11 +158,10 @@ class MediaService
     }
   }
 
-  /**
-   * Requests audio focus.
-   *
-   * @return true if this media player was granted audio focus, false otherwise
-   */
+  /** Requests audio focus.
+    *
+    * @return true if this media player was granted audio focus, false otherwise
+    */
   def requestAudioFocus: Boolean = {
     import AudioManager._
     val result = audioManager.requestAudioFocus(this, STREAM_MUSIC, AUDIOFOCUS_GAIN)
@@ -252,10 +249,9 @@ class MediaService
     closePlayer()
   }
 
-  /**
-   * Called when a track has completed playback or is swapped for another;
-   * a new mediaplayer is then created if more playback follows.
-   */
+  /** Called when a track has completed playback or is swapped for another;
+    * a new mediaplayer is then created if more playback follows.
+    */
   def closePlayer(): Unit = {
     // throws IllegalArgumentException if the argument was not registered, haha
     Try(unregisterReceiver(intentReceiver))
@@ -278,13 +274,13 @@ class MediaService
   }
 
   /**
-   * Used for RPC. But we dont use RPC, can return null.
-   *
-   * All communication with this service is through intents.
-   *
-   * @param intent unused
-   * @return NULL
-   */
+    * Used for RPC. But we dont use RPC, can return null.
+    *
+    * All communication with this service is through intents.
+    *
+    * @param intent unused
+    * @return NULL
+    */
   override def onBind(intent: Intent): IBinder = null
 
   private def showToast(msg: String): Unit = {

@@ -10,17 +10,14 @@ import org.musicpimp.util.Keys
 import org.musicpimp.{TR, R}
 import play.api.libs.json.Json._
 
-/**
- * Note that app Barcode Scanner runs in landscape mode, so the screen
- * is rotated immediately when the intent is started, causing `onCreate`
- * to be called twice if we're in portrait mode. But the intent should
- * only be launched once not twice, therefore the `scanning` variable
- * is used to ensure only one instance of the scanner is opened.
- *
- * http://code.google.com/p/zxing/wiki/ScanningViaIntent
- *
- * @author mle
- */
+/** Note that app Barcode Scanner runs in landscape mode, so the screen
+  * is rotated immediately when the intent is started, causing `onCreate`
+  * to be called twice if we're in portrait mode. But the intent should
+  * only be launched once not twice, therefore the `scanning` variable
+  * is used to ensure only one instance of the scanner is opened.
+  *
+  * http://code.google.com/p/zxing/wiki/ScanningViaIntent
+  */
 class BeamScanActivity extends LayoutBaseActivity {
   // orientation changes
   private var ended = false
@@ -58,13 +55,13 @@ class BeamScanActivity extends LayoutBaseActivity {
   }
 
   /**
-   * Parses the scanned barcode, sets up the MusicBeamer player then finishes
-   * this activity. Displays a feedback message to the user if she fucks up.
-   *
-   * @param requestCode will be SCAN_REQUEST, see above method
-   * @param resultCode should be RESULT_OK if all goes well
-   * @param data data that contains the scanned barcode string in key SCAN_RESULT
-   */
+    * Parses the scanned barcode, sets up the MusicBeamer player then finishes
+    * this activity. Displays a feedback message to the user if she fucks up.
+    *
+    * @param requestCode will be SCAN_REQUEST, see above method
+    * @param resultCode  should be RESULT_OK if all goes well
+    * @param data        data that contains the scanned barcode string in key SCAN_RESULT
+    */
   override def onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
     scanning = false
     if (requestCode == SCAN_REQUEST) {

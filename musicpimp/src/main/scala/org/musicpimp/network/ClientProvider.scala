@@ -1,10 +1,7 @@
 package org.musicpimp.network
 
-/**
- * TODO embrace FP
- *
- * @author mle
- */
+/** TODO embrace FP
+  */
 class ClientProvider(clientCount: Int) {
   // each AsyncHttpClient instance only does 10 parallel connections, so we use multiple
   val clients = Seq.fill(clientCount)(new PingHttpClient)

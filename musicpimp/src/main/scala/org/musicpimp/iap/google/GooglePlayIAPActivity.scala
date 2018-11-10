@@ -10,10 +10,6 @@ import org.musicpimp.iap.google.GooglePlayIAPActivity._
 import org.musicpimp.iap.{GooglePimpIapUtils, IAPActivity, IapInfo}
 import org.musicpimp.util.PimpLog
 
-/**
- *
- * @author mle
- */
 class GooglePlayIAPActivity extends IAPActivity with PimpLog {
   var iabHelper: Option[AsyncIabHelper] = None
   val iapUtils = GooglePimpIapUtils

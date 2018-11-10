@@ -1,9 +1,5 @@
 package org.musicpimp.json
 
-/**
- *
- * @author mle
- */
 trait JsonStrings {
 
   val EMPTY_ARRAY = "[]"

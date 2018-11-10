@@ -4,11 +4,8 @@ import android.content.{Intent, Context, BroadcastReceiver}
 import android.view.KeyEvent
 import org.musicpimp.audio.PlayerManager
 
-/**
- * Handles hardware key presses of prev/next/pause/play, if any.
- *
- * @author mle
- */
+/** Handles hardware key presses of prev/next/pause/play, if any.
+  */
 class RemoteControlReceiver extends BroadcastReceiver {
   def player = PlayerManager.active
 

@@ -10,10 +10,6 @@ import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.AlarmsClient
 import org.musicpimp.util.{Keys, PimpSettings, PimpLog}
 
-/**
- *
- * @author mle
- */
 class StopAlarm extends BaseActivity with PimpLog {
   lazy val settings = new PimpSettings(new ActivityHelper(this).prefs)
 

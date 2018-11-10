@@ -4,10 +4,6 @@ import android.support.v4.app.Fragment
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio._
 
-/**
- *
- * @author mle
- */
 trait PlaybackFragment extends Fragment with PlaybackListening {
   lazy val activityHelper = new ActivityHelper(getActivity)
   // needed so we can remove the event handler when needed

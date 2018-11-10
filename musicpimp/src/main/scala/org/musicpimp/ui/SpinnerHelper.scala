@@ -7,9 +7,6 @@ import com.mle.android.ui.Implicits.action2itemSelectedListener
 import org.musicpimp.TypedResource
 import org.musicpimp.andro.ui.ActivityHelper
 
-/**
- * @author Michael
- */
 abstract class SpinnerHelper(activity: Activity) {
   lazy val helper = new ActivityHelper(activity)
 
@@ -21,12 +18,12 @@ abstract class SpinnerHelper(activity: Activity) {
 
   def spinnerView: Option[Spinner] = helper.tryFindView(spinnerResource)
 
-  def reload() = spinnerView foreach loadSpinnerChoices
+  def reload(): Unit = spinnerView foreach loadSpinnerChoices
 
-//  override def onResume(): Unit = {
-//    super.onResume()
-//    spinnerView foreach loadSpinnerChoices
-//  }
+  //  override def onResume(): Unit = {
+  //    super.onResume()
+  //    spinnerView foreach loadSpinnerChoices
+  //  }
 
   def loadSpinnerChoices(spinner: Spinner): Unit = {
     val choices = spinnerChoices
@@ -50,5 +47,5 @@ abstract class SpinnerHelper(activity: Activity) {
 
   def initialSpinnerSelection(choices: Seq[String]): Option[String] = choices.headOption
 
-  def onSpinnerInit(spinner: Spinner, choices: Seq[String]) = ()
+  def onSpinnerInit(spinner: Spinner, choices: Seq[String]): Unit = ()
 }

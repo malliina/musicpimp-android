@@ -1,10 +1,5 @@
 package org.musicpimp.audio
 
-
-/**
- *
- * @author mle
- */
 trait PlaylistBase {
   /**
    * @return the playlist index wrapped in an Option, or None if no playlist track is active

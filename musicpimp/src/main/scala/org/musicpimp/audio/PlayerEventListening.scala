@@ -2,9 +2,6 @@ package org.musicpimp.audio
 
 import rx.lang.scala.Subscription
 
-/**
- * @author Michael
- */
 trait PlayerEventListening {
   protected var playerEventSubscription: Option[Subscription] = None
 

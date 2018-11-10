@@ -6,10 +6,6 @@ import play.api.libs.json.Reads
 import scala.collection.mutable
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 abstract class RemoteMediaLibrary(val endpoint: Endpoint) extends MediaLibrary with RemoteHttpClient {
   // cache keyed by folder ID
   protected val cache = mutable.Map.empty[String, Directory]

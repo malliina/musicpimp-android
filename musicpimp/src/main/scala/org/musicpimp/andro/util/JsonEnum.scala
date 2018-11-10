@@ -3,11 +3,8 @@ package org.musicpimp.andro.util
 import play.api.libs.json._
 import play.api.libs.json.JsSuccess
 
-/**
- * Copied from util-play. TODO do not copy.
- *
- * @author Michael
- */
+/** Copied from util-play. TODO do not copy.
+  */
 trait JsonEnum[T] {
   def all: Seq[T]
 
@@ -26,4 +23,5 @@ trait JsonEnum[T] {
 
     override def writes(o: T): JsValue = Json.toJson(resolveName(o))
   }
+
 }

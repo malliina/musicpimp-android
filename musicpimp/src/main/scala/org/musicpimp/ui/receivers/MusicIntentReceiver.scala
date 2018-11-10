@@ -4,10 +4,6 @@ import android.content.{Intent, Context, BroadcastReceiver}
 import android.media.AudioManager
 import org.musicpimp.audio.PlayerManager
 
-/**
- *
- * @author mle
- */
 class MusicIntentReceiver extends BroadcastReceiver {
   def localPlayer = PlayerManager.localPlayer
 

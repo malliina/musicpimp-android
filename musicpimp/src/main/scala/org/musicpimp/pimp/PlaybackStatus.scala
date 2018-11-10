@@ -3,10 +3,6 @@ package org.musicpimp.pimp
 import org.musicpimp.audio.Track
 import scala.concurrent.duration.Duration
 
-/**
- *
- * @author mle
- */
 case class PlaybackStatus(id: String,
                           title: String,
                           album: String,

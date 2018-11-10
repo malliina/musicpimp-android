@@ -17,8 +17,7 @@ class ActivityHelper(val activity: Activity) extends TypedFindView with PimpLog 
 
   def tryFindIntView[A](id: Int): Option[A] = Option(activity findViewById id).map(_.asInstanceOf[A])
 
-  /**
-    * Returns the view with the given id if this fragment is attached and the view is found.
+  /** Returns the view with the given id if this fragment is attached and the view is found.
     *
     * Both activity and findViewById may return null at arbitrary times, therefore the result is wrapped in an Option.
     *

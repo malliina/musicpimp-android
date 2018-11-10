@@ -16,10 +16,6 @@ import org.musicpimp.util.{Keys, PimpLog}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
   val supportedExtensions = Seq("mp3")
   // + 1 is for the slash ('/') between the end of the root path and beginning of subpaths

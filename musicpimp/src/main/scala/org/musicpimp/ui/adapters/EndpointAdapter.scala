@@ -4,10 +4,6 @@ import android.content.Context
 import com.mle.andro.ui.adapters.IconTwoLinesAdapter
 import org.musicpimp.http.Endpoint
 
-/**
- *
- * @author mle
- */
 class EndpointAdapter(ctx: Context, endpoints: Seq[Endpoint])
   extends IconTwoLinesAdapter[Endpoint](ctx, endpoints) {
 

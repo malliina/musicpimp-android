@@ -6,10 +6,6 @@ import play.api.libs.json.Json
 
 import scala.util.Try
 
-/**
- *
- * @author mle
- */
 class SubsonicHttpException(content: Option[String]) extends ExplainedHttpException(content) {
   val reasonOpt = for {
     c <- content

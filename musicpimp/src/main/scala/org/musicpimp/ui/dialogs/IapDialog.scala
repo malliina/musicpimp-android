@@ -7,10 +7,6 @@ import org.musicpimp.R.string._
 import android.support.v4.app.Fragment
 import org.musicpimp.andro.ui.ActivityHelper
 
-/**
- *
- * @author mle
- */
 class IapDialog extends DefaultDialog(
   message = free_over_suggest_purchase,
   title = Some(limit_title),

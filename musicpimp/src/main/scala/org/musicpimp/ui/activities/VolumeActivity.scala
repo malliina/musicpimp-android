@@ -9,10 +9,6 @@ import org.musicpimp.audio.{PlayerManager, MuteToggled, VolumeChanged, PlayerEve
 import org.musicpimp.ui.Assets
 import rx.lang.scala.Subscription
 
-/**
- *
- * @author mle
- */
 class VolumeActivity extends LayoutBaseActivity with PlayerListeningActivity {
   protected var subscription: Option[Subscription] = None
   override val contentView = R.layout.volume

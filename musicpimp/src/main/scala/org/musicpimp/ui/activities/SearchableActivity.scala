@@ -18,9 +18,8 @@ import org.musicpimp.{R, TR}
 import scala.concurrent.Future
 
 /**
- * @author Michael
- * @see http://developer.android.com/guide/topics/search/search-dialog.html#SearchableActivity
- */
+  * @see http://developer.android.com/guide/topics/search/search-dialog.html#SearchableActivity
+  */
 class SearchableActivity extends LayoutBaseActivity with MusicDownloadUpdatingActivity with PimpLog {
   lazy val actions = new MusicActions(activityHelper)
 

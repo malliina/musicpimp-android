@@ -22,9 +22,6 @@ import org.musicpimp.util.{Keys, PimpLog}
 
 import scala.util.Try
 
-/**
- * @author Michael
- */
 class MusicActions(utils: ActivityHelper) extends PimpLog {
   def downloadManager = utils.activity.getSystemService(Context.DOWNLOAD_SERVICE).asInstanceOf[DownloadManager]
 

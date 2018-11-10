@@ -8,9 +8,6 @@ import play.api.libs.json.JsValue
 
 import scala.concurrent.{Future, Promise}
 
-/**
- * @author Michael
- */
 trait WelcomeExpectation extends SocketClient[JsValue] {
   protected val welcomePromise = Promise[Unit]()
 

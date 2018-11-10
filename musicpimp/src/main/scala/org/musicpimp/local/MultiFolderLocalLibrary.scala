@@ -4,10 +4,6 @@ import java.io.File
 import org.musicpimp.audio.MultiLibrary
 import org.musicpimp.pimp.PimpLibrary
 
-/**
- *
- * @author mle
- */
 class MultiFolderLocalLibrary(folders: Seq[File]) extends LocalLibraryBase with MultiLibrary {
   val subLibraries = folders.filter(f => f.isDirectory && f.exists()).map(new LocalLibrary(_))
 

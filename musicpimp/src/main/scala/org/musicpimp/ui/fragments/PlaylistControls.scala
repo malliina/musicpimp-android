@@ -13,10 +13,6 @@ import org.musicpimp.ui.adapters.TrackItem
 import org.musicpimp.ui.adapters.{DownloadProgress, LibraryItemAdapter}
 import org.musicpimp.{R, TR}
 
-/**
- *
- * @author mle
- */
 trait PlaylistControls extends PlaybackFragment with MusicDownloadUpdatingFragment {
   def layoutId: Int
 

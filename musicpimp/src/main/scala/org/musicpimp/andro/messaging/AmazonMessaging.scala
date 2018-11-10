@@ -10,9 +10,6 @@ import org.musicpimp.messaging.AdmMessages.{AdmMessage, Registered, Registration
 
 import scala.concurrent.{Future, Promise}
 
-/**
- * @author Michael
- */
 trait AmazonMessaging extends IMessagingUtils {
   def serverMessenger: JsonMessagingUtils
 

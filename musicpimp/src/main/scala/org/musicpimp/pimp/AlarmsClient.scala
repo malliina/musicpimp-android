@@ -10,9 +10,6 @@ import org.musicpimp.util.PimpLog
 import play.api.libs.json.Writes
 import scala.concurrent.Future
 
-/**
- * @author KING MICHAEL
- */
 class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) with PimpLog {
   val player = new PimpServerPlayer(endpoint)
 
@@ -47,4 +44,3 @@ object AlarmsClient {
   val SAVE = "save"
   val DELETE = "delete"
 }
-

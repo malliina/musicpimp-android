@@ -7,10 +7,6 @@ import com.mle.util.Version
 import org.musicpimp.PimpApp
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class MasterLibrary(libraries: Seq[MediaLibrary]) extends MultiLibrary {
   var subLibraries: List[MediaLibrary] = List.empty
   val pairs = libraries zip libraries.map(_.ping)

@@ -2,10 +2,6 @@ package org.musicpimp.pimp
 
 import org.musicpimp.andro.util.JsonEnum
 
-
-/**
- * @author Michael
- */
 // sealed means it's only possible to extend this class in this file
 sealed abstract class WeekDay(val shortName: String, val longName: String)
 

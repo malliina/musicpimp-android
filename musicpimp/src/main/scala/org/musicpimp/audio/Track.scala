@@ -8,22 +8,8 @@ import play.api.libs.json.{JsValue, Json, Writes}
 import scala.concurrent.duration.Duration
 
 /**
- *
- * @author mle
- */
-/**
- *
- * @param id
- * @param title
- * @param album
- * @param artist
- * @param path
- * @param duration
- * @param size
- * @param source the URI to supply to a media player to begin playback
- * @param username
- * @param password
- */
+  * @param source the URI to supply to a media player to begin playback
+  */
 case class Track(id: String,
                  title: String,
                  album: String,

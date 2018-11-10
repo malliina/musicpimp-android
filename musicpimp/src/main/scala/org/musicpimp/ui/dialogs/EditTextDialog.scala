@@ -9,10 +9,6 @@ import com.mle.android.ui.Implicits._
 import org.musicpimp.R
 import org.musicpimp.R.string._
 
-/**
- *
- * @author mle
- */
 abstract class EditTextDialog(positiveLabel: Int = R.string.ok,
                               prefilledValue: Option[String] = None,
                               messageRes: Option[Int] = None,

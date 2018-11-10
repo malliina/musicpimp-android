@@ -12,10 +12,6 @@ import org.musicpimp.ui.adapters.FontAwesomeAdapter
 import org.musicpimp.ui.dialogs.FirstUseWelcomeTutorial
 import org.musicpimp.{PimpApp, TR, R}
 
-/**
- *
- * @author mle
- */
 class AboutActivity extends ActionBarActivity with LayoutBaseActivity {
   val items = Seq(
     TwoPartItem(fa_envelope_o, developed_by),

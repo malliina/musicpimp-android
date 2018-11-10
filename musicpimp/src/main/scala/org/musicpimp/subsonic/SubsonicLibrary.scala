@@ -11,13 +11,9 @@ import org.musicpimp.util.PimpLog
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class SubsonicLibrary(endpoint: Endpoint)
   extends RemoteMediaLibrary(endpoint)
-  with SubsonicHttpClient with PimpLog {
+    with SubsonicHttpClient with PimpLog {
 
   private val json = new SubsonicJsonReaders(endpoint)
 
@@ -54,9 +50,8 @@ class SubsonicLibrary(endpoint: Endpoint)
 
   override def downloadUri(track: Track): Uri = json.downloadUri(track.id)
 
-  /**
-   * This is a helper method for `upload`, but since Subsonic cannot upload anyway, we return a negative result so that
-   * it never takes part in it.
-   */
+  /** This is a helper method for `upload`, but since Subsonic cannot upload anyway, we return a negative result so that
+    * it never takes part in it.
+    */
   override def cacheContains(trackId: String): Boolean = false
 }

@@ -1,13 +1,10 @@
 package org.musicpimp.network
 
-import com.mle.android.http.{JsonHttpClient, HttpUtil, HttpConstants, HttpResponse}
+import com.mle.android.http.{HttpConstants, HttpResponse, HttpUtil, JsonHttpClient}
 import org.musicpimp.http.Endpoint
+
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class PingHttpClient extends JsonHttpClient {
   def setBasicAuth(username: String, password: String) =
     addHeaders(

@@ -12,10 +12,6 @@ import org.musicpimp.usage.PimpUsageController
 import org.musicpimp.util.Keys
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class PimpIapUtils(val iapUtils: IapUtilsBase, premiumSku: String) {
   def purchasePremium(activity: Activity): Future[String] = iapUtils.purchase(premiumSku, activity)
 

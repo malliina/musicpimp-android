@@ -12,10 +12,6 @@ import java.util
 import java.util.{Locale, Date}
 import scala.concurrent._
 
-/**
- *
- * @author mle
- */
 object SamsungIapUtils extends SamsungIapUtils {
   val itemGroupId = "100000102860"
   val premiumSku = "000001014214"

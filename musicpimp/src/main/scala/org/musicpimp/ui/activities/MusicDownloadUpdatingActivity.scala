@@ -4,9 +4,6 @@ import android.app.{Activity, DownloadManager}
 import android.content.IntentFilter
 import org.musicpimp.ui.MusicDownloadUpdating
 
-/**
- * @author Michael
- */
 trait MusicDownloadUpdatingActivity extends Activity with MusicDownloadUpdating {
 
   override def activity: Activity = this

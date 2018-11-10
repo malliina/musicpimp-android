@@ -4,10 +4,6 @@ import android.support.v4.app.{FragmentManager, Fragment, FragmentPagerAdapter}
 import com.mle.android.exceptions.ExplainedException
 import org.musicpimp.ui.fragments.{PlayerFragment, PlaylistFragment, LibraryFragment}
 
-/**
- *
- * @author mle
- */
 class PimpPagerAdapter(fm: FragmentManager, combinedPlayerAndPlaylist: Boolean = false) extends FragmentPagerAdapter(fm) {
 
   val firstTwo = Seq(TabInfo("Music", selected = true), TabInfo("Player"))

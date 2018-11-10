@@ -6,11 +6,6 @@ import concurrent.duration._
 import org.musicpimp.PimpApp
 import org.musicpimp.util.Keys
 
-
-/**
- *
- * @author mle
- */
 trait PimpUsageController extends UsageController {
   // obviously, this must always be true for Google Play / Amazon / Samsung builds
   private val isIapEnabled = true

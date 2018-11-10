@@ -10,14 +10,10 @@ import org.musicpimp.exceptions.SubsonicHttpException
 import org.musicpimp.http.Endpoint
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class SubsonicPlayer(val endpoint: Endpoint)
   extends Player
-  with SelfSubscription
-  with SubsonicHttpClient {
+    with SelfSubscription
+    with SubsonicHttpClient {
   private var poller: Option[ScheduledFuture[_]] = None
   var preMuteVolume: Option[Int] = None
   val json = new SubsonicJsonReaders(endpoint)
@@ -65,14 +61,13 @@ class SubsonicPlayer(val endpoint: Endpoint)
 
   def pause(): Unit = action(STOP)
 
-  /**
-   * Implementation notes: The seeking action in Subsonic is called "skip",
-   * so there is no typo here.Notice from the API that you need to specify
-   * the playlist index (index) in addition to the track position (offset)
-   * when seeking.
-   *
-   * @param pos track position to seek to
-   */
+  /** Implementation notes: The seeking action in Subsonic is called "skip",
+    * so there is no typo here.Notice from the API that you need to specify
+    * the playlist index (index) in addition to the track position (offset)
+    * when seeking.
+    *
+    * @param pos track position to seek to
+    */
   def seek(pos: Duration): Unit = action(
     SKIP,
     INDEX -> (index getOrElse 0).toString,
@@ -95,11 +90,10 @@ class SubsonicPlayer(val endpoint: Endpoint)
     }
   }
 
-  /**
-   * Subsonic expects a value between [0, 1.0] for the gain.
-   *
-   * @param volume [0, 100]
-   */
+  /** Subsonic expects a value between [0, 1.0] for the gain.
+    *
+    * @param volume [0, 100]
+    */
   def volume(volume: Int): Unit = action(SET_GAIN, GAIN -> (1.0f * volume / 100).toString)
 
   private def action(action: String, additionalParams: (String, String)*): Future[Unit] =
@@ -115,7 +109,7 @@ class SubsonicPlayer(val endpoint: Endpoint)
     SubsonicHttpClient.buildPath("jukeboxControl", queryParams: _*)
 
   override def startPolling() {
-    val task = Scheduling.every(3000 milliseconds) {
+    val task = Scheduling.every(3000.milliseconds) {
       val statusFuture = client.getJson[StatusEvent](buildPath(ACTION -> GET))(json.statusReader)
       statusFuture.map(fireEvent).onFailure {
         case she: SubsonicHttpException =>

@@ -9,19 +9,14 @@ import com.mle.util.WebUtils
 
 import scala.concurrent.Future
 
-
-/**
- * @author mle
- */
 class DiscoGs extends Closeable {
   val iLoveDiscoGsFakeCoverSize = 15378
   val client = new QuickHttpClient
 
-  /**
-   * Returns the album cover. Optionally downloads it if it doesn't already exist locally.
-   *
-   * @return the album cover file, which is an image
-   */
+  /** Returns the album cover. Optionally downloads it if it doesn't already exist locally.
+    *
+    * @return the album cover file, which is an image
+    */
   def cover(artist: String, album: String): Future[File] = {
     val file = coverFile(artist, album)
     if (file.canRead && file.length() != iLoveDiscoGsFakeCoverSize) Future.successful(file)
@@ -44,4 +39,3 @@ object DiscoGs {
   coverDirectory.mkdirs()
   val client = new DiscoGs
 }
-

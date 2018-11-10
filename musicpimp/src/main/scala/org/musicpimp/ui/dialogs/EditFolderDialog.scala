@@ -5,10 +5,6 @@ import org.musicpimp.R.string._
 import org.musicpimp.ui.activities.LocalFolders
 import org.musicpimp.util.PimpSettings
 
-/**
- *
- * @author mle
- */
 class EditFolderDialog(folderOpt: Option[String])
   extends FolderDialog(folderOpt, submit_changes) {
 
