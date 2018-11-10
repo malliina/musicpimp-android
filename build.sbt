@@ -12,7 +12,7 @@ val usedScalaVersion = "2.11.12"
 lazy val pimpSettings = apkSettings ++ commonSettings ++
   googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
   scalaVersion := usedScalaVersion,
-  version := "2.0.2",
+  version := "2.1.0",
   resolvers ++= Seq(
     "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
