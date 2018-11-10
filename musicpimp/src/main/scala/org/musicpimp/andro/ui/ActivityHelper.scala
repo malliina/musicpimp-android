@@ -15,7 +15,7 @@ class ActivityHelper(val activity: Activity) extends TypedFindView with PimpLog 
 
   def prefs = PreferenceManager.getDefaultSharedPreferences(activity)
 
-  def tryFindIntView[A](id: Int): Option[A] = Option(activity findViewById id).map(_.asInstanceOf[A])
+  def tryFindIntView[A <: View](id: Int): Option[A] = Option(activity.findViewById[A](id))
 
   /** Returns the view with the given id if this fragment is attached and the view is found.
     *
@@ -25,7 +25,7 @@ class ActivityHelper(val activity: Activity) extends TypedFindView with PimpLog 
     * @tparam A type of view
     * @return the view wrapped in an Option, or None if it could not be obtained
     */
-  def tryFindView[A](tr: TypedResource[A]): Option[A] = tryFindIntView[A](tr.id)
+  def tryFindView[A <: View](tr: TypedResource[A]): Option[A] = tryFindIntView[A](tr.id)
 
   def navigate[T <: Activity](destActivity: Class[T], parameters: (String, String)*) {
     val intent = new Intent(activity, destActivity)

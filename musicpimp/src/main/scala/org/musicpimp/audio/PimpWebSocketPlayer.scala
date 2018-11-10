@@ -17,9 +17,7 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
     with PimpHttpClient
     with PimpLog {
 
-  var socket = newWebSocket
-
-  private def newWebSocket = new PimpWebSocket(endpoint, webSocketResource, onMessage)
+  private val socket = new PimpWebSocket(endpoint, webSocketResource, onMessage)
 
   import json._
 
@@ -83,13 +81,11 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
   def volume(volume: Int): Unit = sendValued(VOLUME, volume)
 
   override def open(): Future[Unit] = {
-    val ret: Future[Unit] = socket.connect()
     val uri = endpoint.wsBaseUri
     info(s"Connecting to: $uri...")
-    ret.map(_ => info(s"Connected to: $uri.")).recover {
+    socket.connect().map(_ => info(s"Connected to: $uri.")).recover {
       case e: Exception => warn(s"Connection to: $uri failed.", e)
     }
-    ret
   }
 
   override def close(): Unit = {
@@ -97,7 +93,12 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
     closeSocket()
   }
 
-  private def closeSocket(): Unit = Try(socket.close())
+  private def closeSocket(): Unit = {
+    Try {
+      socket.client.getConnection.close()
+      socket.close()
+    }
+  }
 
   protected def send[T: Writes](message: T): Unit = {
     socket.sendMessage(message)

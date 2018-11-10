@@ -4,6 +4,8 @@ import android.content.Context
 import com.mle.android.network.WifiHelpers
 import com.mle.network.NetworkDevice
 
+import scala.util.Try
+
 trait PimpWifiHelpers extends WifiHelpers {
   /**
     *
@@ -14,10 +16,13 @@ trait PimpWifiHelpers extends WifiHelpers {
     if (isWlanIP(ip)) currentSSID(ctx)
     else None
 
-  def isWlanIP(ip: String) =
-    EndpointScanner.isNumericalIP(ip) &&
-      NetworkDevice.hostAddresses.exists(addr => network(ip) == network(addr))
-
+  def isWlanIP(ip: String): Boolean =
+    Try {
+      EndpointScanner.isNumericalIP(ip) &&
+        NetworkDevice.hostAddresses.exists(addr => network(ip) == network(addr))
+    }.getOrElse {
+      false
+    }
 }
 
 object PimpWifiHelpers extends PimpWifiHelpers

@@ -2,8 +2,10 @@ package org.musicpimp.audio
 
 import java.io.Closeable
 
-trait SelfSubscription extends PlayerBase with Closeable {
-  protected val subscription = events.subscribe(e => onPlayerEvent(e))
+import org.musicpimp.util.PimpLog
+
+trait SelfSubscription extends PlayerBase with Closeable with PimpLog {
+  protected val subscription = events.subscribe(e => onPlayerEvent(e), err => warn("Player failure", err))
   protected var playerStatus: StatusEvent = StatusEvent.empty
 
   protected def onPlayerEvent(event: PlayerEvent): Unit

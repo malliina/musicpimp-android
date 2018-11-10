@@ -49,7 +49,8 @@ object AndroidBuild {
     "scala.collection.**",
     "play.api.libs.**",
     "cz.msebera.android.httpclient.extras.**",
-    "com.google.android.gms.internal.**"
+    "com.google.android.gms.internal.**",
+    "scala.xml.parsing.**"
   )
 
   def zxingDep = "com.google.zxing" % "core" % "2.3.0"

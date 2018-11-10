@@ -29,7 +29,7 @@ class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) with 
     postBody(ctx, alarmsResource, body)
   }
 
-  def connect() = player.open()
+  def connect(): Future[Unit] = player.open()
 
   override def close(): Unit = {
     player.close()

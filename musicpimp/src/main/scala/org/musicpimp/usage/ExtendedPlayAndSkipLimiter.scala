@@ -1,7 +1,8 @@
 package org.musicpimp.usage
 
-import org.musicpimp.audio.{TrackChanged, PlayerEvent, Track, Player}
+import org.musicpimp.audio.{Player, PlayerEvent, Track, TrackChanged}
 import org.musicpimp.util.PimpLog
+
 import scala.concurrent.duration.Duration
 
 trait LocalPlayerLimiter extends ExtendedPlayAndSkipLimiter
@@ -26,8 +27,7 @@ trait PlayAndSkipLimiter extends PlaybackLimiter {
     withLimitControl(super.skip(index))
 }
 
-/**
-  * Monitors playback and limits it as appropriate.
+/** Monitors playback and limits it as appropriate.
   *
   * This trait does two things: a) it informs [[org.musicpimp.usage.PimpUsageController]]
   * every time a track changes and b) it ensures that certain implementations are called
@@ -38,7 +38,7 @@ trait PlayAndSkipLimiter extends PlaybackLimiter {
   *
   */
 trait PlaybackLimiter extends Player with PimpLog {
-  events.subscribe(e => onEvent(e))
+  events.subscribe(e => onEvent(e), err => warn("Player failure", err))
 
   abstract override def add(track: Track): Unit =
     withLimitControl(super.add(track))

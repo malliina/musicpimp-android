@@ -146,6 +146,7 @@ class EditEndpointActivity
       case pe: ExplainedException =>
         showFeedbackText(pe.getMessage)
       case e: Exception =>
+        warn("Edit endpoint failed.", e)
         showFeedbackText(s"An error occurred. ${e.getMessage}")
     }
 
@@ -154,16 +155,16 @@ class EditEndpointActivity
       case EndpointTypes.MusicPimp => Some(new PimpLibrary(endpoint))
       case EndpointTypes.Cloud => Some(new PimpLibrary(endpoint))
       case EndpointTypes.Subsonic => Some(new SubsonicLibrary(endpoint))
-      case other => None
+      case _ => None
     }
-    maybeSession.foreach(session => {
+    maybeSession.foreach { session =>
       val endpointName = endpoint.endpointType.toString
       showFeedbackText("Testing...", showProgress = true)
       session.ping
         .map(version => showFeedbackText(s"$endpointName ${version.version} at your service."))
         .recover(testFailedFeedback(endpoint) andThen (msg => showFeedbackText(msg)))
         .onComplete(_ => session.close())
-    })
+    }
   }
 
   def setTestingProgressVisibility(visibility: Int) =

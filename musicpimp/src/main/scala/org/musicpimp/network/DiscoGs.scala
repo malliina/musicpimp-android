@@ -6,6 +6,7 @@ import android.os.Environment
 import com.mle.android.http.QuickHttpClient
 import com.mle.concurrent.ExecutionContexts.cached
 import com.mle.util.WebUtils
+import org.musicpimp.util.PimpLog
 
 import scala.concurrent.Future
 
@@ -26,7 +27,16 @@ class DiscoGs extends Closeable {
   def downloadCover(artist: String, album: String): Future[File] = {
     val artistEnc = WebUtils.encodeURIComponent(artist)
     val albumEnc = WebUtils.encodeURIComponent(album)
-    client.getFile(s"https://api.musicpimp.org/covers?artist=$artistEnc&album=$albumEnc", coverFile(artist, album))
+    if (DiscoGs.isStorageMounted) {
+      try {
+        client.getFile(s"https://api.musicpimp.org/covers?artist=$artistEnc&album=$albumEnc", coverFile(artist, album))
+      } catch {
+        case e: AssertionError =>
+          Future.failed(e)
+      }
+    } else {
+      Future.failed(new Exception(s"Storage not mounted, not downloading cover $artist - $album."))
+    }
   }
 
   protected def coverFile(artist: String, album: String): File = new File(DiscoGs.coverDirectory, s"$artist-$album.jpg")
@@ -34,8 +44,18 @@ class DiscoGs extends Closeable {
   def close(): Unit = client.close()
 }
 
-object DiscoGs {
-  val coverDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "covers")
-  coverDirectory.mkdirs()
+object DiscoGs extends PimpLog {
+  //  ContextCompat.checkSelfPermission()
+  val picDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+  val coverDirectory = new File(picDir, "covers")
+  val wasCreated = coverDirectory.mkdirs()
+  if (!wasCreated) {
+    info(s"Created cover dir '$coverDirectory'.")
+  } else {
+    val state = Environment.getExternalStorageState()
+    warn(s"Covers directory not created. Storage state is $state, mounted $isStorageMounted, picture directory '$picDir'.")
+  }
   val client = new DiscoGs
+
+  def isStorageMounted = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
 }

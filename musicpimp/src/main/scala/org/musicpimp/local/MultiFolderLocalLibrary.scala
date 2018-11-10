@@ -16,7 +16,8 @@ class MultiFolderLocalLibrary(folders: Seq[File]) extends LocalLibraryBase with 
 object MultiFolderLocalLibrary {
   val defaultFolders = Seq(
     LocalLibrary.appInternalMusicDir,
-    LocalLibrary.publicMusicDir)
+    LocalLibrary.publicMusicDir
+  )
   //  ,LocalLibrary.subsonicMusicDir)
   val defaultFolderPaths = defaultFolders map (_.getAbsolutePath)
 }
