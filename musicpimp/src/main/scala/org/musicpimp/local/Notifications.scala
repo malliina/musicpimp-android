@@ -62,7 +62,7 @@ class Notifications(ctx: Context) {
       addAction(MediaService.RESUME_ACTION, R.drawable.ic_media_play, "Play")
     }
     addAction(MediaService.NEXT_ACTION, R.drawable.ic_media_next, "Next")
-    addAction(MediaService.CLOSE_ACTION, R.drawable.abc_ic_clear, "Close")
+    addAction(MediaService.CLOSE_ACTION, R.drawable.abc_ic_clear_mtrl_alpha, "Close")
     // clicking "clear all" will have no effect
     builder.setOngoing(true)
     // the notification id allows us to update the notification later on

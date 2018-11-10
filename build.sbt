@@ -6,7 +6,7 @@ lazy val app = Project("musicpimp", file("musicpimp"))
 
 val malliinaGroup = "com.malliina"
 val supportGroup = "com.android.support"
-val supportVersion = "19.1.0"
+val supportVersion = "23.0.0"
 val usedScalaVersion = "2.11.12"
 
 lazy val pimpSettings = apkSettings ++ commonSettings ++
@@ -21,26 +21,27 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(malliinaGroup %% "util-android" % "0.10.0"),
-    "com.google.android.gms" % "play-services" % "4.4.52",
-//    "cz.msebera.android" % "httpclient" % "4.4.1.1",
+    aar(malliinaGroup %% "util-android" % "0.11.0"),
+    "com.google.android.gms" % "play-services" % "8.4.0",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
   ),
   typedResourcesAar := true,
   typedViewHolders := true,
   useProguard in Android := true,
   proguardCache in Android ++= Seq(
-    "com.google",
-    "org.joda",
-    "joda-time",
-    "io.reactivex",
-    "com.fasterxml.jackson",
-    "com.typesafe.play",
-    "com.google.zxing",
     "android.support.v4",
     "android.support.v7",
+    "com.android",
+    "com.fasterxml.jackson",
+    "com.google",
+    "com.google.android",
+    "com.google.zxing",
     "com.loopj.android",
-    "cz.msebera.android"
+    "com.typesafe.play",
+    "cz.msebera.android",
+    "io.reactivex",
+    "joda-time",
+    "org.joda"
   ),
   proguardOptions in Android ++= Seq(
     // I think there's a problem because play-json depends on org.w3c.something, which is

@@ -33,9 +33,24 @@ object AndroidBuild {
     "com.fasterxml.**",
     "org.joda.time.DateTimeZone,scala.reflect.**",
     "scala.concurrent.util.Unsafe,scala.concurrent.stm.impl.**",
-    "scala.Enumeration$$anonfun$scala$Enumeration$$isValDef$1$1")
+    "scala.Enumeration$$anonfun$scala$Enumeration$$isValDef$1$1",
+    "cz.msebera.android.httpclient.extras.PRNGFixes",
+    "com.google.android.gms.**"
+    //    "com.google.android.gms.internal.zzlh",
+    //    "com.google.android.gms.internal.zzlh$1",
+    //    "com.google.android.gms.maps.internal.zzad"
+  )
 
-  def dontWarnClasses = Seq("org.w3c.**", "com.amazon.**", "org.apache.**", "org.joda.**", "scala.collection.**", "play.api.libs.**")
+  def dontWarnClasses = Seq(
+    "org.w3c.**",
+    "com.amazon.**",
+    "org.apache.**",
+    "org.joda.**",
+    "scala.collection.**",
+    "play.api.libs.**",
+    "cz.msebera.android.httpclient.extras.**",
+    "com.google.android.gms.internal.**"
+  )
 
   def zxingDep = "com.google.zxing" % "core" % "2.3.0"
 
@@ -44,7 +59,8 @@ object AndroidBuild {
   def keptClasses: Seq[String] = keptZxingClasses ++ Seq(
     "com.fasterxml.**",
     "com.android.vending.billing.**",
-    "com.amazon.** {*;}")
+    "com.amazon.** {*;}"
+  )
 
   def keptZxingClasses: Seq[String] = Seq(
     "client.android.**",
