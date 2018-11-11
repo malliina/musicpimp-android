@@ -18,7 +18,8 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   resolvers ++= Seq(
     "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
-    "Google" at "https://maven.google.com/"
+    "Google" at "https://maven.google.com/",
+    Resolver.bintrayRepo("malliina", "maven")
   ),
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
