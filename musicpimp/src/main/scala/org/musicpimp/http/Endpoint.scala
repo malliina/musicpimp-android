@@ -75,6 +75,8 @@ object Endpoint {
 
   def basicHeader(user: String, pass: String) = authHeader("Basic", s"$user:$pass")
 
-  def authHeader(word: String, unencoded: String) =
-    s"$word " + Base64.encodeToString(unencoded.getBytes("UTF-8"), Base64.DEFAULT)
+  def authHeader(word: String, unencoded: String) = {
+    val encoded = Base64.encodeToString(unencoded.getBytes("UTF-8"), Base64.NO_WRAP).trim
+    s"$word $encoded"
+  }
 }

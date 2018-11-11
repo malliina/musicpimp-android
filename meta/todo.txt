@@ -44,4 +44,3 @@ release checklist:
 - update version
 - enable aggressive ProGuard caching
 - clean; packageRelease
-

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">MusicPimp</string>
-    <string name="app_version">2.1.0</string>
-    <string name="name_and_version">MusicPimp 2.1.0</string>
+    <string name="app_version">2.2.0</string>
+    <string name="name_and_version">MusicPimp 2.2.0</string>
 
     <string name="action_prev">Previous</string>
     <string name="action_play">Play</string>

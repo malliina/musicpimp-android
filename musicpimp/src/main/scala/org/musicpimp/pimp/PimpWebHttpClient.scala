@@ -1,18 +1,27 @@
 package org.musicpimp.pimp
 
 import android.content.Context
-import com.malliina.android.http.HttpConstants.ACCEPT
-import com.malliina.android.http.HttpResponse
+import com.malliina.android.http.HttpConstants.{AUTHORIZATION, ACCEPT}
+import com.malliina.android.http.{HttpResponse, JsonHttpClient, Protocols}
+import com.malliina.http.FullUrl
 import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.exceptions.PimpHttpException
 import org.musicpimp.http.Endpoint
-import org.musicpimp.network.BasicHttpClient2
 import play.api.libs.json.{Json, Writes}
 
 import scala.concurrent.Future
+import scala.concurrent.duration.DurationLong
 
-class PimpWebHttpClient(val endpoint: Endpoint) extends BasicHttpClient2(endpoint) {
+class PimpWebHttpClient(val endpoint: Endpoint) extends JsonHttpClient {
+  httpClient setTimeout 5.seconds.toMillis.toInt
+  addHeaders(AUTHORIZATION -> endpoint.authValue)
   addHeaders(ACCEPT -> PimpConstants.JSONv18)
+
+  val baseUrl = FullUrl(scheme, s"${endpoint.host}:${endpoint.port}", "")
+
+  private def scheme = if (endpoint.protocol == Protocols.Https) "https" else "http"
+
+  override def transformUri(uri: String): String = (baseUrl / uri).url
 
   /** Analyzes what went wrong with a failed HTTP request and returns a more appropriate exception.
     *

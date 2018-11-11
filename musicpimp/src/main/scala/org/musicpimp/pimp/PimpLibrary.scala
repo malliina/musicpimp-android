@@ -16,7 +16,12 @@ import play.api.libs.json.{Json, Reads}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with PimpHttpClient with PimpLog {
+class PimpLibrary(endpoint: Endpoint)
+//  extends RemoteMediaLibrary(endpoint, PimpOkClient.pimp(endpoint))
+  extends RemoteMediaLibrary(endpoint)
+  with PimpHttpClient
+    with PimpLog {
+//  val json = new PimpJsonReaders(endpoint)
 
   import org.musicpimp.pimp.PimpLibrary._
 

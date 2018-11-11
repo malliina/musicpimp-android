@@ -13,7 +13,7 @@ trait MultiLibrary extends MediaLibrary with PimpLog {
   def folder(id: String): Future[Directory] = mapReduce(subLibraries, _.folder(id))
 
   override def search(term: String, limit: Int): Future[Seq[Track]] = {
-    info(s"Searcing!: $term")
+    info(s"Searcing: $term")
     mapReduceSeq[MediaLibrary, Track](subLibraries, _.search(term, limit))
   }
 
@@ -29,9 +29,8 @@ trait MultiLibrary extends MediaLibrary with PimpLog {
   protected def mapReduce(libraries: Seq[MediaLibrary], f: MediaLibrary => Future[Directory]): Future[Directory] =
     mapReduceBase[MediaLibrary, Directory](libraries, f, Directory.empty, _ ++ _, _.isEmpty)
 
-  def mapReduceSeq[S, T](libraries: Seq[S], f: S => Future[Seq[T]]) = {
+  def mapReduceSeq[S, T](libraries: Seq[S], f: S => Future[Seq[T]]) =
     mapReduceBase[S, Seq[T]](libraries, f, Nil, _ ++ _, _.isEmpty)
-  }
 
   protected def mapReduceBase[S, T](sources: Seq[S],
                                     load: S => Future[T],

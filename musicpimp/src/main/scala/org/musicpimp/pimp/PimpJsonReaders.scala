@@ -14,7 +14,7 @@ import scala.concurrent.duration._
 class PimpJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
 
   def uri(trackId: String): Uri =
-    Uri.parse(s"${endpoint.httpBaseUri}/downloads/$trackId")
+    Uri.parse((endpoint.httpBaseUri / s"/downloads/$trackId").url)
 
   implicit val pimpTrackReader: Reads[Track] = (
     (JsPath \ ID).read[String] and

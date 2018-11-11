@@ -16,10 +16,11 @@ val supportVersion = "23.0.0"
 val usedScalaVersion = "2.11.12"
 val utilAndroidDep = malliinaGroup %% "util-android" % "0.12.5"
 
-lazy val pimpSettings = apkSettings ++ commonSettings ++
+
+lazy val pimpSettings = apkSettings ++ okhttpSettings ++ commonSettings ++
   googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
   scalaVersion := usedScalaVersion,
-  version := "2.1.0",
+  version := "2.2.0",
   resolvers ++= Seq(
     "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
@@ -31,6 +32,7 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
     zxingDep,
     aar(utilAndroidDep),
     "com.typesafe.play" %% "play-json" % "2.3.10",
+    "com.malliina" %% "okclient" % "1.7.1",
     "com.google.android.gms" % "play-services" % "8.4.0",
     "com.android.support" % "multidex" % "1.0.3",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
@@ -116,6 +118,15 @@ lazy val commonSettings = Seq(
   platformTarget in Android := "android-27",
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
   scalacOptions += "-target:jvm-1.6"
+)
+
+def okhttpSettings = Seq(
+  proguardOptions in Android ++= Seq(
+    "-dontwarn javax.annotation.**, okio.**",
+    "-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase",
+    "-dontwarn org.codehaus.mojo.animal_sniffer.*",
+    "-dontwarn okhttp3.internal.platform.ConscryptPlatform"
+  )
 )
 
 /**

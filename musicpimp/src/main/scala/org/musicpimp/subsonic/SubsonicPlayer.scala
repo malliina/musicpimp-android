@@ -1,19 +1,22 @@
 package org.musicpimp.subsonic
 
-import SubsonicPlayer._
-import com.malliina.concurrent.Scheduling
-import com.malliina.concurrent.ExecutionContexts.cached
-import concurrent.duration._
 import java.util.concurrent.ScheduledFuture
+
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.concurrent.Scheduling
 import org.musicpimp.audio._
 import org.musicpimp.exceptions.SubsonicHttpException
 import org.musicpimp.http.Endpoint
+import org.musicpimp.subsonic.SubsonicPlayer._
+
 import scala.concurrent.Future
+import scala.concurrent.duration._
 
 class SubsonicPlayer(val endpoint: Endpoint)
   extends Player
-    with SelfSubscription
-    with SubsonicHttpClient {
+    with SubsonicHttpClient
+    with SelfSubscription {
+//  val client = PimpOkClient.subsonic(endpoint)
   private var poller: Option[ScheduledFuture[_]] = None
   var preMuteVolume: Option[Int] = None
   val json = new SubsonicJsonReaders(endpoint)

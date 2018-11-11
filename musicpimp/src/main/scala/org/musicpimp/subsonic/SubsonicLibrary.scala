@@ -12,8 +12,10 @@ import org.musicpimp.util.PimpLog
 import scala.concurrent.Future
 
 class SubsonicLibrary(endpoint: Endpoint)
+//  extends RemoteMediaLibrary(endpoint, PimpOkClient.subsonic(endpoint))
   extends RemoteMediaLibrary(endpoint)
-    with SubsonicHttpClient with PimpLog {
+    with SubsonicHttpClient
+    with PimpLog {
 
   private val json = new SubsonicJsonReaders(endpoint)
 
