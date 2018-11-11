@@ -3,7 +3,7 @@ package org.musicpimp.beam
 import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
 import com.mle.android.http.HttpResponse
 import com.mle.concurrent.ExecutionContexts.cached
-import org.apache.http.client.HttpResponseException
+import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.beam.BeamPlayer._
 import org.musicpimp.exceptions.{BeamPlayerNotFoundException, ConcurrentStreamingException}
@@ -14,7 +14,6 @@ import org.musicpimp.util.Messaging
 import scala.concurrent.Future
 import scala.concurrent.duration.{Duration, DurationLong}
 
-
 object BeamPlayer {
   val wsResource = "/ws/control"
   val streamResource = "/stream"
@@ -23,14 +22,12 @@ object BeamPlayer {
   val disconnectedMessage = "The MusicBeamer endpoint disconnected. Attempts to control playback will likely fail. You might want to adjust your settings."
 }
 
-/**
- * TODO status is cached in two places: playbackStatus and LocalPlaylist impl
- * @author mle
- */
+/** TODO status is cached in two places: playbackStatus and LocalPlaylist impl
+  */
 class BeamPlayer(endpoint: Endpoint)
   extends PimpWebSocketPlayer(endpoint, BeamPlayer.wsResource)
-  with SelfSubscription
-  with PimpHttpClient {
+    with SelfSubscription
+    with PimpHttpClient {
 
   override val supportsSeekAndSkip = false
 
@@ -85,15 +82,15 @@ class BeamPlayer(endpoint: Endpoint)
     })
 
   /**
-   *
-   * @param position the total playback time since the playlist was reset
-   * @return the playlist index
-   */
+    *
+    * @param position the total playback time since the playlist was reset
+    * @return the playlist index
+    */
   def calculateIndex(position: Duration): Option[Int] = {
     val durations = tracks.map(_.duration.toSeconds)
     val pos = position.toSeconds
     var acc = 0L
-    if (durations.size == 0) {
+    if (durations.isEmpty) {
       None
     } else {
       Some(durations.takeWhile(dur => {
@@ -139,7 +136,7 @@ class BeamPlayer(endpoint: Endpoint)
       })
     }
 
-  def withErrorHandling[T](track: Track)(f: => Future[T]) =
+  def withErrorHandling[T](track: Track)(f: => Future[T]): Unit =
     f.onFailure(parseErrorMessage(track) andThen Messaging.send)
 
   private def parseErrorMessage(track: Track): PartialFunction[Throwable, String] = {

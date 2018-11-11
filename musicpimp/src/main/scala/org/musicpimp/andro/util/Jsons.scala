@@ -6,9 +6,6 @@ import play.api.libs.json.{JsValue, Json}
 
 import scala.util.Try
 
-/**
- * @author Michael
- */
 object Jsons {
   def tryParse(input: String): Try[JsValue] = Try(Json parse input)
 

@@ -12,10 +12,6 @@ import org.musicpimp.{R, TR}
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 abstract class IAPActivity extends PreferenceListeningActivity with PimpLog {
   def loadUnlimitedPlaybackAllowed: Boolean = prefs.getBoolean(Keys.PREF_UNLIMITED_PLAYBACK, false)
 

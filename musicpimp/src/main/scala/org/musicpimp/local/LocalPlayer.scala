@@ -10,14 +10,11 @@ import org.musicpimp.usage.LocalPlayerLimiter
 import scala.concurrent.duration._
 import scala.util.Try
 
-/**
- * Media player that delegates calls by sending intents to the background
- * audio <code>Service</code>.
- *
- * The constructor is protected as evident from the uncommon syntax.
- *
- * @author mle
- */
+/** Media player that delegates calls by sending intents to the background
+  * audio <code>Service</code>.
+  *
+  * The constructor is protected as evident from the uncommon syntax.
+  */
 class LocalPlayer protected() extends Player with LocalPlaylist {
   override val isLocal = true
   private val DEFAULT_VOLUME = 100
@@ -38,11 +35,10 @@ class LocalPlayer protected() extends Player with LocalPlaylist {
 
   def mediaPlayer = mPlayer
 
-  /**
-   * Called whenever a track changes. Reinstalls the previous volume & mute state.
-   *
-   * @param player a player with new a track
-   */
+  /** Called whenever a track changes. Reinstalls the previous volume & mute state.
+    *
+    * @param player a player with new a track
+    */
   def initMediaPlayer(player: MediaPlayer) {
     mPlayer = Some(player)
     volume(vol)
@@ -150,9 +146,9 @@ class LocalPlayer protected() extends Player with LocalPlaylist {
   }
 
   /**
-   *
-   * @param volume [0, 100]
-   */
+    *
+    * @param volume [0, 100]
+    */
   def volume(volume: Int) {
     mediaPlayer.foreach(player => {
       vol = volume
@@ -163,8 +159,8 @@ class LocalPlayer protected() extends Player with LocalPlaylist {
   }
 
   /**
-   * @return the current volume as an integer within [0, 100]
-   */
+    * @return the current volume as an integer within [0, 100]
+    */
   //  def streamVolume: Int = {
   //    val am = PimpApp.context.getSystemService(Context.AUDIO_SERVICE).asInstanceOf[AudioManager]
   //    val vol = am.getStreamVolume(AudioManager.STREAM_MUSIC)
@@ -186,7 +182,7 @@ class LocalPlayer protected() extends Player with LocalPlaylist {
 
 
   private def startPollingForTimeUpdates() {
-    val task = Scheduling.every(900 milliseconds) {
+    val task = Scheduling.every(900.milliseconds) {
       mediaPlayer.foreach(player => {
         fireEvent(TimeUpdated(player.getCurrentPosition.milliseconds))
       })

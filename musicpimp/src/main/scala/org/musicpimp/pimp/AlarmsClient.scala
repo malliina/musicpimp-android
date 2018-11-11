@@ -10,9 +10,6 @@ import org.musicpimp.util.PimpLog
 import play.api.libs.json.Writes
 import scala.concurrent.Future
 
-/**
- * @author KING MICHAEL
- */
 class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) with PimpLog {
   val player = new PimpServerPlayer(endpoint)
 
@@ -32,7 +29,7 @@ class AlarmsClient(endpoint: Endpoint) extends PimpWebHttpClient(endpoint) with 
     postBody(ctx, alarmsResource, body)
   }
 
-  def connect() = player.open()
+  def connect(): Future[Unit] = player.open()
 
   override def close(): Unit = {
     player.close()
@@ -47,4 +44,3 @@ object AlarmsClient {
   val SAVE = "save"
   val DELETE = "delete"
 }
-

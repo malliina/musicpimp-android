@@ -3,7 +3,7 @@ package org.musicpimp.pimp
 import android.content.Context
 import com.mle.android.http.HttpConstants.ACCEPT
 import com.mle.android.http.HttpResponse
-import org.apache.http.client.HttpResponseException
+import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.exceptions.PimpHttpException
 import org.musicpimp.http.Endpoint
 import org.musicpimp.network.BasicHttpClient2
@@ -11,23 +11,18 @@ import play.api.libs.json.{Json, Writes}
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class PimpWebHttpClient(val endpoint: Endpoint) extends BasicHttpClient2(endpoint) {
   addHeaders(ACCEPT -> PimpConstants.JSONv18)
 
-  /**
-   * Analyzes what went wrong with a failed HTTP request and returns a more appropriate exception.
-   *
-   * If the request was authorized, parses the response content as JSON and looks for a reason key, wrapping `t` and the
-   * reason in a [[org.musicpimp.exceptions.PimpHttpException]] if found.
-   *
-   * @param t the failure
-   * @param content any content
-   * @return a more refined exception, or `t` if refinement failed
-   */
+  /** Analyzes what went wrong with a failed HTTP request and returns a more appropriate exception.
+    *
+    * If the request was authorized, parses the response content as JSON and looks for a reason key, wrapping `t`
+    * and the reason in a [[org.musicpimp.exceptions.PimpHttpException]] if found.
+    *
+    * @param t       the failure
+    * @param content any content
+    * @return a more refined exception, or `t` if refinement failed
+    */
   override def handleFailure(t: Throwable, content: Option[String]): Throwable = {
     val pimpFailureRefiner: PartialFunction[Throwable, Throwable] = {
       case hre: HttpResponseException => new PimpHttpException(content, hre)

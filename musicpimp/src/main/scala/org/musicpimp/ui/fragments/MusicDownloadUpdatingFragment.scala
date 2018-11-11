@@ -5,10 +5,9 @@ import android.content.IntentFilter
 import android.support.v4.app.Fragment
 import org.musicpimp.ui.MusicDownloadUpdating
 
-/**
- * Download progress updater that starts polling on `onResume` and stops
- * polling on `onPause`.
- */
+/** Download progress updater that starts polling on `onResume` and stops
+  * polling on `onPause`.
+  */
 trait MusicDownloadUpdatingFragment extends Fragment with MusicDownloadUpdating {
   override def onResume() {
     super.onResume()

@@ -3,9 +3,6 @@ package org.musicpimp.ui.activities
 import android.app.Activity
 import org.musicpimp.audio.PlayerEventListening
 
-/**
- * @author Michael
- */
 trait PlayerListeningActivity extends Activity with PlayerEventListening {
   override def onResume(): Unit = {
     super.onResume()

@@ -5,9 +5,6 @@ import com.mle.android.util.PreferenceImplicits.RichPrefs
 import play.api.libs.json.Json._
 import play.api.libs.json.{Reads, Writes}
 
-/**
- * @author Michael
- */
 class SettingsHelper(prefs: SharedPreferences) {
   def loadStrings(key: String) = loadSeq[String](key)
 

@@ -30,10 +30,6 @@ import org.musicpimp.usage.PimpUsageController
 import org.musicpimp.util.{Keys, Messaging, PimpLog}
 import org.musicpimp.{PimpApp, R, TR, TypedResource}
 
-/**
- *
- * @author mle
- */
 class MainActivity
   extends ActionBarActivity
   with MessageToasting

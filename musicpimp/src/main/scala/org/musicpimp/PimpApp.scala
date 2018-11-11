@@ -3,6 +3,7 @@ package org.musicpimp
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.support.multidex.MultiDexApplication
 import com.mle.android.exceptions.ExplainedException
 import com.mle.util.Version
 import org.musicpimp.andro.messaging.IMessagingUtils
@@ -10,15 +11,11 @@ import org.musicpimp.http.Endpoint
 import org.musicpimp.iap.amazon.AmazonIAPActivity
 import org.musicpimp.iap.google.GooglePlayIAPActivity
 import org.musicpimp.iap.samsung.SamsungIapActivity
-import org.musicpimp.iap.{SamsungPimpIapUtils, AmazonPimpIapUtils, GooglePimpIapUtils, PimpIapUtils}
+import org.musicpimp.iap.{AmazonPimpIapUtils, GooglePimpIapUtils, PimpIapUtils, SamsungPimpIapUtils}
 import org.musicpimp.messaging.{PimpAmazonMessaging, PimpGoogleMessaging}
 
-/**
- *
- * @author mle
- */
-class PimpApp extends android.app.Application {
-  override def onCreate() {
+class PimpApp extends MultiDexApplication {
+  override def onCreate(): Unit = {
     super.onCreate()
     PimpApp.ctx = Some(this)
   }

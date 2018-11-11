@@ -22,13 +22,12 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
 
   implicit val reader: Reads[Directory] = json.dirReader
 
-  /**
-   * An HTTP client with a 6 minute timeout, all other settings are the same as for the normal enclosing client.
-   *
-   * Needed for uploads that take a long time, like when streaming to a remote player.
-   */
+  /** An HTTP client with a 6 minute timeout, all other settings are the same as for the normal enclosing client.
+    *
+    * Needed for uploads that take a long time, like when streaming to a remote player.
+    */
   val longTimeoutClient = new PimpWebHttpClient(endpoint)
-  longTimeoutClient.httpClient setTimeout (6 minutes).toMillis.toInt
+  longTimeoutClient.httpClient setTimeout 6.minutes.toMillis.toInt
 
   def pingNoAuth: Future[Unit] = client getEmpty pingResource
 
@@ -55,12 +54,11 @@ class PimpLibrary(endpoint: Endpoint) extends RemoteMediaLibrary(endpoint) with 
     })
   }
 
-  /**
-   * Checks if track `trackId` exists in the cache.
-   *
-   * @param trackId ID of track
-   * @return true if the cache contains a track with ID `trackId`, false otherwise
-   */
+  /** Checks if track `trackId` exists in the cache.
+    *
+    * @param trackId ID of track
+    * @return true if the cache contains a track with ID `trackId`, false otherwise
+    */
   override def cacheContains(trackId: String): Boolean = {
     // calculates the directory ID from the track ID
     val path = pathFromId(trackId)
@@ -80,4 +78,3 @@ object PimpLibrary {
 
   def pathFromId(path: String) = URLDecoder.decode(path, UTF8).replace('\\', '/')
 }
-

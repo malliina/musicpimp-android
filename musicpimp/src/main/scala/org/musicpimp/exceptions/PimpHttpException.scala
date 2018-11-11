@@ -1,20 +1,16 @@
 package org.musicpimp.exceptions
 
 import com.fasterxml.jackson.core.JsonParseException
-import org.apache.http.client.HttpResponseException
+import com.mle.android.exceptions.ExplainedHttpException
+import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.pimp.Reason
 import org.musicpimp.util.PimpLog
 import play.api.libs.json.Json
-import com.mle.android.exceptions.ExplainedHttpException
 
-/**
- *
- * @author mle
- */
 class PimpHttpException(contentOpt: Option[String], cause: HttpResponseException)
   extends ExplainedHttpException(contentOpt, cause) with PimpLog {
   val reasonOpt =
-    contentOpt.flatMap(content => {
+    contentOpt.flatMap { content =>
       try {
         Json.parse(content).asOpt[Reason].map(_.reason)
       } catch {
@@ -24,7 +20,7 @@ class PimpHttpException(contentOpt: Option[String], cause: HttpResponseException
         case _: Exception =>
           Some("The response could not be read.")
       }
-    })
+    }
 
   val reason = reasonOpt getOrElse "An error occurred while connecting to the MusicPimp server."
 }

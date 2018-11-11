@@ -1,9 +1,5 @@
 package org.musicpimp.audio
 
-/**
- *
- * @author mle
- */
 trait TrackListener extends PlaybackListening {
   def onTrackChanged(trackOpt: Option[Track])
 

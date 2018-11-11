@@ -12,11 +12,10 @@ import org.musicpimp.{R, TR}
 
 import scala.concurrent.Future
 
-/**
- * Base activity for managing a list of items: add/remove/edit/update.
- *
- * @tparam T type of item
- */
+/** Base activity for managing a list of items: add/remove/edit/update.
+  *
+  * @tparam T type of item
+  */
 trait ItemsManager[T] extends ActionBarActivity with LayoutBaseActivity {
   def optionsMenuLayout: Int
 
@@ -70,6 +69,7 @@ trait ItemsManager[T] extends ActionBarActivity with LayoutBaseActivity {
 
   override def onContextItemSelected(item: MenuItem): Boolean = {
     def menuInfo = item.getMenuInfo.asInstanceOf[AdapterContextMenuInfo]
+
     val position = menuInfo.position
     item.getItemId match {
       case R.id.remove_item if position > 0 =>
@@ -82,11 +82,10 @@ trait ItemsManager[T] extends ActionBarActivity with LayoutBaseActivity {
     }
   }
 
-  /**
-   * Assigns an appropriate adapter to `listView`.
-   *
-   * @param listView list to populate
-   */
+  /** Assigns an appropriate adapter to `listView`.
+    *
+    * @param listView list to populate
+    */
   def populateList(listView: ListView): Unit =
     loadAdapterAsync().foreach(a => onUiThread(findListView setAdapter a))
 

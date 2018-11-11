@@ -6,9 +6,6 @@ import com.mle.andro.ui.adapters.BaseArrayAdapter
 import org.musicpimp.TR
 import org.musicpimp.audio.MusicItem
 
-/**
- * @author Michael
- */
 trait MusicItemAdapterBase[T <: MusicItem] extends BaseArrayAdapter[T] {
   def tracks: Seq[TrackItem]
 

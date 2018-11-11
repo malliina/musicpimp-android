@@ -5,10 +5,6 @@ import org.musicpimp.util.PimpLog
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 trait MultiLibrary extends MediaLibrary with PimpLog {
   def subLibraries: Seq[MediaLibrary]
 
@@ -21,16 +17,15 @@ trait MultiLibrary extends MediaLibrary with PimpLog {
     mapReduceSeq[MediaLibrary, Track](subLibraries, _.search(term, limit))
   }
 
-  /**
-   * Loads a folder from each sublibrary as specified by parameter f, then adds them all together.
-   *
-   * The returned future always completes successfully. If the loading of any subdirectory fails,
-   * a fallback is used to successfully return the empty directory.
-   *
-   * @param libraries libraries to load
-   * @param f folder loading function
-   * @return a virtual folder, or view, which merges the contents of all sublibrary folders
-   */
+  /** Loads a folder from each sublibrary as specified by parameter f, then adds them all together.
+    *
+    * The returned future always completes successfully. If the loading of any subdirectory fails,
+    * a fallback is used to successfully return the empty directory.
+    *
+    * @param libraries libraries to load
+    * @param f         folder loading function
+    * @return a virtual folder, or view, which merges the contents of all sublibrary folders
+    */
   protected def mapReduce(libraries: Seq[MediaLibrary], f: MediaLibrary => Future[Directory]): Future[Directory] =
     mapReduceBase[MediaLibrary, Directory](libraries, f, Directory.empty, _ ++ _, _.isEmpty)
 

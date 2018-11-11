@@ -2,9 +2,6 @@ package org.musicpimp.andro.util
 
 import android.os.Bundle
 
-/**
- * @author Michael
- */
 object Implicits {
 
   implicit class RichBundle(bundle: Bundle) {

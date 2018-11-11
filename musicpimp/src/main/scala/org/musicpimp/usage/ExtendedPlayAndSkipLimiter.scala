@@ -1,13 +1,10 @@
 package org.musicpimp.usage
 
-import org.musicpimp.audio.{TrackChanged, PlayerEvent, Track, Player}
+import org.musicpimp.audio.{Player, PlayerEvent, Track, TrackChanged}
 import org.musicpimp.util.PimpLog
+
 import scala.concurrent.duration.Duration
 
-/**
- *
- * @author mle
- */
 trait LocalPlayerLimiter extends ExtendedPlayAndSkipLimiter
 
 trait PimpLimiter extends ExtendedPlayAndSkipLimiter
@@ -30,19 +27,18 @@ trait PlayAndSkipLimiter extends PlaybackLimiter {
     withLimitControl(super.skip(index))
 }
 
-/**
- * Monitors playback and limits it as appropriate.
- *
- * This trait does two things: a) it informs [[org.musicpimp.usage.PimpUsageController]]
- * every time a track changes and b) it ensures that certain implementations are called
- * only if playback is allowed, using the stackable traits pattern. The result is that
- * certain functionality is disabled if this limiter is mixed in with a
- * [[org.musicpimp.audio.Player]] and the playback limit has been reached; subtraits may
- * limit playback even further as they see fit.
- *
- */
+/** Monitors playback and limits it as appropriate.
+  *
+  * This trait does two things: a) it informs [[org.musicpimp.usage.PimpUsageController]]
+  * every time a track changes and b) it ensures that certain implementations are called
+  * only if playback is allowed, using the stackable traits pattern. The result is that
+  * certain functionality is disabled if this limiter is mixed in with a
+  * [[org.musicpimp.audio.Player]] and the playback limit has been reached; subtraits may
+  * limit playback even further as they see fit.
+  *
+  */
 trait PlaybackLimiter extends Player with PimpLog {
-  events.subscribe(e => onEvent(e))
+  events.subscribe(e => onEvent(e), err => warn("Player failure", err))
 
   abstract override def add(track: Track): Unit =
     withLimitControl(super.add(track))
@@ -63,14 +59,13 @@ trait PlaybackLimiter extends Player with PimpLog {
   abstract override def seek(pos: Duration) =
     withLimitControl(super.seek(pos))
 
-  /**
-   * Wrapping `f` in this method ensures that if the playback limit has been reached,
-   * `f` is not evaluated but instead a [[org.musicpimp.util.PlaybackLimitExceeded]]
-   * message is sent. The UI should then display an [[org.musicpimp.ui.dialogs.IapDialog]]
-   * to the user, suggesting they upgrade to the premium version.
-   *
-   * @param f code to run on the condition that playback is allowed
-   */
+  /** Wrapping `f` in this method ensures that if the playback limit has been reached,
+    * `f` is not evaluated but instead a [[org.musicpimp.util.PlaybackLimitExceeded]]
+    * message is sent. The UI should then display an [[org.musicpimp.ui.dialogs.IapDialog]]
+    * to the user, suggesting they upgrade to the premium version.
+    *
+    * @param f code to run on the condition that playback is allowed
+    */
   protected def withLimitControl(f: => Any): Unit =
     if (isPlaybackAllowed) {
       f

@@ -9,10 +9,6 @@ import org.musicpimp.R
 import org.musicpimp.audio.{Track, PlayerManager}
 import org.musicpimp.ui.AppWidgetTrackListener
 
-/**
- *
- * @author mle
- */
 class MusicControlAppWidgetProvider extends AppWidgetProvider {
   def updateAppWidget(ctx: Context, trackOpt: Option[Track], playing: Boolean) {
     val views = registerClickHandlers(ctx)

@@ -9,9 +9,6 @@ import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.ui.activities.StopAlarm
 import org.musicpimp.util.PimpLog
 
-/**
- * @author Michael
- */
 trait CloudMessageService extends IntentService with PimpLog {
   val NOTIFICATION_ID = 1
   val key = StopAlarm.tagKey

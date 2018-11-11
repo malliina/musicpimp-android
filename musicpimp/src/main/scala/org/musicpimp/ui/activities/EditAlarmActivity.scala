@@ -67,7 +67,7 @@ class EditAlarmActivity
       client = Some(alarmsClient)
       val player = alarmsClient.player
       alarmsClient.connect()
-      subscription = Some(player.events.subscribe(e => onPlayerEvent(e)))
+      subscription = Some(player.events.subscribe(e => onPlayerEvent(e), err => warn("Player failure", err)))
       updatePlayPauseText(player.status.state)
       (bundle findString Keys.ALARM_ID).fold({
         for {

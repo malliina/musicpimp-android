@@ -4,10 +4,6 @@ import org.musicpimp.R
 import org.musicpimp.ui.activities.LocalFolders
 import org.musicpimp.util.PimpSettings
 
-/**
- *
- * @author mle
- */
 class AddFolderDialog extends FolderDialog(None, R.string.add_folder) {
   lazy val settings = new PimpSettings(helper.prefs)
 

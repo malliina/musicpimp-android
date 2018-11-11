@@ -11,11 +11,6 @@ import play.api.libs.json.JsResult
 import play.api.libs.json.Json._
 import scala.Some
 
-
-/**
- *
- * @author mle
- */
 class SettingsBase(val prefs: SharedPreferences) {
   def saveEndpoints(endpoints: Seq[Endpoint]) = SettingsBase.saveEndpoints(prefs, endpoints)
 

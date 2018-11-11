@@ -4,24 +4,25 @@ import android.content.Context
 import com.mle.android.network.WifiHelpers
 import com.mle.network.NetworkDevice
 
-/**
- *
- * @author mle
- */
+import scala.util.Try
+
 trait PimpWifiHelpers extends WifiHelpers {
   /**
-   *
-   * @param ip an ip address
-   * @return the SSID of the WLAN network, if the supplied IP belongs to it
-   */
+    *
+    * @param ip an ip address
+    * @return the SSID of the WLAN network, if the supplied IP belongs to it
+    */
   def ssid(ctx: Context, ip: String): Option[String] =
     if (isWlanIP(ip)) currentSSID(ctx)
     else None
 
-  def isWlanIP(ip: String) =
-    EndpointScanner.isNumericalIP(ip) &&
-      NetworkDevice.hostAddresses.exists(addr => network(ip) == network(addr))
-
+  def isWlanIP(ip: String): Boolean =
+    Try {
+      EndpointScanner.isNumericalIP(ip) &&
+        NetworkDevice.hostAddresses.exists(addr => network(ip) == network(addr))
+    }.getOrElse {
+      false
+    }
 }
 
 object PimpWifiHelpers extends PimpWifiHelpers

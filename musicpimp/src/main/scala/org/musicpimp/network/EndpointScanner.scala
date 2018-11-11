@@ -15,40 +15,36 @@ import org.musicpimp.util.{Keys, PimpSettings}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 trait EndpointScanner {
   def prefs(ctx: Context) = PreferenceManager.getDefaultSharedPreferences(ctx)
 
   def settings(ctx: Context) = new PimpSettings(prefs(ctx))
 
   /**
-   * This method updates the IPs of saved, active WLAN endpoints as necessary.
-   *
-   * The goal is to maintain connectivity to certain machines known by
-   * numerical IP address in a network configured with DHCP, where IP addresses
-   * may change over time.
-   *
-   * Implementation: This method reads the SSID of the current WLAN connection
-   * (if any) and checks if any active endpoint has an address that belongs to
-   * this network. Then those endpoints are pinged to check whether
-   * connectivity still exists.
-   *
-   * If the ping fails due to a connectivity problem, a scan of IPs adjacent to
-   * the failed IP is initiated. The reasoning for this is that DHCP may have
-   * assigned a different IP to the server, in which case the new IP is likely close
-   * to the previous one. If pinging an adjacent IP succeeds while the other
-   * connectivity parameters remain untouched, the non-working IP is of the endpoint
-   * is replaced with the working one.
-   *
-   * The idea is to call this method whenever the device gains connectivity
-   * to a WiFi network, thus ensuring that configured server IPs are valid.
-   *
-   * @param ctx context
-   * @return a future that completes when the sync is complete
-   */
+    * This method updates the IPs of saved, active WLAN endpoints as necessary.
+    *
+    * The goal is to maintain connectivity to certain machines known by
+    * numerical IP address in a network configured with DHCP, where IP addresses
+    * may change over time.
+    *
+    * Implementation: This method reads the SSID of the current WLAN connection
+    * (if any) and checks if any active endpoint has an address that belongs to
+    * this network. Then those endpoints are pinged to check whether
+    * connectivity still exists.
+    *
+    * If the ping fails due to a connectivity problem, a scan of IPs adjacent to
+    * the failed IP is initiated. The reasoning for this is that DHCP may have
+    * assigned a different IP to the server, in which case the new IP is likely close
+    * to the previous one. If pinging an adjacent IP succeeds while the other
+    * connectivity parameters remain untouched, the non-working IP is of the endpoint
+    * is replaced with the working one.
+    *
+    * The idea is to call this method whenever the device gains connectivity
+    * to a WiFi network, thus ensuring that configured server IPs are valid.
+    *
+    * @param ctx context
+    * @return a future that completes when the sync is complete
+    */
   def syncWlanEndpoints(ctx: Context): Future[Unit] = {
     //    info("Syncing WLAN endpoints...")
     WifiHelpers.currentSSID(ctx).fold(Future.successful[Unit]())(ssid => {
@@ -58,7 +54,7 @@ trait EndpointScanner {
         .filter(_.endpointType != EndpointTypes.Local)
         .distinct
         .map(pingOrElseSync(ctx, _, ssid)
-        .recover(Utils.suppresser))
+          .recover(Utils.suppresser))
       Future.sequence(futures).map(_ => ())
     })
   }
@@ -98,9 +94,9 @@ trait EndpointScanner {
     WifiHelpers.currentSSID(ctx).foreach(ssid => pingOrElseSync(ctx, e, ssid))
 
   /**
-   *
-   * @return a working endpoint, if any
-   */
+    *
+    * @return a working endpoint, if any
+    */
   private def pingOrElseSync(ctx: Context, e: Endpoint, ssid: String): Future[Endpoint] = {
     UtilHttpClient.ping(e).map(_ => e).recoverWith {
       // The endpoint could not be reached. This suggests that the endpoint's
@@ -112,13 +108,12 @@ trait EndpointScanner {
     }
   }
 
-  /**
-   * Searches for endpoints close to the host of `notFound` and replaces its host with a working one if any is found.
-   *
-   * @param ctx context
-   * @param notFound endpoint whose host may need replacing
-   * @return the working endpoint, if found
-   */
+  /** Searches for endpoints close to the host of `notFound` and replaces its host with a working one if any is found.
+    *
+    * @param ctx      context
+    * @param notFound endpoint whose host may need replacing
+    * @return the working endpoint, if found
+    */
   private def sync(ctx: Context, notFound: Endpoint): Future[Endpoint] = {
     if (isNumericalIP(notFound.host)) {
       searchHost(notFound).map(working => {
@@ -132,9 +127,9 @@ trait EndpointScanner {
   }
 
   /**
-   * Fails with a [[NoSuchElementException]] if no suitable endpoint was found, and a
-   * [[scala.concurrent.TimeoutException]] if the timeout is reached.
-   */
+    * Fails with a [[NoSuchElementException]] if no suitable endpoint was found, and a
+    * [[scala.concurrent.TimeoutException]] if the timeout is reached.
+    */
   private def searchHost(notFound: Endpoint): Future[Endpoint] = {
     val ip = notFound.host
     if (isNumericalIP(ip)) {
@@ -161,7 +156,7 @@ trait EndpointScanner {
     withClients(count, _.clients.foreach(_.setBasicAuth(username, password)))(f)
 
   private def isSyncable(e: Endpoint, deviceSsid: String): Boolean =
-    e.autoSync && isNumericalIP(e.host) && e.ssid.exists(_ == deviceSsid) && e.endpointType == EndpointTypes.MusicPimp
+    e.autoSync && isNumericalIP(e.host) && e.ssid.contains(deviceSsid) && e.endpointType == EndpointTypes.MusicPimp
 
   private def scanRange(ip: String, radius: Int): List[String] = {
     val adjacentIPs = NetworkDevice.adjacentIPs(ip, radius)

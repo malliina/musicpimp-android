@@ -8,10 +8,6 @@ import concurrent.duration.DurationInt
 import org.musicpimp.util.Messaging
 import scala.concurrent.{TimeoutException, Future}
 
-/**
- *
- * @author mle
- */
 class MasterChildLibrary(master: MediaLibrary, child: MediaLibrary) extends MultiLibrary {
   private var isMasterAlive = false
 
@@ -19,23 +15,21 @@ class MasterChildLibrary(master: MediaLibrary, child: MediaLibrary) extends Mult
 
   pingMasterWithRetry()
 
-  /**
-   * Pings the master, retrying once if the first attempt times out.
-   *
-   * Test thoroughly before removing this, see doc of method `pingMaster`.
-   */
+  /** Pings the master, retrying once if the first attempt times out.
+    *
+    * Test thoroughly before removing this, see doc of method `pingMaster`.
+    */
   def pingMasterWithRetry() =
     Futures.within(8 seconds)(pingMaster).recoverWith {
       case _: TimeoutException => withErrorHandling(pingMaster)
     }
 
-  /**
-   * If this code is in the constructor, sometimes the future never completes
-   * even if I assign it to a `val`. I don't know why. If it's in this method,
-   * then it always seems to complete so keep it that way, then.
-   *
-   * @return
-   */
+  /** If this code is in the constructor, sometimes the future never completes
+    * even if I assign it to a `val`. I don't know why. If it's in this method,
+    * then it always seems to complete so keep it that way, then.
+    *
+    * @return
+    */
   def pingMaster =
     master.ping.map(_ => {
       //      info(s"Got ping response from master, sending reload command")

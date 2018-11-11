@@ -4,41 +4,54 @@ lazy val app = Project("musicpimp", file("musicpimp"))
   .settings(pimpSettings: _*)
   .enablePlugins(AndroidApp)
 
+run := run in Android in app
+
 val malliinaGroup = "com.malliina"
 val supportGroup = "com.android.support"
-val supportVersion = "19.1.0"
+val supportVersion = "23.0.0"
 val usedScalaVersion = "2.11.12"
 
 lazy val pimpSettings = apkSettings ++ commonSettings ++
   googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
   scalaVersion := usedScalaVersion,
-  version := "2.0.2",
+  version := "2.1.0",
   resolvers ++= Seq(
     "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
     "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
-    "Google" at "https://maven.google.com/"
+    "Google" at "https://maven.google.com/",
+    Resolver.bintrayRepo("malliina", "maven")
   ),
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(malliinaGroup %% "util-android" % "0.9.11"),
-    "com.google.android.gms" % "play-services" % "4.4.52",
+    aar(malliinaGroup %% "util-android" % "0.12.1"),
+    "com.google.android.gms" % "play-services" % "8.4.0",
+    "com.android.support" % "multidex" % "1.0.3",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
   ),
   typedResourcesAar := true,
   typedViewHolders := true,
+  dexMulti in Android := true,
+  dexMainClassesConfig := baseDirectory.value / "maindexlist.txt",
+  dexMinimizeMain in Android := true,
+  // https://issuetracker.google.com/issues/37008143
+  dexAdditionalParams in Android ++= Seq("--multi-dex", "--set-max-idx-number=40000"),
+  shrinkResources in Android := true,
   useProguard in Android := true,
   proguardCache in Android ++= Seq(
-    "com.google",
-    "org.joda",
-    "joda-time",
-    "io.reactivex",
-    "com.fasterxml.jackson",
-    "com.typesafe.play",
-    "com.google.zxing",
     "android.support.v4",
     "android.support.v7",
-    "com.loopj.android"
+    "com.android",
+    "com.fasterxml.jackson",
+    "com.google",
+    "com.google.android",
+    "com.google.zxing",
+    "com.loopj.android",
+    "com.typesafe.play",
+    "cz.msebera.android",
+    "io.reactivex",
+    "joda-time",
+    "org.joda"
   ),
   proguardOptions in Android ++= Seq(
     // I think there's a problem because play-json depends on org.w3c.something, which is
@@ -83,7 +96,7 @@ lazy val commonSettings = Seq(
     // assumes you have installed "android support repository" from SDK Manager first
     "Local .aar maven repo" at localMavenDir.toURI.toString
   ),
-  platformTarget in Android := "android-19",
+  platformTarget in Android := "android-27",
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
   scalacOptions += "-target:jvm-1.6"
 )

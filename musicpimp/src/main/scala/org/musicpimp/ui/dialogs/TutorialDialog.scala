@@ -6,10 +6,6 @@ import android.support.v4.app.DialogFragment
 import com.mle.andro.ui.dialogs.DefaultDialog
 import org.musicpimp.R.string._
 
-/**
- *
- * @author mle
- */
 abstract class PimpDialog(builder: Option[Bundle] => AlertDialog) extends DialogFragment {
   def this(builder: => AlertDialog) = this(_ => builder)
 

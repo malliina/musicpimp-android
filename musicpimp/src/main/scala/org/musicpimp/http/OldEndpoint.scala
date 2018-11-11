@@ -3,14 +3,9 @@ package org.musicpimp.http
 import com.mle.android.http.Protocols
 import play.api.libs.json.Json
 
-/**
- *
- * @author mle
- */
-/**
- * Legacy endpoint maintained so that we can parse old JSON, `toEndpoint`
- * then converts to the new format.
- */
+/** Legacy endpoint maintained so that we can parse old JSON, `toEndpoint`
+  * then converts to the new format.
+  */
 case class OldEndpoint(name: String,
                        host: String,
                        port: Int,

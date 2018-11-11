@@ -8,11 +8,6 @@ import rx.lang.scala.{Subject, Observable}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-
-/**
- *
- * @author mle
- */
 trait PlayerBase extends Closeable {
   protected val eventsSubject = Subject[PlayerEvent]()
 
@@ -28,7 +23,7 @@ trait PlayerBase extends Closeable {
 
   def isPlaybackAllowed = true
 
-  def sendLimitExceededMessage() = Messaging.limitExceeded()
+  def sendLimitExceededMessage(): Unit = Messaging.limitExceeded()
 
   /**
    * Initializes the playlist with the given track and starts playback from the beginning.
@@ -53,7 +48,7 @@ trait PlayerBase extends Closeable {
   /**
    * Convenience that delegates to either `resume()` or `pause()`.
    */
-  def playOrPause() = status.state match {
+  def playOrPause(): Unit = status.state match {
     case PlayStates.Playing | PlayStates.Started => pause()
     case _ => resume()
   }

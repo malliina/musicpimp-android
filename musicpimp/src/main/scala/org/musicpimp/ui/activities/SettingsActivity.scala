@@ -17,10 +17,6 @@ import org.musicpimp.network.DownloadSettings
 import org.musicpimp.util.Keys._
 import org.musicpimp.util.PimpSettings
 
-/**
- *
- * @author mle
- */
 class SettingsActivity
   extends PreferenceActivity
   with OnSharedPreferenceChangeListener {

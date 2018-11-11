@@ -11,9 +11,7 @@ import com.mle.concurrent.ExecutionContexts.cached
 import scala.concurrent.Future
 
 /**
- *
- * @author mle
- */
+  */
 trait GooglePlayMessagingUtils extends IMessagingUtils with UtilLog {
   def serverMessenger: JsonMessagingUtils
 
@@ -48,12 +46,11 @@ trait GooglePlayMessagingUtils extends IMessagingUtils with UtilLog {
 
   import GooglePlayServicesUtil._
 
-  /**
-   * May display a Dialog that allows users to download the Play Services APK.
-   *
-   * @param activity
-   * @return true if Google Play Services are available on the device, false otherwise
-   */
+  /** May display a Dialog that allows users to download the Play Services APK.
+    *
+    * @param activity
+    * @return true if Google Play Services are available on the device, false otherwise
+    */
   private def checkPlayServices(activity: Activity): Boolean = {
     val resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(activity)
     val isAvailable = resultCode == ConnectionResult.SUCCESS

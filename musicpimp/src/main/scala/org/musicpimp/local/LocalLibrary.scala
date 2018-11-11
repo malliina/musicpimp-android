@@ -16,10 +16,6 @@ import org.musicpimp.util.{Keys, PimpLog}
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
   val supportedExtensions = Seq("mp3")
   // + 1 is for the slash ('/') between the end of the root path and beginning of subpaths
@@ -38,12 +34,12 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
     val (dirs, files) = musicDirectory.listFiles().partition(_.isDirectory)
     val tracks = readTracks(files)
     /**
-     * We replace '/' with '\\' to be consistent with the way path separators are represented
-     * by MusicPimp server 1.8.0, this eases comparisons between folders.
-     *
-     * TODO: Ensure MusicPimp always returns '/', not '\\' for path separators, then remove
-     * the replace call below.
-     */
+      * We replace '/' with '\\' to be consistent with the way path separators are represented
+      * by MusicPimp server 1.8.0, this eases comparisons between folders.
+      *
+      * TODO: Ensure MusicPimp always returns '/', not '\\' for path separators, then remove
+      * the replace call below.
+      */
     val folders = dirs.
       filter(containsTracks).
       map(dir => Folder(PimpLibrary.encode(relativize(dir.getPath).replace('/', '\\')), dir.getName))
@@ -51,10 +47,10 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
   }
 
   /**
-   *
-   * @param dir folder to search for tracks
-   * @return true if the folder or any of its subfolders contains music tracks, false otherwise
-   */
+    *
+    * @param dir folder to search for tracks
+    * @return true if the folder or any of its subfolders contains music tracks, false otherwise
+    */
   def containsTracks(dir: File): Boolean = {
     val tagReader = new MediaMetadataRetriever
     val (dirs, files) = dir.listFiles().partition(_.isDirectory)
@@ -90,6 +86,7 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
       val path = file.getPath
       val relative = relativize(path)
       tagReader setDataSource path
+
       def get(metaKey: Int) = tagReader.extractMetadata(metaKey)
       import android.media.MediaMetadataRetriever._
       Some(Track(
@@ -106,14 +103,13 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
         None
       ))
     } catch {
-      /**
-       * May throw:
-       *
-       * 11-19 19:31:28.730: ERROR/AndroidRuntime(17345): FATAL EXCEPTION: main
-       * java.lang.RuntimeException: setDataSource failed: status = 0x80000000
-       * at android.media.MediaMetadataRetriever.setDataSource(Native Method)
-       * at org.musicpimp.local.LocalLibrary$$anonfun$readTracks$2.apply(LocalLibrary.scala:68)
-       */
+      /** May throw:
+        *
+        * 11-19 19:31:28.730: ERROR/AndroidRuntime(17345): FATAL EXCEPTION: main
+        * java.lang.RuntimeException: setDataSource failed: status = 0x80000000
+        * at android.media.MediaMetadataRetriever.setDataSource(Native Method)
+        * at org.musicpimp.local.LocalLibrary$$anonfun$readTracks$2.apply(LocalLibrary.scala:68)
+        */
       case e: Exception =>
         //          warn(s"Unable to read metadata of ${file.getAbsolutePath}", e)
         None
@@ -134,11 +130,10 @@ class LocalLibrary(val rootDirectory: File) extends LocalLibraryBase {
 }
 
 object LocalLibrary extends DiskHelpers with PimpLog {
-
   /**
-   * @param prefs shared preferences
-   * @return the amount of data deleted
-   */
+    * @param prefs shared preferences
+    * @return the amount of data deleted
+    */
   def maintainCache(prefs: SharedPreferences): Future[StorageSize] = {
     val cacheSize = prefs.getString(Keys.PREF_CACHE, "5").toInt.gigs
     maintainDirSize(appInternalMusicDir, cacheSize)
@@ -146,8 +141,7 @@ object LocalLibrary extends DiskHelpers with PimpLog {
 
 
   // getExternalFilesDir return null if external storage is not mounted
-  val appInternalMusicDir = Option(PimpApp.context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)) getOrElse PimpApp.context.getCacheDir
+  val appInternalMusicDir = Option(PimpApp.context.getExternalFilesDir(Environment.DIRECTORY_MUSIC)).getOrElse(PimpApp.context.getCacheDir)
   val publicMusicDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC)
   val subsonicMusicDir = new File("/mnt/sdcard/subsonic/music")
 }
-

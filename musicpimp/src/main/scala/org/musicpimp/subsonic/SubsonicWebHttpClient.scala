@@ -7,10 +7,6 @@ import org.musicpimp.http.Endpoint
 
 import scala.concurrent.Promise
 
-/**
- *
- * @author mle
- */
 class SubsonicWebHttpClient(endpoint: Endpoint) extends BasicHttpClient(endpoint) {
   addHeaders(ACCEPT -> JSON)
 

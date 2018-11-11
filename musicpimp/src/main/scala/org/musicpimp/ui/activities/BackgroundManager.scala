@@ -24,7 +24,7 @@ class BackgroundManager(activity: Activity) extends PimpLog {
       DiscoGs.client.cover(track.artist, track.album).map { file =>
         val background = Drawable.createFromPath(file.getAbsolutePath)
         background setAlpha 26
-        help.onUiThread(pager setBackgroundDrawable background)
+        help.onUiThread(pager.setBackgroundDrawable(background))
       }.recoverAll { t =>
         warn(s"Unable to obtain cover of ${track.artist} - ${track.album}.", t)
       }

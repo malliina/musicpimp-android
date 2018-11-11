@@ -2,18 +2,14 @@ package org.musicpimp.subsonic
 
 import com.loopj.android.http.TextHttpResponseHandler
 import com.mle.android.http.HttpResponse
-import org.apache.http.Header
+import cz.msebera.android.httpclient.Header
 import org.musicpimp.exceptions.SubsonicHttpException
 import org.musicpimp.subsonic.SubsonicJsonReaders.{FAILED, STATUS, SUBSONIC_RESPONSE}
-import org.musicpimp.util.PimpLog
 import play.api.libs.json.Json
 
 import scala.concurrent.Promise
 import scala.util.Try
 
-/**
- * @author Michael
- */
 class SubsonicResponseHandler(promise: Promise[HttpResponse]) extends TextHttpResponseHandler {
   override def onSuccess(statusCode: Int, headers: Array[Header], responseString: String): Unit = {
     val content = Option(responseString)
@@ -30,7 +26,7 @@ class SubsonicResponseHandler(promise: Promise[HttpResponse]) extends TextHttpRe
   }
 
   override def onFailure(statusCode: Int, headers: Array[Header], responseString: String, throwable: Throwable): Unit = {
-//    info(s"Failed response: $responseString")
+    //    info(s"Failed response: $responseString")
     promise failure Option(throwable).getOrElse(new SubsonicHttpException(Option(responseString)))
   }
 }

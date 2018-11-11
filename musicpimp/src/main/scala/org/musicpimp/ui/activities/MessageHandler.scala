@@ -5,9 +5,8 @@ import android.support.v4.app.Fragment
 import org.musicpimp.util.{Messaging, UIMessage}
 import com.mle.android.events.EventSource
 
-/**
- * TODO investigate if we can elegantly not repeat ourselves
- */
+/** TODO investigate if we can elegantly not repeat ourselves
+  */
 trait MessageHandlerActivity extends Activity with BasicProxy {
   override def onResume() {
     source addHandler handler

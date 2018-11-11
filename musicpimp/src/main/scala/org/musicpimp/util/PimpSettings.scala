@@ -8,9 +8,6 @@ import org.musicpimp.http.Endpoint
 import org.musicpimp.local.MultiFolderLocalLibrary
 import org.musicpimp.ui.activities.{SettingsBase, LocalFolders}
 
-/**
- * @author Michael
- */
 class PimpSettings(prefs: SharedPreferences) extends SettingsHelper(prefs) {
   def loadFolders = loadSeq[String](LocalFolders.localFoldersPrefKey)
     .getOrElse(MultiFolderLocalLibrary.defaultFolderPaths)

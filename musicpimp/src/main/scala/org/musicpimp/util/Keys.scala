@@ -1,9 +1,5 @@
 package org.musicpimp.util
 
-/**
- *
- * @author mle
- */
 trait Keys {
   val FOLDER = "org.musicpimp.folder"
   val PATH = "org.musicpimp.path"

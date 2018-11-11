@@ -13,10 +13,6 @@ import play.api.libs.json._
 
 import scala.concurrent.duration._
 
-/**
- *
- * @author mle
- */
 class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with PimpLog {
 
   import org.musicpimp.subsonic.SubsonicJsonReaders._
@@ -31,19 +27,16 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with
     Uri.parse(endpoint.httpBaseUri + SubsonicHttpClient.buildPath(methodName, trackId))
 
 
-  /**
-   * The JSON entries may or may not exist, and the values can be strings,
-   * integers, whatever, for the same key.
-
-   * Example: "album" for an Iron Maiden track is "Powerslave", but for
-   * an Adele track the integer 21. (The name of the album is "21".) The
-   * "album" entry might also be missing completely from yet another track.
-   *
-   * To deal with the issues, the reader reads the entries with `readNullable`,
-   * using a reader `stringifier` that accepts both strings and integers.
-   *
-   * @return
-   */
+  /** The JSON entries may or may not exist, and the values can be strings,
+    * integers, whatever, for the same key.
+    *
+    * Example: "album" for an Iron Maiden track is "Powerslave", but for
+    * an Adele track the integer 21. (The name of the album is "21".) The
+    * "album" entry might also be missing completely from yet another track.
+    *
+    * To deal with the issues, the reader reads the entries with `readNullable`,
+    * using a reader `stringifier` that accepts both strings and integers.
+    */
   implicit val subsonicTrackReader: Reads[Track] = (
     (JsPath \ ID).read[Int].map(_.toString) and
       (JsPath \ TITLE).readNullable[String](stringifier).map(_ getOrElse "") and
@@ -56,7 +49,7 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with
       constantT(username) and
       constantT(password) and
       constantT(cloudID)
-    )(Track)
+    ) (Track)
 
   val indexReader = new Reads[Directory] {
     def reads(json: JsValue): JsResult[Directory] = {
@@ -142,11 +135,10 @@ object SubsonicJsonReaders {
   implicit val indexFolderReader: Reads[Folder] = (
     (JsPath \ ID).read[Int].map(_.toString) and
       (JsPath \ NAME).read[String]
-    )(Folder)
+    ) (Folder)
 
-  /**
-   * Flattens an array (or not) of artists grouped by their initial letter under an "artists" entry.
-   */
+  /** Flattens an array (or not) of artists grouped by their initial letter under an "artists" entry.
+    */
   implicit val artistGroupedFolderReader = new Reads[Seq[Folder]] {
     def reads(json: JsValue): JsResult[Seq[Folder]] = {
       // this is a seq of json which is seq of (seq of json)
@@ -158,25 +150,23 @@ object SubsonicJsonReaders {
   val musicDirFolderReader: Reads[Folder] = (
     (JsPath \ ID).read[Int].map(_.toString) and
       (JsPath \ TITLE).read[String]
-    )(Folder)
+    ) (Folder)
 
-  /**
-   * Attempts to parse a string value, but if that fails, reads and integer and
-   * stringifies it, or finally if that also fails, returns an empty string.
-   */
+  /** Attempts to parse a string value, but if that fails, reads and integer and
+    * stringifies it, or finally if that also fails, returns an empty string.
+    */
   val stringifier = new Reads[String] {
     def reads(json: JsValue): JsResult[String] =
       JsSuccess(json.asOpt[String].getOrElse(json.asOpt[Int].map(_.toString).getOrElse("")))
   }
 
-  /**
-   * Subsonic JSON "arrays" are not always arrays. Entries of empty arrays are
-   * missing completely, one-element "arrays" are not arrays but just that
-   * one element. Only multi-element arrays are actually represented as JSON arrays.
-   *
-   * @param json json that may or may not be a JSON array as described above
-   * @return a guaranteed sequence of json values, no bullshit
-   */
+  /** Subsonic JSON "arrays" are not always arrays. Entries of empty arrays are
+    * missing completely, one-element "arrays" are not arrays but just that
+    * one element. Only multi-element arrays are actually represented as JSON arrays.
+    *
+    * @param json json that may or may not be a JSON array as described above
+    * @return a guaranteed sequence of json values, no bullshit
+    */
   def ensureIsArray(json: JsValue): Seq[JsValue] = json match {
     case JsString(v) if v.isEmpty => Seq.empty[JsValue]
     case JsArray(elements) => elements // JsArray extends JsValue

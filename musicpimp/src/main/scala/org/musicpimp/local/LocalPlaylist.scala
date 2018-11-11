@@ -1,13 +1,9 @@
 package org.musicpimp.local
 
-import collection.mutable
 import org.musicpimp.audio._
-import scala.Some
 
-/**
- *
- * @author mle
- */
+import scala.collection.mutable
+
 trait LocalPlaylist extends PlaylistBase {
   protected def fireEvent(event: PlayerEvent): Unit
 
@@ -50,24 +46,22 @@ trait LocalPlaylist extends PlaylistBase {
     fireEvent(PlaylistModified(tracks))
   }
 
-  /**
-   * If there is a next track, it is returned and the current playlist
-   * index is incremented by one.
-   *
-   * @return the next track, if any
-   */
+  /** If there is a next track, it is returned and the current playlist
+    * index is incremented by one.
+    *
+    * @return the next track, if any
+    */
   def toNext: Option[Track] = {
     val ret = next
     next.foreach(_ => index = index.map(_ + 1))
     ret
   }
 
-  /**
-   * If there is a previous track, it is returned and the current playlist
-   * index is decremented by one if positive.
-   *
-   * @return
-   */
+  /** If there is a previous track, it is returned and the current playlist
+    * index is decremented by one if positive.
+    *
+    * @return
+    */
   def toPrevious: Option[Track] = {
     val ret = previous
     previous.foreach(_ => index = index.map(i => if (i > 0) i - 1 else 0))

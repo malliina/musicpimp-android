@@ -4,10 +4,6 @@ import com.mle.android.util.PersistentList
 import org.musicpimp.PimpApp
 import scala.concurrent.duration.Duration
 
-/**
- *
- * @author mle
- */
 class UsageList(key: String, limit: Int, timeWindow: Duration) extends PersistentList[Long](PimpApp.context, key) {
   private val timeWindowMillis = timeWindow.toMillis
 

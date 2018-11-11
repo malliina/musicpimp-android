@@ -9,10 +9,6 @@ import org.musicpimp.ui.adapters.EndpointAdapter
 import org.musicpimp.util.{PimpSettings, Keys}
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class Endpoints
   extends ItemsManager[Endpoint]
   with PreferenceListeningActivity {

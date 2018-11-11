@@ -11,10 +11,6 @@ import org.musicpimp.subsonic.SubsonicLibrary
 import org.musicpimp.ui.activities.{LocalFolders, SettingsBase}
 import org.musicpimp.util.{PimpSettings, Keys}
 
-/**
- *
- * @author mle
- */
 trait LibraryManager extends EndpointManager[MediaLibrary] {
   val settingsHelper = new PimpSettings(prefs)
   override val prefKey = Keys.PREF_LIBRARY

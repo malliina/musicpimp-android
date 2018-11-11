@@ -7,9 +7,6 @@ import android.text.format.DateFormat
 import android.widget.TimePicker
 import java.util.Calendar
 
-/**
- * @author Michael.
- */
 class TimePickerFragment extends DialogFragment with TimePickerDialog.OnTimeSetListener {
   override def onCreateDialog(savedInstanceState: Bundle): Dialog = {
     val c = Calendar.getInstance()

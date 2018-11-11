@@ -11,11 +11,8 @@ import org.musicpimp.ui.activities.SettingsBase
 import org.musicpimp.util.Keys
 import rx.lang.scala.{Subject, Observable}
 
-/**
- * The name of the active endpoint is stored as a preference key.
- *
- * @author mle
- */
+/** The name of the active endpoint is stored as a preference key.
+  */
 trait EndpointManager[T <: Closeable] extends OnSharedPreferenceChangeListener {
   protected val eventsSubject = Subject[Changed]()
   val events: Observable[Changed] = eventsSubject
@@ -32,18 +29,17 @@ trait EndpointManager[T <: Closeable] extends OnSharedPreferenceChangeListener {
 
   def buildEndpoint(e: Endpoint): T
 
-  /**
-   * Reloads the active endpoint if
-   *
-   * a) the active endpoint itself is swapped for some other endpoint or
-   * b) the set of endpoints is modified (regardless of which endpoint is modified).
-   *
-   * We only detect changes to endpoints through the event that fires when all endpoints
-   * are saved, which could mean that the active endpoint has been modified, so in
-   * order not to use outdated endpoint data we reload the endpoint whenever something
-   * changes in the configuration.
-   *
-   */
+  /** Reloads the active endpoint if
+    *
+    * a) the active endpoint itself is swapped for some other endpoint or
+    * b) the set of endpoints is modified (regardless of which endpoint is modified).
+    *
+    * We only detect changes to endpoints through the event that fires when all endpoints
+    * are saved, which could mean that the active endpoint has been modified, so in
+    * order not to use outdated endpoint data we reload the endpoint whenever something
+    * changes in the configuration.
+    *
+    */
   def onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String): Unit = {
     if (key == prefKey || key == Keys.PREF_ENDPOINTS) {
       val old = active
@@ -64,9 +60,9 @@ trait EndpointManager[T <: Closeable] extends OnSharedPreferenceChangeListener {
   def activeEndpoint(sharedPrefs: SharedPreferences) =
     loadActiveEndpoint(sharedPrefs) getOrElse SettingsBase.localEndpoint
 
-  def activate(newActiveEndpointName: String) = prefs.put(prefKey, newActiveEndpointName)
+  def activate(newActiveEndpointName: String): Unit = prefs.put(prefKey, newActiveEndpointName)
 
-  def fireEvent(event: Changed) = eventsSubject onNext event
+  def fireEvent(event: Changed): Unit = eventsSubject onNext event
 }
 
 trait Changed

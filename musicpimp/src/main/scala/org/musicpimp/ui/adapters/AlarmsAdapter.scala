@@ -4,9 +4,6 @@ import android.content.Context
 import com.mle.andro.ui.adapters.IconTwoLinesAdapter
 import org.musicpimp.pimp.Alarms.Alarm
 
-/**
- * @author Michael
- */
 class AlarmsAdapter(ctx: Context, alarms: Seq[Alarm]) extends IconTwoLinesAdapter[Alarm](ctx, alarms) {
   override def firstRow(item: Alarm, position: Int): String = item.job.track.title
 

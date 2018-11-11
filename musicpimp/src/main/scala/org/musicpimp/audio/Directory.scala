@@ -1,9 +1,5 @@
 package org.musicpimp.audio
 
-/**
- *
- * @author mle
- */
 case class Directory(folders: Seq[Folder], tracks: Seq[Track]) {
   def ++(other: Directory) = Directory(
     (folders ++ other.folders).distinct.sortBy(_.title.toLowerCase),

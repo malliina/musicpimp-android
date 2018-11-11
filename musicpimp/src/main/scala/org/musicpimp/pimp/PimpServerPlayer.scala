@@ -42,8 +42,7 @@ class PimpServerPlayer(endpoint: Endpoint)
     case _ => ()
   }
 
-  /**
-    * Updates any listeners with the player state following the reception of a status event.
+  /** Updates any listeners with the player state following the reception of a status event.
     *
     * @param status the player state
     */
@@ -106,4 +105,3 @@ case class SimpleCommand(cmd: String)
 object SimpleCommand {
   implicit val json = Json.format[SimpleCommand]
 }
-

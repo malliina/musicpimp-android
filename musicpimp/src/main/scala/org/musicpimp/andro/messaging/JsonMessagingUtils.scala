@@ -8,10 +8,6 @@ import org.musicpimp.pimp.{AlarmsClient, PimpWebHttpClient}
 import play.api.libs.json.Json
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class JsonMessagingUtils(endpoint: Endpoint, registerCommand: String, unregisterCommand: String) {
   val client = new PimpWebHttpClient(endpoint)
 

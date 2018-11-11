@@ -3,10 +3,6 @@ package org.musicpimp.json
 import org.musicpimp.http.Endpoint
 import play.api.libs.json.{JsResult, JsSuccess, JsValue, Reads}
 
-/**
- *
- * @author mle
- */
 abstract class JsonReaders(endpoint: Endpoint) {
   val username = endpoint.username
   val password = endpoint.password

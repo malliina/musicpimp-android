@@ -2,10 +2,6 @@ package org.musicpimp.beam
 
 import play.api.libs.json.Json
 
-/**
- *
- * @author mle
- */
 case class BeamCode(host: String, port: Int, user: String)
 
 object BeamCode {

@@ -1,17 +1,14 @@
 package org.musicpimp.network
 
+import java.io.File
+
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.preference.PreferenceManager
 import com.mle.android.util.PreferenceImplicits.RichPrefs
-import java.io.File
 import org.musicpimp.PimpApp
 import org.musicpimp.local.LocalLibrary
 
-/**
- *
- * @author mle
- */
 trait DownloadSettings extends OnSharedPreferenceChangeListener {
   val PREF_DOWNLOADS_DIR = "pref_downloads_dir"
   val prefs = PreferenceManager.getDefaultSharedPreferences(PimpApp.context)

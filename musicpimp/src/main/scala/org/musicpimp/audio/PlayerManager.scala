@@ -10,10 +10,6 @@ import org.musicpimp.usage.{BeamLimiter, PimpLimiter, PimpUsageController, Subso
 import org.musicpimp.util.{Keys, PimpLog}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
- *
- * @author mle
- */
 trait PlayerManager extends EndpointManager[Player] with PimpLog {
   val localPlayer =
     if (PimpUsageController.allowUnlimited) LocalPlayer

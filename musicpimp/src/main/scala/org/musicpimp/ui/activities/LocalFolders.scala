@@ -8,10 +8,6 @@ import org.musicpimp.ui.dialogs.{AddFolderDialog, EditFolderDialog}
 import org.musicpimp.util.PimpSettings
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 class LocalFolders
   extends ItemsManager[String]
   with PreferenceListeningActivity {

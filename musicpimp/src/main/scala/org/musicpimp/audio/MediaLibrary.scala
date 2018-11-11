@@ -8,10 +8,6 @@ import com.mle.util.Version
 
 import scala.concurrent.Future
 
-/**
- *
- * @author mle
- */
 trait MediaLibrary extends Closeable {
   val defaultSearchLimit = 100
 

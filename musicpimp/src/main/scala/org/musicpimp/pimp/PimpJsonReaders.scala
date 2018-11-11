@@ -43,6 +43,4 @@ class PimpJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) {
       (__ \ PLAYLIST).read[Seq[Track]] and
       (__ \ INDEX).read[Int].map(i => if (i >= 0) Some(i) else None)
     )(StatusEvent.apply _)
-
-
 }

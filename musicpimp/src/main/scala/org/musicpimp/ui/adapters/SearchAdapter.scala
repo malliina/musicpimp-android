@@ -6,9 +6,6 @@ import com.mle.andro.TR
 import com.mle.andro.ui.adapters.IconOneLineAdapter
 import org.musicpimp.R
 
-/**
- * @author Michael
- */
 class SearchAdapter(ctx: Context, val tracks: Seq[TrackItem])
   extends IconOneLineAdapter[TrackItem](ctx, R.layout.search_result_track, tracks)
   with MusicItemAdapterBase[TrackItem] {
