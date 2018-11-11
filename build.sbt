@@ -21,12 +21,6 @@ lazy val pimpSettings = apkSettings ++ okhttpSettings ++ commonSettings ++
   googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
   scalaVersion := usedScalaVersion,
   version := "2.2.0",
-  resolvers ++= Seq(
-    "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
-    "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
-    "Google" at "https://maven.google.com/",
-    Resolver.bintrayRepo("malliina", "maven")
-  ),
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
@@ -112,8 +106,10 @@ def apkSettings = Seq(
 lazy val commonSettings = Seq(
   scalaVersion := usedScalaVersion,
   resolvers ++= Seq(
-    // assumes you have installed "android support repository" from SDK Manager first
-    "Local .aar maven repo" at localMavenDir.toURI.toString
+    "Typesafe" at "http://repo.typesafe.com/typesafe/maven-releases/",
+    "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
+    "Google" at "https://maven.google.com/",
+    Resolver.bintrayRepo("malliina", "maven")
   ),
   platformTarget in Android := "android-27",
   javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
