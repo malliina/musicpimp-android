@@ -2,9 +2,10 @@ package org.musicpimp.http
 
 import java.util.UUID
 
-import com.mle.android.http.{IEndpoint, Protocols}
-import com.mle.json.SimpleFormat
-import org.java_websocket.util.Base64
+import android.util.Base64
+import com.malliina.android.http.{IEndpoint, Protocols}
+import com.malliina.http.FullUrl
+import com.malliina.json.SimpleFormat
 import org.musicpimp.beam.BeamCode
 import play.api.libs.json.Json
 
@@ -39,9 +40,9 @@ case class Endpoint(id: String,
     }
 
 
-  private def baseUri(scheme: String) = s"$scheme://$host:$port"
+  private def baseUri(scheme: String) = FullUrl(scheme, s"$host:$port", "")
 
-  def httpUri(path: String) = httpBaseUri + path
+  def httpUri(path: String): FullUrl = httpBaseUri / path
 }
 
 object Endpoint {
@@ -75,5 +76,5 @@ object Endpoint {
   def basicHeader(user: String, pass: String) = authHeader("Basic", s"$user:$pass")
 
   def authHeader(word: String, unencoded: String) =
-    s"$word " + Base64.encodeBytes(unencoded.getBytes("UTF-8"))
+    s"$word " + Base64.encodeToString(unencoded.getBytes("UTF-8"), Base64.DEFAULT)
 }

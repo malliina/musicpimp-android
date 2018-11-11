@@ -1,9 +1,9 @@
 package org.musicpimp.local
 
 import android.net.Uri
-import com.mle.android.http.{AuthHttpClient, HttpResponse}
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.util.Version
+import com.malliina.android.http.{AuthHttpClient, HttpResponse}
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.util.Version
 import concurrent.duration._
 import java.io.{FileNotFoundException, File}
 import org.musicpimp.PimpApp
@@ -35,7 +35,7 @@ trait LocalLibraryBase extends MediaLibrary {
     val file = path(PimpLibrary.pathFromId(request.track))
     val httpClient = new AuthHttpClient(request.username, request.password)
     httpClient.httpClient setTimeout (6 minutes).toMillis.toInt
-    val ret = httpClient.postFile(request.uri, file)
+    val ret = httpClient.postFile(request.uri.url, file)
     ret.onComplete(_ => httpClient.close())
     ret
   }

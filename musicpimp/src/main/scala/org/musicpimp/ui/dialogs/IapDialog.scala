@@ -1,7 +1,7 @@
 package org.musicpimp.ui.dialogs
 
-import com.mle.andro.ui.dialogs.DefaultDialog
-import com.mle.android.ui.fragments.BaseFragment
+import com.malliina.andro.ui.dialogs.DefaultDialog
+import com.malliina.android.ui.fragments.BaseFragment
 import org.musicpimp.PimpApp
 import org.musicpimp.R.string._
 import android.support.v4.app.Fragment

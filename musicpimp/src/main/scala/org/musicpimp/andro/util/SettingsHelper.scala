@@ -1,7 +1,7 @@
 package org.musicpimp.andro.util
 
 import android.content.SharedPreferences
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import play.api.libs.json.Json._
 import play.api.libs.json.{Reads, Writes}
 

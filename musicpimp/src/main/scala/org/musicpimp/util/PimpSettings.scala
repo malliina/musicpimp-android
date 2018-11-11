@@ -1,7 +1,7 @@
 package org.musicpimp.util
 
 import android.content.SharedPreferences
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import org.musicpimp.andro.util.SettingsHelper
 import org.musicpimp.audio.LibraryManager
 import org.musicpimp.http.Endpoint
@@ -51,7 +51,7 @@ class PimpSettings(prefs: SharedPreferences) extends SettingsHelper(prefs) {
    * @return any error message, or [[None]] if the operation succeeded
    */
   def updateEndpoint(old: Endpoint, updated: Endpoint): Option[String] = {
-    import com.mle.android.util.PreferenceImplicits._
+    import com.malliina.android.util.PreferenceImplicits._
 
     val isPlayer = (prefs get Keys.PREF_PLAYER).exists(_ == old.name)
     val isLibrary = (prefs get Keys.PREF_LIBRARY).exists(_ == old.name)

@@ -3,9 +3,9 @@ package org.musicpimp.iap
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
-import com.mle.android.iap.IapException
-import com.mle.android.ui.Implicits.action2clickListener
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.iap.IapException
+import com.malliina.android.ui.Implicits.action2clickListener
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.ui.activities.PreferenceListeningActivity
 import org.musicpimp.util.{Keys, PimpLog}
 import org.musicpimp.{R, TR}

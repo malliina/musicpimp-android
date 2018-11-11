@@ -8,9 +8,9 @@ import android.net.Uri
 import android.view.{ContextMenu, MenuInflater, MenuItem}
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{AbsListView, AdapterView}
-import com.mle.android.http.HttpConstants
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.util.Utils
+import com.malliina.android.http.HttpConstants
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.util.Utils
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio._

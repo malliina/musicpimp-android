@@ -14,9 +14,7 @@ incOptions := incOptions.value.withNameHashing(true)
 
 Seq(
   "org.scala-android" % "sbt-android" % "1.7.10",
-  "com.timushev.sbt" % "sbt-updates" % "0.1.6",
-  "com.eed3si9n" % "sbt-buildinfo" % "0.3.0",
-  "net.virtual-void" % "sbt-dependency-graph" % "0.7.4"
+  "com.eed3si9n" % "sbt-buildinfo" % "0.3.0"
 ) map addSbtPlugin
 
 def ivyResolver(suffix: String) =

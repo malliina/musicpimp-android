@@ -8,11 +8,11 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.{ContextMenu, MenuItem, View}
 import android.widget._
 import com.fasterxml.jackson.core.JsonParseException
-import com.mle.andro.ui.adapters.{StaticIconOneLineAdapter, TwoPartItem}
-import com.mle.android.exceptions.ExplainedHttpException
-import com.mle.android.ui.Implicits.action2itemClickListener2
-import com.mle.android.ui.fragments.DefaultFragment
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.andro.ui.adapters.{StaticIconOneLineAdapter, TwoPartItem}
+import com.malliina.android.exceptions.ExplainedHttpException
+import com.malliina.android.ui.Implicits.action2itemClickListener2
+import com.malliina.android.ui.fragments.DefaultFragment
+import com.malliina.concurrent.ExecutionContexts.cached
 import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.ui._

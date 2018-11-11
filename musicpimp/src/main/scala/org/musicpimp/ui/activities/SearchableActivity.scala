@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.view.ContextMenu.ContextMenuInfo
 import android.view.{ContextMenu, MenuItem, View}
 import android.widget.{ListAdapter, AdapterView, AbsListView, ArrayAdapter}
-import com.mle.android.ui.Implicits.action2itemClickListener2
-import com.mle.concurrent.FutureOps
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.ui.Implicits.action2itemClickListener2
+import com.malliina.concurrent.FutureOps
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.audio.LibraryManager
 import org.musicpimp.ui.MusicActions
 import org.musicpimp.ui.adapters.{DownloadProgress, SearchAdapter, TrackItem}

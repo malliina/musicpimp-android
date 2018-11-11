@@ -1,6 +1,6 @@
 package org.musicpimp.network
 
-import com.mle.android.http.{HttpConstants, JsonHttpClient, Protocols}
+import com.malliina.android.http.{HttpConstants, JsonHttpClient, Protocols}
 import org.musicpimp.http.Endpoint
 
 import scala.concurrent.duration.DurationLong

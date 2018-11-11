@@ -2,7 +2,7 @@ package org.musicpimp.ui.activities
 
 import android.os.Bundle
 import android.widget.SeekBar
-import com.mle.android.ui.Implicits._
+import com.malliina.android.ui.Implicits._
 import org.musicpimp.R
 import org.musicpimp.TR
 import org.musicpimp.audio.{PlayerManager, MuteToggled, VolumeChanged, PlayerEvent}

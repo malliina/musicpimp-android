@@ -3,8 +3,8 @@ package org.musicpimp.andro.messaging
 import android.app.Activity
 import android.content.Context
 import com.amazon.device.messaging.ADM
-import com.mle.android.exceptions.AndroidException
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.exceptions.AndroidException
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.messaging.AdmEvents
 import org.musicpimp.messaging.AdmMessages.{AdmMessage, Registered, RegistrationError, Unregistered}
 

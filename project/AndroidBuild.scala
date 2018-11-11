@@ -47,7 +47,7 @@ object AndroidBuild {
     "org.apache.**",
     "org.joda.**",
     "scala.collection.**",
-    "play.api.libs.**",
+//    "play.api.libs.**",
     "cz.msebera.android.httpclient.extras.**",
     "com.google.android.gms.internal.**",
     "scala.xml.parsing.**"

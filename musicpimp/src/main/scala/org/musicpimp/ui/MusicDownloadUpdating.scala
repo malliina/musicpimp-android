@@ -1,13 +1,10 @@
 package org.musicpimp.ui
 
-import android.app.{Activity, DownloadManager}
-import android.content.IntentFilter
-import android.support.v4.app.Fragment
-import com.mle.andro.ui.adapters.BaseArrayAdapter
-import com.mle.android.receivers.DownloadCompleteListener
-import com.mle.android.ui.DownloadStatus
+import android.app.Activity
+import com.malliina.android.receivers.DownloadCompleteListener
+import com.malliina.android.ui.DownloadStatus
 import org.musicpimp.andro.ui.ActivityHelper
-import org.musicpimp.ui.adapters.{MusicItemAdapterBase, LibraryItemAdapter}
+import org.musicpimp.ui.adapters.MusicItemAdapterBase
 
 /** This trait updates the download progress of music items loaded into an adapter.
   */

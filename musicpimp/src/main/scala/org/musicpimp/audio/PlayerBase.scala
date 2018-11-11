@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.json.{JsonFormats, SimpleFormat}
+import com.malliina.json.{JsonFormats, SimpleFormat}
 import java.io.Closeable
 import org.musicpimp.util.Messaging
 import play.api.libs.json.Json

@@ -11,10 +11,10 @@ import android.support.v7.app.ActionBar.Tab
 import android.support.v7.app.{ActionBar, ActionBarActivity}
 import android.view._
 import android.widget.Spinner
-import com.mle.android.receivers.DownloadEventReceiver
-import com.mle.android.util.AndroUtils
-import com.mle.android.util.PreferenceImplicits.RichPrefs
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.receivers.DownloadEventReceiver
+import com.malliina.android.util.AndroUtils
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.PimpApp.AppStores
 import org.musicpimp.audio.PlayStates.PlayState
 import org.musicpimp.audio._

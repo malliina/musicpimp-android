@@ -1,8 +1,8 @@
 package org.musicpimp.network
 
 import android.content.Context
-import com.mle.android.network.WifiHelpers
-import com.mle.network.NetworkDevice
+import com.malliina.android.network.WifiHelpers
+import com.malliina.network.NetworkDevice
 
 import scala.util.Try
 

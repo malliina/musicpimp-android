@@ -3,7 +3,7 @@ package org.musicpimp.ui.activities
 import android.app.Activity
 import android.support.v4.app.Fragment
 import org.musicpimp.util.{Messaging, UIMessage}
-import com.mle.android.events.EventSource
+import com.malliina.android.events.EventSource
 
 /** TODO investigate if we can elegantly not repeat ourselves
   */
@@ -35,4 +35,4 @@ trait MessagingProxy {
   protected val source: EventSource[UIMessage] = Messaging
 }
 
-trait BasicProxy extends com.mle.events.Proxy[UIMessage] with MessagingProxy
+trait BasicProxy extends com.malliina.events.Proxy[UIMessage] with MessagingProxy

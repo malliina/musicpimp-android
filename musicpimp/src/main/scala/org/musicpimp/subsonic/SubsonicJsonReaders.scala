@@ -1,7 +1,7 @@
 package org.musicpimp.subsonic
 
 import android.net.Uri
-import com.mle.util.Version
+import com.malliina.util.Version
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonReaders
@@ -24,7 +24,7 @@ class SubsonicJsonReaders(endpoint: Endpoint) extends JsonReaders(endpoint) with
   def downloadUri(trackId: String) = uri2("download", trackId)
 
   private def uri2(methodName: String, trackId: String) =
-    Uri.parse(endpoint.httpBaseUri + SubsonicHttpClient.buildPath(methodName, trackId))
+    Uri.parse((endpoint.httpBaseUri / SubsonicHttpClient.buildPath(methodName, trackId)).url)
 
 
   /** The JSON entries may or may not exist, and the values can be strings,

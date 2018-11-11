@@ -1,5 +1,5 @@
 package org.musicpimp.messaging
 
-import com.mle.android.messaging.GcmReceiver
+import com.malliina.android.messaging.GcmReceiver
 
 class PimpGcmReceiver extends GcmReceiver(classOf[PimpGcmService])

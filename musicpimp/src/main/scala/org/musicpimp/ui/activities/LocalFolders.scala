@@ -1,7 +1,7 @@
 package org.musicpimp.ui.activities
 
 import android.content.{Context, SharedPreferences}
-import com.mle.andro.ui.adapters.EditIconOneLineAdapter
+import com.malliina.andro.ui.adapters.EditIconOneLineAdapter
 import org.musicpimp.R
 import org.musicpimp.ui.activities.LocalFolders.{FolderAdapter, localFoldersPrefKey}
 import org.musicpimp.ui.dialogs.{AddFolderDialog, EditFolderDialog}

@@ -26,7 +26,7 @@
         android:paddingBottom="10dp"
         android:background="@drawable/selector_transparent_button" />
 
-    <com.mle.andro.ui.views.VerticalSeekBar
+    <com.malliina.andro.ui.views.VerticalSeekBar
         android:id="@+id/volume_bar"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"

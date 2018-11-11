@@ -3,9 +3,9 @@ package org.musicpimp.network
 import java.io._
 
 import android.os.Environment
-import com.mle.android.http.QuickHttpClient
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.util.WebUtils
+import com.malliina.android.http.QuickHttpClient
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.util.WebUtils
 import org.musicpimp.util.PimpLog
 
 import scala.concurrent.Future

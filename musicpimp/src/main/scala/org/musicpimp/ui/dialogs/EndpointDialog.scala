@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.text.InputType
 import android.widget.EditText
-import com.mle.andro.ui.dialogs.DefaultDialog
-import com.mle.android.exceptions.UnauthorizedHttpException
-import com.mle.android.ui.ActivityUtils
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.andro.ui.dialogs.DefaultDialog
+import com.malliina.android.exceptions.UnauthorizedHttpException
+import com.malliina.android.ui.ActivityUtils
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.http.Endpoint

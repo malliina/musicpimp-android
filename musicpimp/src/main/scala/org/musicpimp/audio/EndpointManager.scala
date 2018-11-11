@@ -3,7 +3,7 @@ package org.musicpimp.audio
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.preference.PreferenceManager
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import java.io.Closeable
 import org.musicpimp.PimpApp
 import org.musicpimp.http.Endpoint

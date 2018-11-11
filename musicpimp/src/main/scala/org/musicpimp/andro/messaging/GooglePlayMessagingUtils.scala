@@ -5,9 +5,9 @@ import android.content.{SharedPreferences, Context}
 import android.preference.PreferenceManager
 import com.google.android.gms.common.{ConnectionResult, GooglePlayServicesUtil}
 import com.google.android.gms.gcm.GoogleCloudMessaging
-import com.mle.android.util.PreferenceImplicits._
-import com.mle.android.util.UtilLog
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.util.PreferenceImplicits._
+import com.malliina.android.util.UtilLog
+import com.malliina.concurrent.ExecutionContexts.cached
 import scala.concurrent.Future
 
 /**

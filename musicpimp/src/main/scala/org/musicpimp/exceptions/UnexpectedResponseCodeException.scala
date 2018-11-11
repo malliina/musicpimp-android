@@ -1,6 +1,6 @@
 package org.musicpimp.exceptions
 
-import com.mle.android.exceptions.ExplainedHttpException
+import com.malliina.android.exceptions.ExplainedHttpException
 
 class UnexpectedResponseCodeException(val responseCode: Int)
   extends ExplainedHttpException(Some(s"Unexpected response code: $responseCode")) {

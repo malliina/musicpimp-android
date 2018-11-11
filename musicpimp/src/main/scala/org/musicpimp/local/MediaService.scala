@@ -7,7 +7,7 @@ import android.net.Uri
 import android.net.wifi.WifiManager
 import android.os.{Build, Handler, IBinder, PowerManager}
 import android.widget.Toast
-import com.mle.android.http.HttpConstants
+import com.malliina.android.http.HttpConstants
 import org.musicpimp.audio.{PlayerManager, Track}
 import org.musicpimp.ui.receivers.{MusicIntentReceiver, RemoteControlReceiver}
 

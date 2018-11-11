@@ -6,8 +6,8 @@ import android.content.SharedPreferences
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Environment
-import com.mle.file.DiskHelpers
-import com.mle.storage._
+import com.malliina.file.DiskHelpers
+import com.malliina.storage._
 import org.musicpimp.PimpApp
 import org.musicpimp.audio.{Directory, Folder, Track}
 import org.musicpimp.pimp.PimpLibrary

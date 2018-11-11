@@ -1,7 +1,7 @@
 package org.musicpimp.ui.adapters
 
 import android.support.v4.app.{FragmentManager, Fragment, FragmentPagerAdapter}
-import com.mle.android.exceptions.ExplainedException
+import com.malliina.android.exceptions.ExplainedException
 import org.musicpimp.ui.fragments.{PlayerFragment, PlaylistFragment, LibraryFragment}
 
 class PimpPagerAdapter(fm: FragmentManager, combinedPlayerAndPlaylist: Boolean = false) extends FragmentPagerAdapter(fm) {

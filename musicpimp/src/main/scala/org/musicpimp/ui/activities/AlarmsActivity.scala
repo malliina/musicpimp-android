@@ -4,10 +4,10 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.{Menu, View}
 import android.widget.{ArrayAdapter, Spinner}
-import com.mle.android.messaging.MessagingException
-import com.mle.android.util.PreferenceImplicits.RichPrefs
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.concurrent.FutureOps
+import com.malliina.android.messaging.MessagingException
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.concurrent.FutureOps
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio.{LibraryManager, PlayerManager}

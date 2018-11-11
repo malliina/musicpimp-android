@@ -2,7 +2,7 @@ package org.musicpimp.local
 
 import android.content.{Context, Intent}
 import android.media.MediaPlayer
-import com.mle.util.Scheduling
+import com.malliina.concurrent.Scheduling
 import java.util.concurrent.ScheduledFuture
 import org.musicpimp.PimpApp
 import org.musicpimp.audio._

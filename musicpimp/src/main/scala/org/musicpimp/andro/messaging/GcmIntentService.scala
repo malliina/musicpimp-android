@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.content.WakefulBroadcastReceiver
 import com.google.android.gms.gcm.GoogleCloudMessaging
-import com.mle.android.util.UtilLog
+import com.malliina.android.util.UtilLog
 
 /** http://developer.android.com/google/gcm/client.html
   */

@@ -5,8 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.ActionBarActivity
 import android.widget.{ListView, AdapterView}
-import com.mle.andro.ui.adapters.TwoPartItem
-import com.mle.android.ui.Implicits.action2itemClickListener2
+import com.malliina.andro.ui.adapters.TwoPartItem
+import com.malliina.android.ui.Implicits.action2itemClickListener2
 import org.musicpimp.R.string._
 import org.musicpimp.ui.adapters.FontAwesomeAdapter
 import org.musicpimp.ui.dialogs.FirstUseWelcomeTutorial

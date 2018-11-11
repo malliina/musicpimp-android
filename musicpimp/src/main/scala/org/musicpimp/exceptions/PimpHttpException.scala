@@ -1,7 +1,7 @@
 package org.musicpimp.exceptions
 
 import com.fasterxml.jackson.core.JsonParseException
-import com.mle.android.exceptions.ExplainedHttpException
+import com.malliina.android.exceptions.ExplainedHttpException
 import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.pimp.Reason
 import org.musicpimp.util.PimpLog

@@ -4,9 +4,9 @@ import java.io.File
 import java.net.{URLDecoder, URLEncoder}
 
 import android.net.Uri
-import com.mle.android.http.HttpResponse
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.util.Version
+import com.malliina.android.http.HttpResponse
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.util.Version
 import org.musicpimp.PimpApp
 import org.musicpimp.audio._
 import org.musicpimp.http.Endpoint

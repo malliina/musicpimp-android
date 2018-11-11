@@ -5,7 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.EditText
-import com.mle.android.ui.Implicits._
+import com.malliina.android.ui.Implicits._
 import org.musicpimp.R
 import org.musicpimp.R.string._
 

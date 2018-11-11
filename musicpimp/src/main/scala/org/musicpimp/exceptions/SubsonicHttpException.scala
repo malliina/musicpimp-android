@@ -1,6 +1,6 @@
 package org.musicpimp.exceptions
 
-import com.mle.android.exceptions.ExplainedHttpException
+import com.malliina.android.exceptions.ExplainedHttpException
 import org.musicpimp.subsonic.SubsonicJsonReaders._
 import play.api.libs.json.Json
 

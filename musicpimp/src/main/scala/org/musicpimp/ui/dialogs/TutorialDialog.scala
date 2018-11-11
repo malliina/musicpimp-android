@@ -3,7 +3,7 @@ package org.musicpimp.ui.dialogs
 import android.app.{Dialog, AlertDialog}
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import com.mle.andro.ui.dialogs.DefaultDialog
+import com.malliina.andro.ui.dialogs.DefaultDialog
 import org.musicpimp.R.string._
 
 abstract class PimpDialog(builder: Option[Bundle] => AlertDialog) extends DialogFragment {

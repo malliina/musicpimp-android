@@ -3,9 +3,9 @@ package org.musicpimp.iap
 import android.app.Activity
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.mle.android.iap.amazon.AmazonIapUtils
-import com.mle.android.iap.{ProductInfo, IapUtilsBase}
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.iap.amazon.AmazonIapUtils
+import com.malliina.android.iap.{ProductInfo, IapUtilsBase}
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.iap.google.KeyedGoogleIapUtils
 import org.musicpimp.iap.samsung.SamsungIapUtils
 import org.musicpimp.usage.PimpUsageController

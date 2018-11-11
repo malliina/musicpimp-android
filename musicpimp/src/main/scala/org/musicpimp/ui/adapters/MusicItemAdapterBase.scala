@@ -2,7 +2,7 @@ package org.musicpimp.ui.adapters
 
 import android.view.View
 import android.widget.ProgressBar
-import com.mle.andro.ui.adapters.BaseArrayAdapter
+import com.malliina.andro.ui.adapters.BaseArrayAdapter
 import org.musicpimp.TR
 import org.musicpimp.audio.MusicItem
 
@@ -14,8 +14,10 @@ trait MusicItemAdapterBase[T <: MusicItem] extends BaseArrayAdapter[T] {
   protected def updateProgress(view: View, item: TrackItem) {
     val progress = item.progress
     val transferring = progress.transferring
+
     def progressVisibility = if (transferring) View.VISIBLE else View.INVISIBLE
-    val progressBar = findView(view, TR.progressBar.id).asInstanceOf[ProgressBar]
+
+    val progressBar = view.findViewById[ProgressBar](TR.progressBar.id)
     progressBar setVisibility progressVisibility
     if (transferring) {
       val bytes = progress.bytes.toInt

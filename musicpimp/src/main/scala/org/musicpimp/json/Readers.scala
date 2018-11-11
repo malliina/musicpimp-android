@@ -1,6 +1,6 @@
 package org.musicpimp.json
 
-import com.mle.json.JsonFormats
+import com.malliina.json.JsonFormats
 import org.musicpimp.json.JsonStrings._
 import org.musicpimp.pimp._
 import play.api.libs.json.Json._

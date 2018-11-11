@@ -8,10 +8,10 @@ import android.support.v7.app.ActionBarActivity
 import android.text.{Editable, TextWatcher}
 import android.view.View
 import android.widget.{EditText, RadioButton}
-import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
-import com.mle.android.http.{HttpConstants, Protocols}
-import com.mle.android.ui.Implicits.action2clickListener
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.exceptions.{ExplainedException, ExplainedHttpException}
+import com.malliina.android.http.{HttpConstants, Protocols}
+import com.malliina.android.ui.Implicits.action2clickListener
+import com.malliina.concurrent.ExecutionContexts.cached
 import cz.msebera.android.httpclient.client.HttpResponseException
 import cz.msebera.android.httpclient.conn.{ConnectTimeoutException, HttpHostConnectException}
 import org.musicpimp.http.{Endpoint, EndpointTypes}

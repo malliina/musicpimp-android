@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.Endpoint
 import org.musicpimp.json.JsonStrings._
 import org.musicpimp.json.Readers._
@@ -95,7 +95,7 @@ abstract class PimpWebSocketPlayer(val endpoint: Endpoint, webSocketResource: St
 
   private def closeSocket(): Unit = {
     Try {
-      socket.client.getConnection.close()
+//      socket.client.getConnection.close()
       socket.close()
     }
   }

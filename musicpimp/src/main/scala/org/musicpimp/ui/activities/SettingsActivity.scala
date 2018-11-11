@@ -7,9 +7,9 @@ import android.os.Bundle
 import android.preference.{EditTextPreference, ListPreference, PreferenceActivity}
 import android.view.View
 import android.widget.Button
-import com.mle.android.exceptions.ExplainedException
-import com.mle.android.ui.Implicits.action2clickListener
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.exceptions.ExplainedException
+import com.malliina.android.ui.Implicits.action2clickListener
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import org.musicpimp.R
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio.LibraryManager

@@ -5,12 +5,12 @@ import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.view.View
 import android.widget.{CheckedTextView, TimePicker, ArrayAdapter}
-import com.mle.andro.ui.adapters.IconTwoLinesAdapter
-import com.mle.android.exceptions.AndroidException
-import com.mle.android.http.HttpResponse
-import com.mle.android.ui.Implicits._
-import com.mle.concurrent.FutureOps
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.andro.ui.adapters.IconTwoLinesAdapter
+import com.malliina.android.exceptions.AndroidException
+import com.malliina.android.http.HttpResponse
+import com.malliina.android.ui.Implicits._
+import com.malliina.concurrent.FutureOps
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.audio._
 import org.musicpimp.pimp.Alarms._

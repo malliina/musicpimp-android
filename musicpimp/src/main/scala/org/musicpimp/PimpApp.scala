@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.net.Uri
 import android.support.multidex.MultiDexApplication
-import com.mle.android.exceptions.ExplainedException
-import com.mle.util.Version
+import com.malliina.android.exceptions.ExplainedException
+import com.malliina.util.Version
 import org.musicpimp.andro.messaging.IMessagingUtils
 import org.musicpimp.http.Endpoint
 import org.musicpimp.iap.amazon.AmazonIAPActivity

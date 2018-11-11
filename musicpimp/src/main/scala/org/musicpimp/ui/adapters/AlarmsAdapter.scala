@@ -1,7 +1,7 @@
 package org.musicpimp.ui.adapters
 
 import android.content.Context
-import com.mle.andro.ui.adapters.IconTwoLinesAdapter
+import com.malliina.andro.ui.adapters.IconTwoLinesAdapter
 import org.musicpimp.pimp.Alarms.Alarm
 
 class AlarmsAdapter(ctx: Context, alarms: Seq[Alarm]) extends IconTwoLinesAdapter[Alarm](ctx, alarms) {

@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.Endpoint
 import play.api.libs.json.Reads
 import scala.collection.mutable

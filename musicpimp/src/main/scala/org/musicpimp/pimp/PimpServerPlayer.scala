@@ -1,7 +1,7 @@
 package org.musicpimp.pimp
 
-import com.mle.android.http.{AuthHttpClient, HttpResponse}
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.http.{AuthHttpClient, HttpResponse}
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.audio._
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.json.JsonStrings
@@ -19,7 +19,7 @@ class PimpServerPlayer(endpoint: Endpoint)
     with SelfSubscription
     with PimpHttpClient {
 
-  override protected def onPlayerEvent(event: PlayerEvent) = event match {
+  override protected def onPlayerEvent(event: PlayerEvent): Unit = event match {
     case Welcomed =>
       sendSimple(STATUS)
     case e: StatusEvent =>
@@ -82,7 +82,7 @@ class PimpServerPlayer(endpoint: Endpoint)
     val httpClient = new AuthHttpClient(endpoint.username, endpoint.password)
     httpClient.httpClient setTimeout 6.minutes.toMillis.toInt
     httpClient.addHeaders(JsonStrings.TRACK_CAPITAL_T -> Json.stringify(Json.toJson(track)(TrackHelp.json)))
-    val ret = httpClient.postFile(endpoint httpUri PimpServerPlayer.streamResource, file)
+    val ret = httpClient.postFile(endpoint.httpUri(PimpServerPlayer.streamResource).url, file)
     ret.onComplete(_ => httpClient.close())
     ret
   }

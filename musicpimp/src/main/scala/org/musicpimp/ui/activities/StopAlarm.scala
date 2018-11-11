@@ -2,8 +2,8 @@ package org.musicpimp.ui.activities
 
 import android.content.Intent
 import android.os.Bundle
-import com.mle.android.ui.activities.BaseActivity
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.ui.activities.BaseActivity
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.andro.util.Implicits.RichBundle
 import org.musicpimp.http.Endpoint

@@ -1,9 +1,9 @@
 package org.musicpimp.iap.samsung
 
 import android.app.Activity
-import com.mle.android.iap._
-import com.mle.concurrent.{PromiseHelpers, Futures}
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.iap._
+import com.malliina.concurrent.{PromiseHelpers, Futures}
+import com.malliina.concurrent.ExecutionContexts.cached
 import com.sec.android.iap.lib.helper.SamsungIapHelper
 import com.sec.android.iap.lib.listener.{OnGetItemListener, OnGetInboxListener, OnPaymentListener}
 import com.sec.android.iap.lib.vo._

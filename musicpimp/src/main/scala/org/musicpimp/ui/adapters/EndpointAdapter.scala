@@ -1,7 +1,7 @@
 package org.musicpimp.ui.adapters
 
 import android.content.Context
-import com.mle.andro.ui.adapters.IconTwoLinesAdapter
+import com.malliina.andro.ui.adapters.IconTwoLinesAdapter
 import org.musicpimp.http.Endpoint
 
 class EndpointAdapter(ctx: Context, endpoints: Seq[Endpoint])

@@ -6,8 +6,8 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view.{ContextMenu, Menu, MenuItem, View}
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{AdapterView, ArrayAdapter, ListView}
-import com.mle.android.ui.Implicits.action2itemClickListener2
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.ui.Implicits.action2itemClickListener2
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.{R, TR}
 
 import scala.concurrent.Future

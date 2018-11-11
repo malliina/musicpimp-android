@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.android.exceptions.ExplainedException
+import com.malliina.android.exceptions.ExplainedException
 import org.musicpimp.beam.BeamPlayer
 import org.musicpimp.http.Endpoint
 import org.musicpimp.local.{LimitedLocalPlayer, LocalPlayer}

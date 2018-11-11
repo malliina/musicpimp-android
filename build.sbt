@@ -24,7 +24,8 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(malliinaGroup %% "util-android" % "0.12.1"),
+    aar(malliinaGroup %% "util-android" % "0.12.5"),
+    "com.typesafe.play" %% "play-json" % "2.3.10",
     "com.google.android.gms" % "play-services" % "8.4.0",
     "com.android.support" % "multidex" % "1.0.3",
     "org.scalatest" %% "scalatest" % "3.0.5" % Test
@@ -36,7 +37,7 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   dexMinimizeMain in Android := true,
   // https://issuetracker.google.com/issues/37008143
   dexAdditionalParams in Android ++= Seq("--multi-dex", "--set-max-idx-number=40000"),
-  shrinkResources in Android := true,
+//  shrinkResources in Android := true,
   useProguard in Android := true,
   proguardCache in Android ++= Seq(
     "android.support.v4",
@@ -157,7 +158,7 @@ def rxSettings = {
   val rxGroup = "io.reactivex"
   Seq(
     libraryDependencies ++= Seq(
-      rxGroup %% "rxscala" % "0.24.1",
+      rxGroup %% "rxscala" % "0.26.5",
       rxGroup % "rxandroid" % "0.25.0"
     ),
     //      proguardCache in Android += cache(rxGroup)("rx"),

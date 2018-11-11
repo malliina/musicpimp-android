@@ -1,9 +1,9 @@
 package org.musicpimp.audio
 
-import com.mle.android.http.HttpResponse
-import com.mle.concurrent.Futures
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.util.Version
+import com.malliina.android.http.HttpResponse
+import com.malliina.concurrent.Futures
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.util.Version
 import concurrent.duration.DurationInt
 import org.musicpimp.util.Messaging
 import scala.concurrent.{TimeoutException, Future}

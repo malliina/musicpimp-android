@@ -2,8 +2,8 @@ package org.musicpimp.ui
 
 import android.app.Activity
 import android.widget.Spinner
-import com.mle.andro.ui.adapters.OneLineAdapter
-import com.mle.android.ui.Implicits.action2itemSelectedListener
+import com.malliina.andro.ui.adapters.OneLineAdapter
+import com.malliina.android.ui.Implicits.action2itemSelectedListener
 import org.musicpimp.TypedResource
 import org.musicpimp.andro.ui.ActivityHelper
 

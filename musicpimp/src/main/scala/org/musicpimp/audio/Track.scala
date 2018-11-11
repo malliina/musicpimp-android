@@ -1,7 +1,7 @@
 package org.musicpimp.audio
 
 import android.net.Uri
-import com.mle.json.JsonFormats
+import com.malliina.json.JsonFormats
 import org.musicpimp.http.Endpoint
 import play.api.libs.json.{JsValue, Json, Writes}
 

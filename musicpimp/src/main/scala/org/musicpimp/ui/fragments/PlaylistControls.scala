@@ -7,7 +7,7 @@ import android.view.ContextMenu.ContextMenuInfo
 import android.view._
 import android.widget.AdapterView.AdapterContextMenuInfo
 import android.widget.{TextView, ListView, AdapterView}
-import com.mle.android.ui.Implicits.action2itemClickListener2
+import com.malliina.android.ui.Implicits.action2itemClickListener2
 import org.musicpimp.audio._
 import org.musicpimp.ui.adapters.TrackItem
 import org.musicpimp.ui.adapters.{DownloadProgress, LibraryItemAdapter}
@@ -129,7 +129,7 @@ trait PlaylistControls extends PlaybackFragment with MusicDownloadUpdatingFragme
       override def decorate(view: View, item: MusicItem, position: Int): Unit = {
         super.decorate(view, item, position)
         val color = playlistIndex.filter(_ == position).fold(DEFAULT_COLOR)(_ => HIGHLIGHT_COLOR)
-        findView(view, TR.firstLine.id).asInstanceOf[TextView] setTextColor color
+        view.findViewById[TextView](TR.firstLine.id).setTextColor(color)
       }
     }
     activityHelper.onUiThread {

@@ -1,8 +1,8 @@
 package org.musicpimp.beam
 
-import com.mle.android.exceptions.{ExplainedException, ExplainedHttpException}
-import com.mle.android.http.HttpResponse
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.exceptions.{ExplainedException, ExplainedHttpException}
+import com.malliina.android.http.HttpResponse
+import com.malliina.concurrent.ExecutionContexts.cached
 import cz.msebera.android.httpclient.client.HttpResponseException
 import org.musicpimp.audio._
 import org.musicpimp.beam.BeamPlayer._

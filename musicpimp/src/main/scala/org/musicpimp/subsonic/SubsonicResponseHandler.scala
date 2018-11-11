@@ -1,7 +1,7 @@
 package org.musicpimp.subsonic
 
 import com.loopj.android.http.TextHttpResponseHandler
-import com.mle.android.http.HttpResponse
+import com.malliina.android.http.HttpResponse
 import cz.msebera.android.httpclient.Header
 import org.musicpimp.exceptions.SubsonicHttpException
 import org.musicpimp.subsonic.SubsonicJsonReaders.{FAILED, STATUS, SUBSONIC_RESPONSE}

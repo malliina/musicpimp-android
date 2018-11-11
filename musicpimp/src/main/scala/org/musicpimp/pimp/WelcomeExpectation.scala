@@ -1,8 +1,8 @@
 package org.musicpimp.pimp
 
-import com.mle.concurrent.ExecutionContexts.cached
-import com.mle.concurrent.Futures
-import com.mle.ws.SocketClient
+import com.malliina.concurrent.ExecutionContexts.cached
+import com.malliina.concurrent.Futures
+import com.malliina.ws.SocketClient
 import org.musicpimp.json.JsonStrings.{EVENT, WELCOME}
 import play.api.libs.json.JsValue
 

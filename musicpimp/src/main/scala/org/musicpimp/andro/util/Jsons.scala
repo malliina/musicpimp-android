@@ -1,7 +1,7 @@
 package org.musicpimp.andro.util
 
 import com.fasterxml.jackson.core.JsonParseException
-import com.mle.util.Utils
+import com.malliina.util.Utils
 import play.api.libs.json.{JsValue, Json}
 
 import scala.util.Try

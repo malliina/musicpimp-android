@@ -1,6 +1,6 @@
 package org.musicpimp.util
 
-import com.mle.android.events.EventSource
+import com.malliina.android.events.EventSource
 
 trait Messaging extends EventSource[UIMessage] {
   /** Fires the message.

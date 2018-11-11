@@ -3,7 +3,7 @@ package org.musicpimp.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
-import com.mle.android.ui.Implicits.{action2clickListener, fun2seekChangeListener}
+import com.malliina.android.ui.Implicits.{action2clickListener, fun2seekChangeListener}
 import concurrent.duration._
 import org.musicpimp.audio._
 import org.musicpimp.ui.Assets

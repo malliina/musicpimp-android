@@ -1,7 +1,7 @@
 package org.musicpimp.usage
 
 import android.preference.PreferenceManager
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import concurrent.duration._
 import org.musicpimp.PimpApp
 import org.musicpimp.util.Keys

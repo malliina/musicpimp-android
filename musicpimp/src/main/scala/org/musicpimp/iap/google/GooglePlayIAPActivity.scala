@@ -3,8 +3,8 @@ package org.musicpimp.iap.google
 import android.content.Intent
 import android.os.Bundle
 import com.android.iab.util.IabHelper
-import com.mle.android.iap.google._
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.iap.google._
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.R
 import org.musicpimp.iap.google.GooglePlayIAPActivity._
 import org.musicpimp.iap.{GooglePimpIapUtils, IAPActivity, IapInfo}

@@ -1,7 +1,7 @@
 package org.musicpimp.pimp
 
-import com.mle.json.JsonFormats
-import com.mle.storage.StorageSize
+import com.malliina.json.JsonFormats
+import com.malliina.storage.StorageSize
 import org.musicpimp.audio.MusicItem
 import play.api.libs.json.Json
 import scala.concurrent.duration.Duration

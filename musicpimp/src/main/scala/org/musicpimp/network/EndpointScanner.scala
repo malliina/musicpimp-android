@@ -4,11 +4,11 @@ import java.io.IOException
 
 import android.content.Context
 import android.preference.PreferenceManager
-import com.mle.android.network.WifiHelpers
-import com.mle.concurrent.Futures
-import com.mle.network.NetworkDevice
-import com.mle.util.{Lists, Utils}
-import com.mle.concurrent.ExecutionContexts.cached
+import com.malliina.android.network.WifiHelpers
+import com.malliina.concurrent.Futures
+import com.malliina.network.NetworkDevice
+import com.malliina.util.{Lists, Utils}
+import com.malliina.concurrent.ExecutionContexts.cached
 import org.musicpimp.http.{Endpoint, EndpointTypes}
 import org.musicpimp.util.{Keys, PimpSettings}
 

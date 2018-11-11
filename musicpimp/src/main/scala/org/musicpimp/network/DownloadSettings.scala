@@ -5,7 +5,7 @@ import java.io.File
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.preference.PreferenceManager
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import org.musicpimp.PimpApp
 import org.musicpimp.local.LocalLibrary
 

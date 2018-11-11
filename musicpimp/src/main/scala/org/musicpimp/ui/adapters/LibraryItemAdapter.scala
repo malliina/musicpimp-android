@@ -2,8 +2,8 @@ package org.musicpimp.ui.adapters
 
 import android.content.Context
 import android.view.View
-import com.mle.andro.ui.adapters.IconOneLineAdapter
-import com.mle.android.exceptions.ExplainedException
+import com.malliina.andro.ui.adapters.IconOneLineAdapter
+import com.malliina.android.exceptions.ExplainedException
 import org.musicpimp.R
 import org.musicpimp.audio.{Folder, MusicItem}
 import org.musicpimp.util.PimpLog

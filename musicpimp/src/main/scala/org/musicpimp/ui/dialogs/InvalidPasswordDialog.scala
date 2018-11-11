@@ -1,6 +1,6 @@
 package org.musicpimp.ui.dialogs
 
-import com.mle.andro.ui.dialogs.DefaultDialog
+import com.malliina.andro.ui.dialogs.DefaultDialog
 import org.musicpimp.R
 
 class InvalidPasswordDialog extends DefaultDialog(R.string.invalid_pass_add_manually, negativeText = None)

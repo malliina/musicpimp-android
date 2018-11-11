@@ -1,6 +1,6 @@
 package org.musicpimp.ui
 
-import com.mle.android.ui.DownloadHelper
+import com.malliina.android.ui.DownloadHelper
 import org.musicpimp.network.DownloadSettings
 
 /** Provides a method `downloadIfNotExists` that initiates downloads and a method

@@ -1,6 +1,6 @@
 package org.musicpimp.http
 
-import com.mle.android.http.{IEndpoint, Protocols}
+import com.malliina.android.http.{IEndpoint, Protocols}
 import play.api.libs.json.Json
 
 /** Use [[Endpoint]].

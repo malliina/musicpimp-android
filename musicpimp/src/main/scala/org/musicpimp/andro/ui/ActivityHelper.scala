@@ -5,8 +5,7 @@ import android.content.Intent
 import android.preference.PreferenceManager
 import android.view.View
 import android.widget.Toast
-import com.mle.util.Utils
-import org.java_websocket.exceptions.WebsocketNotConnectedException
+import com.malliina.util.Utils
 import org.musicpimp.util.PimpLog
 import org.musicpimp.{TypedFindView, TypedResource}
 
@@ -58,9 +57,9 @@ class ActivityHelper(val activity: Activity) extends TypedFindView with PimpLog 
     try {
       action
     } catch {
-      case wse: WebsocketNotConnectedException =>
-        showToast("Unable to perform action. The connection to the server has been lost.")
-        default
+//      case wse: WebsocketNotConnectedException =>
+//        showToast("Unable to perform action. The connection to the server has been lost.")
+//        default
       case e: Exception =>
         warn(s"Failure", e)
         showToast("Unable to perform action. Please check your settings and try again.")

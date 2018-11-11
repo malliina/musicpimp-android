@@ -1,8 +1,8 @@
 package org.musicpimp.subsonic
 
 import com.loopj.android.http.TextHttpResponseHandler
-import com.mle.android.http.HttpConstants.{ACCEPT, JSON}
-import com.mle.android.http.{BasicHttpClient, HttpResponse}
+import com.malliina.android.http.HttpConstants.{ACCEPT, JSON}
+import com.malliina.android.http.{BasicHttpClient, HttpResponse}
 import org.musicpimp.http.Endpoint
 
 import scala.concurrent.Promise

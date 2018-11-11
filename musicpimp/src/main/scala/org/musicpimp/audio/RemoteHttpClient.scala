@@ -1,6 +1,6 @@
 package org.musicpimp.audio
 
-import com.mle.android.http.JsonHttpClient
+import com.malliina.android.http.JsonHttpClient
 import java.io.Closeable
 import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.{PimpWebHttpClient, PimpJsonReaders}

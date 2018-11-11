@@ -1,6 +1,6 @@
 package org.musicpimp.usage
 
-import com.mle.android.util.PersistentList
+import com.malliina.android.util.PersistentList
 import org.musicpimp.PimpApp
 import scala.concurrent.duration.Duration
 

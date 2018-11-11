@@ -1,6 +1,6 @@
 package org.musicpimp.http
 
-import com.mle.android.http.Protocols
+import com.malliina.android.http.Protocols
 import play.api.libs.json.Json
 
 /** Legacy endpoint maintained so that we can parse old JSON, `toEndpoint`

@@ -2,8 +2,8 @@ package org.musicpimp.pimp
 
 import AlarmsClient.{alarmsResource, START, STOP, SAVE, DELETE}
 import android.content.Context
-import com.mle.android.http.HttpResponse
-import com.mle.util.Version
+import com.malliina.android.http.HttpResponse
+import com.malliina.util.Version
 import org.musicpimp.http.Endpoint
 import org.musicpimp.pimp.Alarms._
 import org.musicpimp.util.PimpLog

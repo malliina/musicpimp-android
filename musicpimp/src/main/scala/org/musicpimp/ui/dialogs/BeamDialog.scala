@@ -4,7 +4,7 @@ import android.app.{AlertDialog, Dialog}
 import android.content.DialogInterface
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
-import com.mle.android.ui.Implicits.clickListener
+import com.malliina.android.ui.Implicits.clickListener
 import org.musicpimp.R.string._
 import org.musicpimp.andro.ui.ActivityHelper
 import org.musicpimp.audio.PlayerManager

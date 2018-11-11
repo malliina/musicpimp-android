@@ -1,7 +1,7 @@
 package org.musicpimp.ui.activities
 
 import android.content.SharedPreferences
-import com.mle.android.util.PreferenceImplicits._
+import com.malliina.android.util.PreferenceImplicits._
 import org.musicpimp.beam.BeamCode
 import org.musicpimp.http.AlmostOldEndpoint
 import org.musicpimp.http.{OldEndpoint, EndpointTypes, Endpoint}
@@ -42,7 +42,7 @@ class SettingsBase(val prefs: SharedPreferences) {
    * @return any error message, or [[None]] if the operation succeeded
    */
   def updateEndpoint(old: Endpoint, updated: Endpoint): Option[String] = {
-    import com.mle.android.util.PreferenceImplicits._
+    import com.malliina.android.util.PreferenceImplicits._
 
     val isPlayer = (prefs get Keys.PREF_PLAYER).exists(_ == old.name)
     val isLibrary = (prefs get Keys.PREF_LIBRARY).exists(_ == old.name)

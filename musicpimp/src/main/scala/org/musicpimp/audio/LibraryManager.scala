@@ -1,8 +1,8 @@
 package org.musicpimp.audio
 
 import android.content.SharedPreferences
-import com.mle.android.exceptions.ExplainedException
-import com.mle.android.util.PreferenceImplicits.RichPrefs
+import com.malliina.android.exceptions.ExplainedException
+import com.malliina.android.util.PreferenceImplicits.RichPrefs
 import java.io.File
 import org.musicpimp.http._
 import org.musicpimp.local.MultiFolderLocalLibrary
