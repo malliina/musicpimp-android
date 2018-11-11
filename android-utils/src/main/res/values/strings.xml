@@ -1,0 +1,7 @@
+<resources>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="item_icon">Item icon</string>
+    <string name="empty_string"/>
+</resources>

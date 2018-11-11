@@ -4,12 +4,17 @@ lazy val app = Project("musicpimp", file("musicpimp"))
   .settings(pimpSettings: _*)
   .enablePlugins(AndroidApp)
 
+lazy val utils = Project("android-utils", file("android-utils"))
+  .settings(utilsSettings: _*)
+  .enablePlugins(AndroidLib)
+
 run := run in Android in app
 
 val malliinaGroup = "com.malliina"
 val supportGroup = "com.android.support"
 val supportVersion = "23.0.0"
 val usedScalaVersion = "2.11.12"
+val utilAndroidDep = malliinaGroup %% "util-android" % "0.12.5"
 
 lazy val pimpSettings = apkSettings ++ commonSettings ++
   googlePlayServicesSettings ++ amazonDeviceMessagingSettings ++ rxSettings ++ Seq(
@@ -24,7 +29,7 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   libraryDependencies ++= Seq(
     aar(supportGroup % "appcompat-v7" % supportVersion),
     zxingDep,
-    aar(malliinaGroup %% "util-android" % "0.12.5"),
+    aar(utilAndroidDep),
     "com.typesafe.play" %% "play-json" % "2.3.10",
     "com.google.android.gms" % "play-services" % "8.4.0",
     "com.android.support" % "multidex" % "1.0.3",
@@ -37,7 +42,7 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   dexMinimizeMain in Android := true,
   // https://issuetracker.google.com/issues/37008143
   dexAdditionalParams in Android ++= Seq("--multi-dex", "--set-max-idx-number=40000"),
-//  shrinkResources in Android := true,
+  //  shrinkResources in Android := true,
   useProguard in Android := true,
   proguardCache in Android ++= Seq(
     "android.support.v4",
@@ -70,6 +75,17 @@ lazy val pimpSettings = apkSettings ++ commonSettings ++
   //    apkbuildExcludes in Android ++= Seq("LICENSE.txt", "NOTICE.txt", "LICENSE", "NOTICE").map(file => s"META-INF/$file"),
   localAars in Android ++= Seq("scanner", "android-utils", "samsung-iap-lib").map(name => baseDirectory.value / "aar" / s"$name.aar")
 ) ++ buildMetaSettings
+
+def utilsSettings = commonSettings ++ Seq(
+  organization := "com.malliina",
+  version := "0.1.1",
+  fork in Test := true,
+  libraryDependencies ++= Seq(utilAndroidDep),
+  platformTarget in Android := "android-27",
+  useProguard in Android := true,
+  libraryProject := true,
+  typedResourcesAar := true
+)
 
 def apkSettings = Seq(
   appStore := AppStores.GooglePlay,
