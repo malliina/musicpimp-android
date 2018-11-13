@@ -22,6 +22,7 @@
     <!-- Background audio, GCM, ADM -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Barcode scanning -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
     <!-- Temporary, remove if not needed -->
     <uses-permission android:name="android.permission.VIBRATE" />

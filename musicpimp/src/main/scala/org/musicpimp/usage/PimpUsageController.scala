@@ -7,7 +7,7 @@ import org.musicpimp.PimpApp
 import org.musicpimp.util.Keys
 
 trait PimpUsageController extends UsageController {
-  // obviously, this must always be true for Google Play / Amazon / Samsung builds
+  // Free!
   private val isIapEnabled = false
 
   val upFrontAllowance = 10
