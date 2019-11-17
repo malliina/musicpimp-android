@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_music"
+    app:startDestination="@id/music_home">
+
+    <fragment
+        android:id="@+id/music_home"
+        android:name="org.musicpimp.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_music">
+        <action
+            android:id="@+id/home_to_music"
+            app:destination="@id/music_folder"
+            app:enterAnim="@anim/enter_from_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/music_folder"
+        android:name="org.musicpimp.ui.music.MusicFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_music">
+        <argument
+            android:name="folderId"
+            app:argType="org.musicpimp.FolderId" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <action
+            android:id="@+id/music_to_music"
+            app:destination="@id/music_folder" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_settings"
+        android:name="org.musicpimp.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/settings_fragment" />
+
+    <fragment
+        android:id="@+id/endpoint_edit"
+        android:name="org.musicpimp.ui.settings.EditEndpointFragment"
+        android:label="@string/title_edit_endpoint"
+        tools:layout="@layout/edit_endpoint_fragment" />
+</navigation>
