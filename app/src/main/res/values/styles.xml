@@ -13,4 +13,9 @@
         <item name="android:maxHeight">2dip</item>
     </style>
 
+    <style name="IconButton" parent="Widget.MaterialComponents.Button.Icon">
+        <item name="android:minHeight">2dip</item>
+        <item name="android:maxHeight">2dip</item>
+    </style>
+
 </resources>

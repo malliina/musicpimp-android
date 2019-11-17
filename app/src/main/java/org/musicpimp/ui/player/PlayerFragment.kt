@@ -10,12 +10,13 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.MainActivityViewModel
+import org.musicpimp.Playstate
 import org.musicpimp.R
 import timber.log.Timber
 import java.lang.IllegalArgumentException
 
 class PlayerFragment : Fragment() {
-    protected lateinit var mainViewModel: MainActivityViewModel
+    private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var playerViewModel: PlayerViewModel
 
     override fun onCreateView(
@@ -33,20 +34,14 @@ class PlayerFragment : Fragment() {
         mainViewModel =
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
         mainViewModel.timeUpdates.observe(viewLifecycleOwner) {
-            Timber.i("Position ${it.seconds}")
             val float = it.seconds.toFloat()
             try {
                 view.position_text.text = it.formatted()
                 val slider = view.player_slider
-//                if (float >= slider.valueFrom && float <= slider.valueTo) {
-//                    slider.value = it.seconds.toFloat()
-//                } else {
-//                    Timber.i("Out of bounds: $float.")
-//                }
                 if (float >= slider.min && float <= slider.max) {
                     slider.progress = it.seconds.toInt()
                 } else {
-                    Timber.i("Out of bounds: $float.")
+                    Timber.w("Out of bounds: $float.")
                 }
             } catch (iae: IllegalArgumentException) {
                 Timber.e("Invalid position: '${it.seconds}'.")
@@ -56,10 +51,13 @@ class PlayerFragment : Fragment() {
             view.track_text.text = it.title
             view.album_text.text = it.album
             view.artist_text.text = it.artist
-//            view.position_text.text = resources.getString(R.string.time_zero)
             view.duration_text.text = it.duration.formatted()
-            // view.player_slider.valueTo = it.duration.seconds.toFloat()
             view.player_slider.max = it.duration.seconds.toInt()
+        }
+        mainViewModel.stateUpdates.observe(viewLifecycleOwner) {
+            view.no_track_text.visibility = if (it == Playstate.NoMedia) View.VISIBLE else View.GONE
+            view.playback_controls.visibility =
+                if (it != Playstate.NoMedia) View.VISIBLE else View.GONE
         }
     }
 }

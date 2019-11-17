@@ -23,7 +23,9 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val times = MutableLiveData<Duration>()
     private val tracks = MutableLiveData<Track>()
-    private val states = MutableLiveData<Playstate>()
+    private val states = MutableLiveData<Playstate>().apply {
+        value = Playstate.NoMedia
+    }
     private val liveDataDelegate = object : SocketDelegate {
         override fun timeUpdated(time: Duration) {
             times.postValue(time)
