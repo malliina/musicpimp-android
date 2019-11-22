@@ -6,13 +6,25 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.musicpimp.AuthHeader
 import org.musicpimp.Directory
 import org.musicpimp.FolderId
+import org.musicpimp.SingleError
 import org.musicpimp.backend.PimpHttpClient
-import org.musicpimp.endpoints.CloudEndpoint
-import org.musicpimp.endpoints.EndpointManager
 import timber.log.Timber
+
+enum class Status {
+    Success,
+    Error,
+    Loading
+}
+
+data class Outcome<out T>(val status: Status, val data: T?, val error: SingleError?) {
+    companion object {
+        fun <T> success(t: T): Outcome<T> = Outcome(Status.Success, t, null)
+        fun error(err: SingleError): Outcome<Nothing> = Outcome(Status.Error, null, err)
+        fun loading(): Outcome<Nothing> = Outcome(Status.Loading, null, null)
+    }
+}
 
 class MusicViewModelFactory(val app: Application, val http: PimpHttpClient): ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
@@ -24,24 +36,24 @@ class MusicViewModelFactory(val app: Application, val http: PimpHttpClient): Vie
 class MusicViewModel(val app: Application, val http: PimpHttpClient) : AndroidViewModel(app) {
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
-//    private val settings: EndpointManager = EndpointManager.load(app)
-//    private val http: PimpHttpClient = PimpHttpClient.build(app, authHeader())
 
-    private val dir = MutableLiveData<Directory>()
-    val directory: LiveData<Directory> = dir
+    private val dir = MutableLiveData<Outcome<Directory>>().apply {
+
+    }
+    val directory: LiveData<Outcome<Directory>> = dir
 
     fun loadFolder(id: FolderId) {
         uiScope.launch {
             try {
-//                val response = cache.getOrPut(id) { http.folder(id) }
                 val response = http.folder(id)
-                dir.value = response
+                dir.value = Outcome.success(response)
                 Timber.i("Loaded ${response.folder.path}")
             } catch (e: Exception) {
                 val msg =
                     if (id == FolderId.root) "Failed to load root directory."
                     else "Failed to load directory $id."
                 Timber.e(e, msg)
+                dir.value = Outcome.error(SingleError.backend(msg))
             }
         }
     }

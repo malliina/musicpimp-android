@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.edit_endpoint_fragment.*
@@ -50,16 +51,18 @@ class EditEndpointFragment : Fragment() {
             activity?.onBackPressed()
         }
         viewModel.editedEndpoint?.let { fill(it, view) }
+        Timber.i("${requireActivity().actionBar}")
+        requireActivity().actionBar?.title = "hmm"
+        Timber.i("dest ${findNavController().currentDestination}")
+        findNavController().currentDestination?.label = "What"
     }
 
     private fun fill(e: Endpoint, on: View) {
         if (e is CloudEndpoint) {
             val creds = e.creds
-            on.findViewById<TextInputEditText>(R.id.cloud_id_edit_text).setText(creds.server.value)
-            on.findViewById<TextInputEditText>(R.id.username_edit_text)
-                .setText(creds.username.value)
-            on.findViewById<TextInputEditText>(R.id.password_edit_text)
-                .setText(creds.password.value)
+            on.cloud_id_edit_text.setText(creds.server.value)
+            on.username_edit_text.setText(creds.username.value)
+            on.password_edit_text.setText(creds.password.value)
         }
     }
 }

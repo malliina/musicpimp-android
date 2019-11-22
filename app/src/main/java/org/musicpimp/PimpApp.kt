@@ -12,8 +12,8 @@ class PimpApp: Application() {
         val tree = if (BuildConfig.DEBUG) Timber.DebugTree() else NoLogging()
         Timber.plant(tree)
 
-//        AppCenter.start(this, "768ec01e-fe9c-46b2-a05a-5389fa9d148f",
-//            Analytics::class.java, Crashes::class.java)
+        AppCenter.start(this, "f7857cd4-6b66-42ba-b916-5a4382849a23",
+            Analytics::class.java, Crashes::class.java)
     }
 
     class NoLogging: Timber.Tree() {

@@ -33,14 +33,26 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_settings"
+        android:id="@+id/settings"
         android:name="org.musicpimp.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/settings_fragment" />
+        tools:layout="@layout/settings_fragment">
+        <action android:id="@+id/settings_to_endpoint"
+            app:destination="@id/endpoint_edit"
+            app:enterAnim="@anim/enter_from_right"/>
+    </fragment>
 
     <fragment
         android:id="@+id/endpoint_edit"
         android:name="org.musicpimp.ui.settings.EditEndpointFragment"
-        android:label="@string/title_edit_endpoint"
-        tools:layout="@layout/edit_endpoint_fragment" />
+        android:label="{title}"
+        tools:layout="@layout/edit_endpoint_fragment">
+        <argument
+            android:name="endpointId"
+            app:argType="org.musicpimp.EndpointId"
+            app:nullable="true"/>
+        <argument
+            android:name="title"
+            app:argType="string" />
+    </fragment>
 </navigation>

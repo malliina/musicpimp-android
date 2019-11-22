@@ -67,7 +67,8 @@ data class NonEmptyString(override val value: String) : Primitive {
     override fun toString(): String = value
 }
 
-data class EndpointId(override val value: String) : Primitive {
+@Parcelize
+data class EndpointId(override val value: String) : Primitive, Parcelable {
     override fun toString(): String = value
 
     companion object {
@@ -94,6 +95,7 @@ data class Track(
 @JsonClass(generateAdapter = true)
 data class Directory(val folder: Folder, val folders: List<Folder>, val tracks: List<Track>) {
     val size = folders.size + tracks.size
+    val isEmpty = size == 0
 
     companion object {
         val empty = Directory(Folder(FolderId.root, "", ""), emptyList(), emptyList())
@@ -166,7 +168,11 @@ data class FullUrl(val proto: String, val hostAndPort: String, val uri: String) 
 data class PimpError(val reason: String)
 
 @JsonClass(generateAdapter = true)
-data class SingleError(val key: String, val message: String)
+data class SingleError(val key: String, val message: String) {
+    companion object {
+        fun backend(message: String) = SingleError("backend", message)
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class Errors(val errors: List<SingleError>) {

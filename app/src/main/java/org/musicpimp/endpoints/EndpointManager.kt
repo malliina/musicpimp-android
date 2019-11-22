@@ -76,22 +76,45 @@ data class Endpoints(val endpoints: List<Endpoint>) {
     fun remove(id: EndpointId) = Endpoints(endpoints.filterNot { e -> e.id == id })
 }
 
+@JsonClass(generateAdapter = true)
+data class ActiveEndpoint(val id: EndpointId)
+
 class EndpointManager(private val prefs: SharedPreferences) {
     companion object {
-        const val endpointsKey = "org.musicpimp.prefs.endpoints6"
+        const val activeKey = "org.musicpimp.prefs.endpoints.active"
+        const val endpointsKey = "org.musicpimp.prefs.endpoints.list"
 
+        val activeAdapter: JsonAdapter<ActiveEndpoint> =
+            Json.moshi.adapter(ActiveEndpoint::class.java)
         val directAdapter: JsonAdapter<DirectEndpoint> =
             Json.moshi.adapter(DirectEndpoint::class.java)
         val cloudAdapter: JsonAdapter<CloudEndpoint> = Json.moshi.adapter(CloudEndpoint::class.java)
         val endpointsAdapter: JsonAdapter<Endpoints> = Json.moshi.adapter(Endpoints::class.java)
 
         fun load(app: Application): EndpointManager {
-            return EndpointManager(app.getSharedPreferences("org.musicpimp.prefs", Context.MODE_PRIVATE))
+            return EndpointManager(
+                app.getSharedPreferences(
+                    "org.musicpimp.prefs",
+                    Context.MODE_PRIVATE
+                )
+            )
         }
     }
 
+    fun active(): CloudEndpoint? {
+        return loadOpt(activeKey, activeAdapter)?.let { id ->
+            fetch().endpoints.find { e -> e.id == id.id }
+                ?.let { e -> if (e is CloudEndpoint) e else null }
+        }
+    }
+
+    fun saveActive(id: EndpointId) {
+        save(ActiveEndpoint(id), activeAdapter, activeKey)
+    }
+
     fun save(endpoint: Endpoint): Endpoints {
-        val newValue = Endpoints(fetch().endpoints.filterNot { e -> e.id == endpoint.id }.plus(endpoint))
+        val newValue =
+            Endpoints(fetch().endpoints.filterNot { e -> e.id == endpoint.id }.plus(endpoint))
         saveAll(newValue)
         return newValue
     }
@@ -107,8 +130,12 @@ class EndpointManager(private val prefs: SharedPreferences) {
     fun fetch(): Endpoints = load(endpointsKey, endpointsAdapter, Endpoints(emptyList()))
 
     fun <T> load(key: String, adapter: JsonAdapter<T>, default: T): T {
+        return loadOpt(key, adapter) ?: default
+    }
+
+    fun <T> loadOpt(key: String, adapter: JsonAdapter<T>): T? {
         val str = prefs.getString(key, null)
-        return if (str != null) adapter.fromJson(str) ?: default else default
+        return str?.let { adapter.fromJson(it) }
     }
 
     fun <T> save(item: T, adapter: JsonAdapter<T>, to: String) {

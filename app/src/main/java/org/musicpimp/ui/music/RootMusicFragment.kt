@@ -9,7 +9,7 @@ import org.musicpimp.FolderId
 class RootMusicFragment : CommonMusicFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadFolder(FolderId.root)
+        viewModel?.loadFolder(FolderId.root)
     }
 
     override fun onFolder(folder: Folder) {

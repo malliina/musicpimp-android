@@ -38,7 +38,7 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app), EndpointsDele
         }
     }
 
-    fun remove(id: EndpointId) {
+    private fun remove(id: EndpointId) {
         settings.remove(id)
         updateEndpoints()
     }

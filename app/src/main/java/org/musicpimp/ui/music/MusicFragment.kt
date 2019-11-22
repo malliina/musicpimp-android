@@ -17,7 +17,7 @@ class MusicFragment : CommonMusicFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.loadFolder(args.folderId)
+        viewModel?.loadFolder(args.folderId)
     }
 
     override fun onFolder(folder: Folder) {

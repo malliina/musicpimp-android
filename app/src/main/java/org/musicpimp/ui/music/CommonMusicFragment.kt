@@ -3,7 +3,6 @@ package org.musicpimp.ui.music
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.Navigation.findNavController
@@ -11,16 +10,19 @@ import androidx.navigation.ui.onNavDestinationSelected
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.fragment_music.view.*
+import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.Directory
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.Track
+import timber.log.Timber
 
 abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
-    protected lateinit var viewAdapter: MusicAdapter
-    protected lateinit var viewManager: RecyclerView.LayoutManager
-    protected lateinit var mainViewModel: MainActivityViewModel
-    protected lateinit var viewModel: MusicViewModel
+    private lateinit var viewAdapter: MusicAdapter
+    private lateinit var viewManager: RecyclerView.LayoutManager
+    private lateinit var mainViewModel: MainActivityViewModel
+    protected var viewModel: MusicViewModel? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,24 +36,57 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
-        viewModel = ViewModelProviders.of(
-            this,
-            MusicViewModelFactory(requireActivity().application, mainViewModel.http)
-        )
-            .get(MusicViewModel::class.java)
         viewManager = LinearLayoutManager(context)
         viewAdapter = MusicAdapter(Directory.empty, this)
-        view.findViewById<RecyclerView>(R.id.tracks_view).apply {
+        view.tracks_view.apply {
             setHasFixedSize(false)
             layoutManager = viewManager
             adapter = viewAdapter
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
-        viewModel.directory.observe(viewLifecycleOwner) {
-            viewAdapter.directory = it
-            viewAdapter.notifyDataSetChanged()
+        if (mainViewModel.http == null) {
+            display(getString(R.string.no_music), view)
+        }
+        mainViewModel.http?.let { httpClient ->
+            val vm = ViewModelProviders.of(
+                this,
+                MusicViewModelFactory(requireActivity().application, httpClient)
+            ).get(MusicViewModel::class.java)
+            vm.directory.observe(viewLifecycleOwner) { outcome ->
+                when (outcome.status) {
+                    Status.Success -> {
+                        view.music_progress.visibility = View.GONE
+                        view.tracks_view.visibility = View.VISIBLE
+                        view.no_music_text.visibility = View.GONE
+                        outcome.data?.let { dir ->
+                            if (dir.isEmpty) {
+                                display(getString(R.string.no_music), view)
+                            } else {
+                                viewAdapter.directory = dir
+                                viewAdapter.notifyDataSetChanged()
+                            }
+                        }
+                    }
+                    Status.Error -> {
+                        display(outcome.error?.message ?: getString(R.string.error_generic), view)
+                    }
+                    Status.Loading -> {
+                        view.music_progress.visibility = View.VISIBLE
+                        view.tracks_view.visibility = View.GONE
+                        view.no_music_text.visibility = View.GONE
+                    }
+                }
+            }
+            viewModel = vm
         }
         setHasOptionsMenu(true)
+    }
+
+    private fun display(message: String, view: View) {
+        view.music_progress.visibility = View.GONE
+        view.tracks_view.visibility = View.GONE
+        view.no_music_text.visibility = View.VISIBLE
+        view.no_music_text.text = message
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -69,6 +104,6 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
     }
 
     override fun onTrack(track: Track) {
-        mainViewModel.socketClient.play(track.id)
+        mainViewModel.socket?.play(track.id)
     }
 }

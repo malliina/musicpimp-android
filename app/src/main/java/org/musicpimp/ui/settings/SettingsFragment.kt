@@ -55,15 +55,16 @@ class SettingsFragment : Fragment(), EndpointsDelegate {
 
     override fun onEndpoint(e: Endpoint) {
         viewModel.onEndpoint(e)
-        Timber.i("Selected ${e.id}")
-        findNavController().navigate(R.id.endpoint_edit)
+        val action = SettingsFragmentDirections.settingsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
+        findNavController().navigate(action)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.endpoint_edit -> {
                 viewModel.editedEndpoint = null
-                findNavController().navigate(R.id.endpoint_edit)
+                val action = SettingsFragmentDirections.settingsToEndpoint(null, getString(R.string.title_add_endpoint))
+                findNavController().navigate(action)
                 true
             }
             else -> super.onOptionsItemSelected(item)

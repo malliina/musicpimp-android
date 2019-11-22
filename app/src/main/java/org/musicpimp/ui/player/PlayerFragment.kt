@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -17,20 +16,19 @@ import java.lang.IllegalArgumentException
 
 class PlayerFragment : Fragment() {
     private lateinit var mainViewModel: MainActivityViewModel
-    private lateinit var playerViewModel: PlayerViewModel
+    private lateinit var viewModel: PlayerViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        playerViewModel =
-            ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         return inflater.inflate(R.layout.fragment_player, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         mainViewModel =
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
         mainViewModel.timeUpdates.observe(viewLifecycleOwner) {
