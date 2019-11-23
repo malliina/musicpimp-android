@@ -1,26 +1,26 @@
 package org.musicpimp.ui.settings
 
+import android.content.Context
 import android.os.Bundle
-import android.view.*
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.endpoint_item.view.*
+import kotlinx.android.synthetic.main.settings_fragment.view.*
+import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
 import timber.log.Timber
 
-class SettingsFragment : Fragment(), EndpointsDelegate {
+class SettingsFragment : Fragment() {
+    private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var viewModel: SettingsViewModel
-    private lateinit var viewAdapter: EndpointsAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,69 +32,67 @@ class SettingsFragment : Fragment(), EndpointsDelegate {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mainViewModel =
+            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
         viewModel =
             activity?.run { ViewModelProviders.of(this).get(SettingsViewModel::class.java) }!!
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = EndpointsAdapter(emptyList(), this)
-        view.findViewById<RecyclerView>(R.id.endpoints_list).apply {
-            setHasFixedSize(false)
-            layoutManager = viewManager
-            adapter = viewAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+        val playbackAdapter = DropdownAdapter(requireContext(), mutableListOf())
+        val sourceAdapter = DropdownAdapter(requireContext(), mutableListOf())
+        view.playback_device_dropdown.setAdapter(playbackAdapter)
+        view.music_source_dropdown.setAdapter(sourceAdapter)
+        viewModel.endpoints.observe(viewLifecycleOwner) { es ->
+            playbackAdapter.update(es)
+            sourceAdapter.update(es)
         }
-        viewModel.endpoints.observe(viewLifecycleOwner) {
-            viewAdapter.endpoints = it
-            viewAdapter.notifyDataSetChanged()
+        viewModel.playbackDevice.observe(viewLifecycleOwner) {
+            Timber.i("Playback device changed to ${it.name}")
+            mainViewModel.activatePlayer(it)
+            // Bug if two endpoints have the same name. Perhaps forbid that.
+            view.playback_device_dropdown.setText(it.name.value, false)
         }
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.settings_top_nav_menu, menu)
-    }
-
-    override fun onEndpoint(e: Endpoint) {
-        viewModel.onEndpoint(e)
-        val action = SettingsFragmentDirections.settingsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
-        findNavController().navigate(action)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.endpoint_edit -> {
-                viewModel.editedEndpoint = null
-                val action = SettingsFragmentDirections.settingsToEndpoint(null, getString(R.string.title_add_endpoint))
-                findNavController().navigate(action)
-                true
+        viewModel.musicSource.observe(viewLifecycleOwner) {
+            mainViewModel.activateSource(it)
+            Timber.i("Music source changed to ${it.name}.")
+            view.music_source_dropdown.setText(it.name.value, false)
+        }
+        view.playback_device_dropdown.setOnItemClickListener { parent, v, position, id ->
+            playbackAdapter.getItem(position)?.let {
+                viewModel.onPlayback(it)
             }
-            else -> super.onOptionsItemSelected(item)
+        }
+        view.music_source_dropdown.setOnItemClickListener { parent, v, position, id ->
+            sourceAdapter.getItem(position)?.let {
+                viewModel.onSource(it)
+            }
+        }
+        view.manage_endpoints_button.setOnClickListener {
+            val action = SettingsFragmentDirections.settingsToEndpoints()
+            findNavController().navigate(action)
         }
     }
 }
 
-class EndpointsAdapter(var endpoints: List<Endpoint>, private val delegate: EndpointsDelegate) :
-    RecyclerView.Adapter<EndpointsAdapter.EndpointHolder>() {
-    class EndpointHolder(val layout: ConstraintLayout) : RecyclerView.ViewHolder(layout)
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EndpointHolder {
-        val layout = LayoutInflater.from(parent.context).inflate(
-            R.layout.endpoint_item,
+class DropdownAdapter(context: Context, val endpoints: MutableList<Endpoint>) :
+    ArrayAdapter<Endpoint>(context, 0, endpoints) {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        val target = (convertView ?: LayoutInflater.from(context).inflate(
+            R.layout.endpoint_dropdown_item,
             parent,
             false
-        ) as ConstraintLayout
-        return EndpointHolder(layout)
-    }
-
-    override fun onBindViewHolder(th: EndpointHolder, position: Int) {
-        val layout = th.layout
-        val endpoint = endpoints[position]
-        layout.endpoint_name.text = endpoint.name.value
-        layout.setOnClickListener {
-            delegate.onEndpoint(endpoint)
+        )) as TextView
+        getItem(position)?.let { endpoint ->
+            target.text = endpoint.name.value
+            // Apparently interferes with framework functionality if set
+//            target.setOnClickListener { ... }
         }
+        return target
     }
 
-    override fun getItemCount(): Int = endpoints.size
+    fun update(es: List<Endpoint>) {
+        clear()
+        addAll(es)
+        notifyDataSetChanged()
+    }
 }
 
 interface EndpointsDelegate {

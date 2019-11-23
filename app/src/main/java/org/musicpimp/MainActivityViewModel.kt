@@ -46,22 +46,31 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     var socket: PimpSocket? = null
 
     init {
-        settings.active()?.let { endpoint ->
-            updateBackend(endpoint.creds.authHeader)
+        settings.activeSource()?.let { endpoint ->
+            setupSource(endpoint)
             openSocket()
         }
     }
 
-    fun activate(endpoint: Endpoint) {
-        settings.saveActive(endpoint.id)
-        if (endpoint is CloudEndpoint) {
-            updateBackend(endpoint.creds.authHeader)
+    fun activatePlayer(e: Endpoint) {
+        settings.saveActivePlayer(e.id)
+    }
+
+    fun activateSource(e: Endpoint) {
+        settings.saveActiveSource(e.id)
+        if (e is CloudEndpoint) {
+            setupSource(e)
         }
     }
 
-    private fun updateBackend(header: AuthHeader) {
-        http = PimpHttpClient.build(app, header)
+    private fun setupSource(e: CloudEndpoint) {
+        updateBackend(e.creds.authHeader, e.creds.server.value)
+    }
+
+    private fun updateBackend(header: AuthHeader, name: String) {
+        http = PimpHttpClient.build(app, header, name)
         socket = PimpSocket.build(header, liveDataDelegate)
+        Timber.i("Updated backend to '$name'.")
     }
 
     fun openSocket() {

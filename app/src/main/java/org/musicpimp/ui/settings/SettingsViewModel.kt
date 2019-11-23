@@ -1,30 +1,46 @@
 package org.musicpimp.ui.settings
 
 import android.app.Application
-import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import org.musicpimp.EndpointId
-import org.musicpimp.endpoints.DirectEndpointInput
 import org.musicpimp.endpoints.Endpoint
-import org.musicpimp.endpoints.EndpointInput
 import org.musicpimp.endpoints.EndpointManager
 
 class SettingsViewModel(app: Application) : AndroidViewModel(app), EndpointsDelegate {
-    private val settings =
-        EndpointManager(app.getSharedPreferences("org.musicpimp.prefs", Context.MODE_PRIVATE))
+    private val settings = EndpointManager.load(app)
 
     private val endpointsData = MutableLiveData<List<Endpoint>>().apply {
         value = settings.fetch().endpoints
     }
+    private val playback = MutableLiveData<Endpoint>().apply {
+        settings.activePlayer()?.let {
+            value = it
+        }
+    }
+    private val source = MutableLiveData<Endpoint>().apply {
+        settings.activeSource()?.let {
+            value = it
+        }
+    }
 
     val endpoints: LiveData<List<Endpoint>> = endpointsData
+    val playbackDevice: LiveData<Endpoint> = playback
+    val musicSource: LiveData<Endpoint> = source
 
     var editedEndpoint: Endpoint? = null
 
     override fun onEndpoint(e: Endpoint) {
         editedEndpoint = e
+    }
+
+    fun onPlayback(e: Endpoint) {
+        playback.postValue(e)
+    }
+
+    fun onSource(e: Endpoint) {
+        source.postValue(e)
     }
 
     fun save(e: Endpoint) {

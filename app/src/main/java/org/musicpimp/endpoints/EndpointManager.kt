@@ -68,7 +68,10 @@ data class CloudEndpoint(
     override val id: EndpointId,
     override val name: NonEmptyString,
     val creds: CloudCredential
-) : Endpoint
+) : Endpoint {
+    // For dropdowns
+    override fun toString(): String = name.value
+}
 
 @JsonClass(generateAdapter = true)
 data class Endpoints(val endpoints: List<Endpoint>) {
@@ -81,7 +84,8 @@ data class ActiveEndpoint(val id: EndpointId)
 
 class EndpointManager(private val prefs: SharedPreferences) {
     companion object {
-        const val activeKey = "org.musicpimp.prefs.endpoints.active"
+        const val activePlayerKey = "org.musicpimp.prefs.endpoints.active.player"
+        const val activeSourceKey = "org.musicpimp.prefs.endpoints.active.source"
         const val endpointsKey = "org.musicpimp.prefs.endpoints.list"
 
         val activeAdapter: JsonAdapter<ActiveEndpoint> =
@@ -101,15 +105,31 @@ class EndpointManager(private val prefs: SharedPreferences) {
         }
     }
 
-    fun active(): CloudEndpoint? {
-        return loadOpt(activeKey, activeAdapter)?.let { id ->
+    fun activePlayer(): CloudEndpoint? {
+        return active(activePlayerKey)
+    }
+
+    fun saveActivePlayer(id: EndpointId) {
+        saveActive(id, activePlayerKey)
+    }
+
+    fun activeSource(): CloudEndpoint? {
+        return active(activeSourceKey)
+    }
+
+    fun saveActiveSource(id: EndpointId) {
+        saveActive(id, activeSourceKey)
+    }
+
+    private fun active(key: String): CloudEndpoint? {
+        return loadOpt(key, activeAdapter)?.let { id ->
             fetch().endpoints.find { e -> e.id == id.id }
                 ?.let { e -> if (e is CloudEndpoint) e else null }
         }
     }
 
-    fun saveActive(id: EndpointId) {
-        save(ActiveEndpoint(id), activeAdapter, activeKey)
+    private fun saveActive(id: EndpointId, key: String) {
+        save(ActiveEndpoint(id), activeAdapter, key)
     }
 
     fun save(endpoint: Endpoint): Endpoints {

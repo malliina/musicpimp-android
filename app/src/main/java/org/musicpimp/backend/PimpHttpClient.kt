@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import org.musicpimp.*
 
-class PimpHttpClient(val http: HttpClient) {
+class PimpHttpClient(val http: HttpClient, val name: String) {
     companion object {
         const val pimpFormat = "application/vnd.musicpimp.v18+json"
 
-        fun build(ctx: Context, authHeader: AuthHeader): PimpHttpClient {
+        fun build(ctx: Context, authHeader: AuthHeader, name: String): PimpHttpClient {
             val http = HttpClient.getInstance(ctx, authHeader)
-            return PimpHttpClient(http)
+            return PimpHttpClient(http, name)
         }
 
         fun authHeader(word: String, unencoded: String): AuthHeader {
@@ -22,7 +22,6 @@ class PimpHttpClient(val http: HttpClient) {
         }
 
         private val moshi: Moshi = Json.moshi
-        //        val errorsAdapter: JsonAdapter<Errors> = moshi.adapter(Errors::class.java)
         val pimpErrorAdapter: JsonAdapter<PimpError> = moshi.adapter(PimpError::class.java)
         val directoryAdapter: JsonAdapter<Directory> = moshi.adapter(Directory::class.java)
     }

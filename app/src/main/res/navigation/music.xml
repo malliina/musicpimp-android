@@ -14,6 +14,10 @@
             android:id="@+id/home_to_music"
             app:destination="@id/music_folder"
             app:enterAnim="@anim/enter_from_right" />
+        <action
+            android:id="@+id/home_to_settings"
+            app:destination="@id/settings"
+            app:enterAnim="@anim/enter_from_right"/>
     </fragment>
 
     <fragment
@@ -23,13 +27,21 @@
         tools:layout="@layout/fragment_music">
         <argument
             android:name="folderId"
-            app:argType="org.musicpimp.FolderId" />
+            app:argType="org.musicpimp.FolderId"
+            app:nullable="true"
+            android:defaultValue="@null"/>
         <argument
             android:name="title"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="MusicPimp"/>
         <action
             android:id="@+id/music_to_music"
-            app:destination="@id/music_folder" />
+            app:destination="@id/music_folder"
+            app:enterAnim="@anim/enter_from_right"/>
+        <action
+            android:id="@+id/music_to_settings"
+            app:destination="@id/settings"
+            app:enterAnim="@anim/enter_from_right"/>
     </fragment>
 
     <fragment
@@ -37,7 +49,17 @@
         android:name="org.musicpimp.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
         tools:layout="@layout/settings_fragment">
-        <action android:id="@+id/settings_to_endpoint"
+        <action android:id="@+id/settings_to_endpoints"
+            app:destination="@id/endpoints"
+            app:enterAnim="@anim/enter_from_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/endpoints"
+        android:name="org.musicpimp.ui.settings.EndpointsFragment"
+        android:label="@string/title_endpoints"
+        tools:layout="@layout/endpoints_fragment">
+        <action android:id="@+id/endpoints_to_endpoint"
             app:destination="@id/endpoint_edit"
             app:enterAnim="@anim/enter_from_right"/>
     </fragment>

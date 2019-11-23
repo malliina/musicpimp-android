@@ -49,9 +49,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$navigationVersion"
     implementation "com.android.volley:volley:1.1.1"
     implementation "com.neovisionaries:nv-websocket-client:2.9"
-    implementation "com.google.android.material:material:1.2.0-alpha01"
+    implementation "com.google.android.material:material:1.2.0-alpha02"
     implementation "com.jakewharton.timber:timber:4.7.1"
     implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "me.zhanghai.android.materialprogressbar:library:1.6.1"
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
     testImplementation "junit:junit:4.12"
     androidTestImplementation "androidx.test:runner:1.2.0"

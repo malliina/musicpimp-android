@@ -52,9 +52,9 @@ class EditEndpointFragment : Fragment() {
         }
         viewModel.editedEndpoint?.let { fill(it, view) }
         Timber.i("${requireActivity().actionBar}")
-        requireActivity().actionBar?.title = "hmm"
-        Timber.i("dest ${findNavController().currentDestination}")
-        findNavController().currentDestination?.label = "What"
+        findNavController().currentDestination?.label =
+            if (viewModel.editedEndpoint == null) getString(R.string.title_add_endpoint)
+            else getString(R.string.title_edit_endpoint)
     }
 
     private fun fill(e: Endpoint, on: View) {

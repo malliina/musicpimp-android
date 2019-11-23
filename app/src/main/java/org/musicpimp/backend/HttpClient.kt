@@ -25,14 +25,13 @@ class HttpClient(ctx: Context, val authHeader: AuthHeader) {
         }
 
         @Volatile
-        private var INSTANCE: HttpClient? = null
+        private var cache: MutableMap<AuthHeader, HttpClient> = mutableMapOf()
 
-        fun getInstance(context: Context, authHeader: AuthHeader) =
-            INSTANCE ?: synchronized(this) {
-                INSTANCE
-                    ?: HttpClient(context, authHeader).also {
-                        INSTANCE = it
-                    }
+        fun getInstance(context: Context, authHeader: AuthHeader): HttpClient =
+            cache[authHeader] ?: synchronized(this) {
+                cache.getOrPut(authHeader) {
+                    HttpClient(context, authHeader)
+                }
             }
     }
 
