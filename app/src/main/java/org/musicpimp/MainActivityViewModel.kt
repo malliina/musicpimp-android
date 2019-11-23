@@ -37,46 +37,63 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         override fun playstateUpdated(state: Playstate) {
             states.postValue(state)
         }
+        override fun onStatus(status: StatusMessage) {
+            if (status.state != Playstate.NoMedia) {
+                tracks.postValue(status.track)
+                states.postValue(status.state)
+                times.postValue(status.position)
+            }
+        }
     }
     val timeUpdates: LiveData<Duration> = times
     val trackUpdates: LiveData<Track> = tracks
     val stateUpdates: LiveData<Playstate> = states
 
     var http: PimpHttpClient? = null
-    var socket: PimpSocket? = null
+    var playerSocket: PimpSocket? = null
 
     init {
-        settings.activeSource()?.let { endpoint ->
-            setupSource(endpoint)
-            openSocket()
+        settings.activeSource()?.let { source ->
+            setupSource(source)
+        }
+        settings.activePlayer()?.let { player ->
+            setupPlayer(player)
         }
     }
 
-    fun activatePlayer(e: Endpoint) {
-        settings.saveActivePlayer(e.id)
+    fun activatePlayer(player: Endpoint) {
+        settings.saveActivePlayer(player.id)
+        if (player is CloudEndpoint) {
+            setupPlayer(player)
+        }
     }
 
-    fun activateSource(e: Endpoint) {
-        settings.saveActiveSource(e.id)
-        if (e is CloudEndpoint) {
-            setupSource(e)
+    fun activateSource(source: Endpoint) {
+        settings.saveActiveSource(source.id)
+        if (source is CloudEndpoint) {
+            setupSource(source)
         }
     }
 
     private fun setupSource(e: CloudEndpoint) {
-        updateBackend(e.creds.authHeader, e.creds.server.value)
+        updateSource(e.creds.authHeader, e.creds.server.value)
     }
 
-    private fun updateBackend(header: AuthHeader, name: String) {
+    private fun updateSource(header: AuthHeader, name: String) {
         http = PimpHttpClient.build(app, header, name)
-        socket = PimpSocket.build(header, liveDataDelegate)
         Timber.i("Updated backend to '$name'.")
+    }
+
+    private fun setupPlayer(e: CloudEndpoint) {
+        closeSocket()
+        playerSocket = PimpSocket.build(e.creds.authHeader, liveDataDelegate)
+        openSocket()
     }
 
     fun openSocket() {
         uiScope.launch {
             try {
-                socket?.connect()
+                playerSocket?.connect()
             } catch(e: Exception) {
                 Timber.e(e)
             }
@@ -85,10 +102,10 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun closeSocket() {
         try {
-            socket?.disconnect()
+            playerSocket?.disconnect()
         } catch(e: Exception) {
             Timber.e(e, "Failed to disconnect.")
         }
     }
-//    fun <T> send(message: T, adapter: JsonAdapter<T>) = socket.send(message, adapter)
+//    fun <T> send(message: T, adapter: JsonAdapter<T>) = playerSocket.send(message, adapter)
 }

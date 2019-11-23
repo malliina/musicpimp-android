@@ -6,6 +6,7 @@ import com.squareup.moshi.JsonClass
 class EnumAdapter {
     @FromJson
     fun playbackEvent(e: String): PlaybackEvent = PlaybackEvent.parse(e)
+
     @FromJson
     fun playstate(e: String): Playstate = Playstate.parse(e)
 }
@@ -20,6 +21,7 @@ enum class PlaybackEvent(val code: String) {
     PlaylistIndexChanged("playlist_index_changed"),
     VolumeChanged("volume_changed"),
     MuteToggled("mute_toggled"),
+    Status("status"),
     Other("other");
 
     companion object {
@@ -32,6 +34,7 @@ enum class PlaybackEvent(val code: String) {
                 "playlist_index_changed" -> PlaylistIndexChanged
                 "volume_changed" -> VolumeChanged
                 "mute_toggled" -> MuteToggled
+                "status" -> Status
                 else -> Other
             }
         }
@@ -54,6 +57,7 @@ enum class Playstate(val code: String) {
                 "Paused" -> Paused
                 "Stopped" -> Stopped
                 "NoMedia" -> NoMedia
+                "Closed" -> NoMedia
                 else -> Other
             }
         }
@@ -64,6 +68,16 @@ enum class Playstate(val code: String) {
 data class ServerEvent(val event: PlaybackEvent)
 
 interface ServerMessage
+
+@JsonClass(generateAdapter = true)
+data class StatusMessage(
+    val index: Int,
+    val volume: Int,
+    val position: Duration,
+    val state: Playstate,
+    val playlist: List<Track>,
+    val track: Track
+) : ServerMessage
 
 // Server messages
 @JsonClass(generateAdapter = true)

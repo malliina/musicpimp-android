@@ -89,6 +89,6 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
     }
 
     override fun onTrack(track: Track) {
-        mainViewModel.socket?.play(track.id)
+        mainViewModel.playerSocket?.play(track.id)
     }
 }

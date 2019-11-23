@@ -13,12 +13,19 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
         val baseUrl = Env.baseUrl
     }
 
+    abstract fun onConnected(url: FullUrl)
     abstract fun onMessage(message: String)
 
     private val sf: WebSocketFactory = WebSocketFactory()
     // var because it's recreated on reconnects
     private var socket = sf.createSocket(url.url, 10000)
     private val listener = object : WebSocketAdapter() {
+        override fun onConnected(
+            websocket: WebSocket?,
+            headers: MutableMap<String, MutableList<String>>?
+        ) {
+            onConnected(url)
+        }
         override fun onTextMessage(websocket: WebSocket?, text: String?) {
             try {
                 text?.let { onMessage(it) }
@@ -67,11 +74,13 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
         }
 
     fun <T> send(message: T, adapter: JsonAdapter<T>) {
+        val json = adapter.toJson(message)
         // Might throw
         if (socket.isOpen) {
-            val json = adapter.toJson(message)
-            Timber.d("Sending $json...")
+            Timber.i("Sending $json...")
             socket.sendText(json)
+        } else {
+            Timber.w("Not sending message '$json' because socket to '$url'.")
         }
     }
 

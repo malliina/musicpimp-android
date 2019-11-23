@@ -28,9 +28,13 @@ class PlayerFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(PlayerViewModel::class.java)
         mainViewModel =
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
+        viewModel = ViewModelProviders.of(
+            this,
+            PlayerViewModelFactory(requireActivity().application, mainViewModel)
+        ).get(PlayerViewModel::class.java)
+
         mainViewModel.timeUpdates.observe(viewLifecycleOwner) {
             val float = it.seconds.toFloat()
             try {
@@ -56,6 +60,15 @@ class PlayerFragment : Fragment() {
             view.no_track_text.visibility = if (it == Playstate.NoMedia) View.VISIBLE else View.GONE
             view.playback_controls.visibility =
                 if (it != Playstate.NoMedia) View.VISIBLE else View.GONE
+        }
+        view.play_pause_button.setOnClickListener {
+            viewModel.onPlayPause()
+        }
+        view.next_button.setOnClickListener {
+            viewModel.onNext()
+        }
+        view.prev_button.setOnClickListener {
+            viewModel.onPrevious()
         }
     }
 }

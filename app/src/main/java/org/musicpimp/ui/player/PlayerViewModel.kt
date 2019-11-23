@@ -1,24 +1,29 @@
 package org.musicpimp.ui.player
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
-import org.musicpimp.*
+import androidx.lifecycle.ViewModelProvider
+import org.musicpimp.MainActivityViewModel
 
-class PlayerViewModel : ViewModel() {
-    val testTrack = Track(
-        TrackId("test"),
-        "Title 1",
-        Album("21"),
-        Artist("Adele"),
-        "a/b/c",
-        Duration(120.0),
-        12121212,
-        FullUrl("https", "musicpimp.org", "")
-    )
-    private val tracksData = MutableLiveData<Track>().apply {
-        value = testTrack
+class PlayerViewModelFactory(val app: Application, val main: MainActivityViewModel) :
+    ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return PlayerViewModel(app, main) as T
+    }
+}
+
+class PlayerViewModel(app: Application, val main: MainActivityViewModel) : AndroidViewModel(app) {
+    fun onPlayPause() {
+        main.playerSocket?.resume()
     }
 
-    val tracks: LiveData<Track> = tracksData
+    fun onNext() {
+        main.playerSocket?.next()
+    }
+
+    fun onPrevious() {
+        main.playerSocket?.prev()
+    }
 }

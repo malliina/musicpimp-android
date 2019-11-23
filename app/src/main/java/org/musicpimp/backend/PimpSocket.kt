@@ -10,6 +10,7 @@ interface SocketDelegate {
     fun timeUpdated(time: Duration)
     fun trackUpdated(track: Track)
     fun playstateUpdated(state: Playstate)
+    fun onStatus(status: StatusMessage)
 }
 
 class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: SocketDelegate) :
@@ -28,6 +29,7 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
             val volume: JsonAdapter<VolumeChangedMessage> =
                 moshi.adapter(VolumeChangedMessage::class.java)
             val mute: JsonAdapter<MuteMessage> = moshi.adapter(MuteMessage::class.java)
+            val status: JsonAdapter<StatusMessage> = moshi.adapter(StatusMessage::class.java)
             val trackCmd: JsonAdapter<TrackCommand> = moshi.adapter(TrackCommand::class.java)
             val simple: JsonAdapter<SimpleCommand> = moshi.adapter(SimpleCommand::class.java)
         }
@@ -37,6 +39,10 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
             Timber.i("Setting socketUrl to '$socketUrl'.")
             return PimpSocket(socketUrl, HttpClient.headers(auth), delegate)
         }
+    }
+
+    override fun onConnected(url: FullUrl) {
+        status()
     }
 
     override fun onMessage(message: String) {
@@ -61,6 +67,10 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
                 PlaylistIndexChanged -> adapters.index.read(message)
                 VolumeChanged -> adapters.volume.read(message)
                 MuteToggled -> adapters.mute.read(message)
+                Status -> {
+                    val status = adapters.status.read(message)
+                    delegate.onStatus(status)
+                }
                 Other -> OtherMessage(message)
             }
         }
@@ -71,6 +81,7 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
     fun stop() = simple("stop")
     fun next() = simple("next")
     fun prev() = simple("prev")
+    fun status() = simple("status")
 
     fun simple(cmd: String) = send(SimpleCommand(cmd), adapters.simple)
 }
