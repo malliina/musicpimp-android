@@ -27,27 +27,45 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     private val states = MutableLiveData<Playstate>().apply {
         value = Playstate.NoMedia
     }
+    private val playlist = MutableLiveData<List<Track>>()
+    private val index = MutableLiveData<Int>()
+
     private val liveDataDelegate = object : SocketDelegate {
         override fun timeUpdated(time: Duration) {
             times.postValue(time)
         }
+
         override fun trackUpdated(track: Track) {
             tracks.postValue(track)
         }
+
         override fun playstateUpdated(state: Playstate) {
             states.postValue(state)
         }
+
         override fun onStatus(status: StatusMessage) {
             if (status.state != Playstate.NoMedia) {
                 tracks.postValue(status.track)
                 states.postValue(status.state)
                 times.postValue(status.position)
             }
+            playlist.postValue(status.playlist)
+            index.postValue(status.index)
+        }
+
+        override fun playlistUpdated(list: List<Track>) {
+            playlist.postValue(list)
+        }
+
+        override fun indexUpdated(idx: Int) {
+            index.postValue(idx)
         }
     }
     val timeUpdates: LiveData<Duration> = times
     val trackUpdates: LiveData<Track> = tracks
     val stateUpdates: LiveData<Playstate> = states
+    val playlistUpdates: LiveData<List<Track>> = playlist
+    val indexUpdates: LiveData<Int> = index
 
     var http: PimpHttpClient? = null
     var playerSocket: PimpSocket? = null
@@ -94,7 +112,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         uiScope.launch {
             try {
                 playerSocket?.connect()
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 Timber.e(e)
             }
         }
@@ -103,7 +121,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     fun closeSocket() {
         try {
             playerSocket?.disconnect()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             Timber.e(e, "Failed to disconnect.")
         }
     }

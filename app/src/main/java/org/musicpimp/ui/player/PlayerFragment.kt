@@ -1,12 +1,11 @@
 package org.musicpimp.ui.player
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.Playstate
@@ -83,6 +82,22 @@ class PlayerFragment : Fragment() {
         }
         view.prev_button.setOnClickListener {
             viewModel.onPrevious()
+        }
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.player_top_nav_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.playlist -> {
+                val action = PlayerFragmentDirections.playerToPlaylist()
+                findNavController().navigate(action)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

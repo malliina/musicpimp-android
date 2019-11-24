@@ -11,10 +11,13 @@ import org.musicpimp.Folder
 import org.musicpimp.R
 import org.musicpimp.Track
 
-interface MusicItemDelegate {
-    fun onTrack(track: Track)
+interface TrackDelegate {
+    fun onTrack(track: Track, position: Int)
+    fun onTrackMore(track: Track, view: ImageButton, position: Int)
+}
+
+interface MusicItemDelegate: TrackDelegate {
     fun onFolder(folder: Folder)
-    fun onTrackMore(track: Track, view: ImageButton)
     fun onFolderMore(folder: Folder, view: ImageButton)
 }
 
@@ -48,10 +51,10 @@ class MusicAdapter(var directory: Directory, private val delegate: MusicItemDele
             val track = directory.tracks[position - directory.folders.size]
             title.text = track.title
             layout.setOnClickListener {
-                delegate.onTrack(track)
+                delegate.onTrack(track, position)
             }
             moreButton.setOnClickListener {
-                delegate.onTrackMore(track, moreButton)
+                delegate.onTrackMore(track, moreButton, position)
             }
         }
     }

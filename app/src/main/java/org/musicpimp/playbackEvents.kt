@@ -108,6 +108,9 @@ data class OtherMessage(val message: String) : ServerMessage
 data class TrackCommand(val cmd: String, val track: TrackId)
 
 @JsonClass(generateAdapter = true)
+data class ValueCommand(val cmd: String, val value: Int)
+
+@JsonClass(generateAdapter = true)
 data class ItemsCommand(val cmd: String, val tracks: List<TrackId>, val folders: List<FolderId>)
 
 @JsonClass(generateAdapter = true)

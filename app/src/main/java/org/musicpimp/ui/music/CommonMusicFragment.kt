@@ -87,11 +87,11 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
         inflater.inflate(R.menu.music_top_nav_menu, menu)
     }
 
-    override fun onTrack(track: Track) {
+    override fun onTrack(track: Track, position: Int) {
         mainViewModel.playerSocket?.play(track.id)
     }
 
-    override fun onTrackMore(track: Track, view: ImageButton) {
+    override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
         showPopup(view) {
             Timber.i("Add track ${track.id}")
             mainViewModel.playerSocket?.add(track.id)

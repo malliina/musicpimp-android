@@ -4,7 +4,7 @@ import java.net.URLEncoder
 import java.security.MessageDigest
 
 object Utils {
-    val hexChars = "0123456789abcdef"
+    private const val hexChars = "0123456789abcdef"
 
     fun urlEncode(s: String): String = URLEncoder.encode(s, "utf-8")
 

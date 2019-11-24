@@ -2,9 +2,7 @@ package org.musicpimp.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.TextView
@@ -16,6 +14,7 @@ import kotlinx.android.synthetic.main.settings_fragment.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
+import org.musicpimp.ui.music.MusicFragmentDirections
 import timber.log.Timber
 
 class SettingsFragment : Fragment() {
