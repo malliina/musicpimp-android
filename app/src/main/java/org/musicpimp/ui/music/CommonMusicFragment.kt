@@ -2,6 +2,8 @@ package org.musicpimp.ui.music
 
 import android.os.Bundle
 import android.view.*
+import android.widget.ImageButton
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
@@ -9,10 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_music.view.*
-import org.musicpimp.Directory
-import org.musicpimp.MainActivityViewModel
-import org.musicpimp.R
-import org.musicpimp.Track
+import org.musicpimp.*
 import timber.log.Timber
 
 abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
@@ -90,5 +89,33 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
 
     override fun onTrack(track: Track) {
         mainViewModel.playerSocket?.play(track.id)
+    }
+
+    override fun onTrackMore(track: Track, view: ImageButton) {
+        showPopup(view) {
+            Timber.i("Add track ${track.id}")
+            mainViewModel.playerSocket?.add(track.id)
+        }
+    }
+
+    override fun onFolderMore(folder: Folder, view: ImageButton) {
+        showPopup(view) {
+            mainViewModel.playerSocket?.addFolder(folder.id)
+        }
+    }
+
+    private fun showPopup(v: View, onAdd: () -> Unit) {
+        val popup = PopupMenu(requireContext(), v)
+        popup.inflate(R.menu.music_item_menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.add_to_playlist_item -> {
+                    onAdd()
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
 }

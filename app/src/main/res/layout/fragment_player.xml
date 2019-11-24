@@ -22,15 +22,18 @@
         android:visibility="visible">
         <ImageView
             android:id="@+id/album_cover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
             android:layout_marginStart="12dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="12dp"
             android:src="@drawable/ic_launcher_foreground"
+            android:contentDescription="@string/cover"
+            app:layout_constraintVertical_bias=".5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/track_text"/>
         <TextView
             style="@style/PlaybackText"
             android:id="@+id/track_text"
@@ -40,7 +43,7 @@
             android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_cover"
+            app:layout_constraintBottom_toTopOf="@id/album_text"
             tools:text="Someone Like You" />
         <TextView
             style="@style/PlaybackText"
@@ -51,7 +54,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/track_text"
+            app:layout_constraintBottom_toTopOf="@id/artist_text"
             tools:text="21" />
         <TextView
             style="@style/PlaybackText"
@@ -62,7 +65,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/album_text"
+            app:layout_constraintBottom_toTopOf="@id/position_text"
             tools:text="Adele" />
         <TextView
             style="@style/PlaybackText"
@@ -75,7 +78,7 @@
             app:layout_constraintHorizontal_bias="0"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/artist_text"
+            app:layout_constraintBottom_toTopOf="@id/player_slider"
             tools:text="01:20" />
         <TextView
             style="@style/PlaybackText"
@@ -87,7 +90,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintStart_toEndOf="@id/position_text"
-            app:layout_constraintTop_toBottomOf="@id/artist_text"
+            app:layout_constraintBottom_toTopOf="@id/player_slider"
             tools:text="04:23" />
         <SeekBar
             android:id="@+id/player_slider"
@@ -102,7 +105,7 @@
             android:progress="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/position_text" />
+            app:layout_constraintBottom_toTopOf="@id/prev_button"/>
         <Button
             android:id="@+id/prev_button"
             style="@style/PlaybackButton"
@@ -110,16 +113,26 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_skip_previous_24px"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_slider" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
         <Button
-            android:id="@+id/play_pause_button"
+            android:id="@+id/play_button"
             style="@style/PlaybackButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_play_arrow_24px"
             app:layout_constraintEnd_toStartOf="@id/next_button"
             app:layout_constraintStart_toEndOf="@id/prev_button"
-            app:layout_constraintTop_toBottomOf="@id/player_slider" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <Button
+            android:id="@+id/pause_button"
+            style="@style/PlaybackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_pause_24px"
+            app:layout_constraintEnd_toStartOf="@id/next_button"
+            app:layout_constraintStart_toEndOf="@id/prev_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="gone"/>
         <Button
             android:id="@+id/next_button"
             style="@style/PlaybackButton"
@@ -127,6 +140,6 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_skip_next_24px"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_slider" />
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,7 +12,6 @@ import org.musicpimp.MainActivityViewModel
 import org.musicpimp.Playstate
 import org.musicpimp.R
 import timber.log.Timber
-import java.lang.IllegalArgumentException
 
 class PlayerFragment : Fragment() {
     private lateinit var mainViewModel: MainActivityViewModel
@@ -34,35 +33,50 @@ class PlayerFragment : Fragment() {
             this,
             PlayerViewModelFactory(requireActivity().application, mainViewModel)
         ).get(PlayerViewModel::class.java)
-
-        mainViewModel.timeUpdates.observe(viewLifecycleOwner) {
-            val float = it.seconds.toFloat()
+        mainViewModel.timeUpdates.observe(viewLifecycleOwner) { time ->
+            val float = time.seconds.toFloat()
             try {
-                view.position_text.text = it.formatted()
+                view.position_text.text = time.formatted()
                 val slider = view.player_slider
                 if (float >= slider.min && float <= slider.max) {
-                    slider.progress = it.seconds.toInt()
+                    slider.progress = time.seconds.toInt()
                 } else {
                     Timber.w("Out of bounds: $float.")
                 }
             } catch (iae: IllegalArgumentException) {
-                Timber.e("Invalid position: '${it.seconds}'.")
+                Timber.e("Invalid position: '${time.seconds}'.")
             }
         }
-        mainViewModel.trackUpdates.observe(viewLifecycleOwner) {
-            view.track_text.text = it.title
-            view.album_text.text = it.album
-            view.artist_text.text = it.artist
-            view.duration_text.text = it.duration.formatted()
-            view.player_slider.max = it.duration.seconds.toInt()
+        mainViewModel.trackUpdates.observe(viewLifecycleOwner) { track ->
+            view.track_text.text = track.title
+            view.album_text.text = track.album
+            view.artist_text.text = track.artist
+            view.duration_text.text = track.duration.formatted()
+            view.player_slider.max = track.duration.seconds.toInt()
+            viewModel.updateCover(track)
         }
-        mainViewModel.stateUpdates.observe(viewLifecycleOwner) {
-            view.no_track_text.visibility = if (it == Playstate.NoMedia) View.VISIBLE else View.GONE
+        mainViewModel.stateUpdates.observe(viewLifecycleOwner) { state ->
+            view.no_track_text.visibility =
+                if (state == Playstate.NoMedia) View.VISIBLE else View.GONE
             view.playback_controls.visibility =
-                if (it != Playstate.NoMedia) View.VISIBLE else View.GONE
+                if (state != Playstate.NoMedia) View.VISIBLE else View.GONE
+            if (state == Playstate.Playing) {
+                view.pause_button.visibility = View.VISIBLE
+                view.play_button.visibility = View.GONE
+            } else {
+                view.pause_button.visibility = View.GONE
+                view.play_button.visibility = View.VISIBLE
+            }
         }
-        view.play_pause_button.setOnClickListener {
-            viewModel.onPlayPause()
+        viewModel.covers.observe(viewLifecycleOwner) { cover ->
+            view.album_cover.setImageResource(R.drawable.ic_launcher_foreground)
+            view.album_cover.setImageBitmap(cover)
+        }
+        view.play_button.setOnClickListener {
+            viewModel.onPlay()
+        }
+        view.pause_button.setOnClickListener {
+            viewModel.onPause()
         }
         view.next_button.setOnClickListener {
             viewModel.onNext()

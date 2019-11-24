@@ -36,6 +36,8 @@ class PrimitiveAdapter {
     @ToJson fun writeAlbum(s: Album): String = s.value
     @FromJson fun duration(d: Double): Duration = Duration(d)
     @ToJson fun writeDuration(d: Duration): Double = d.seconds
+    @FromJson fun storageSize(l: Long): StorageSize = StorageSize(l)
+    @ToJson fun writeStorageSize(size: StorageSize): Long = size.bytes
     @FromJson fun endpointId(s: String): EndpointId = EndpointId(s)
     @ToJson fun writeEndpointId(e: EndpointId): String = e.value
     @FromJson fun url(url: String): FullUrl = FullUrl.build(url) ?: Json.fail("Value '$url' cannot be converted to FullUrl")

@@ -80,7 +80,7 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
             Timber.i("Sending $json...")
             socket.sendText(json)
         } else {
-            Timber.w("Not sending message '$json' because socket to '$url'.")
+            Timber.w("Not sending message '$json' because socket to '$url' is closed.")
         }
     }
 

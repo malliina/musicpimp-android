@@ -13,7 +13,7 @@ interface SocketDelegate {
     fun onStatus(status: StatusMessage)
 }
 
-class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: SocketDelegate) :
+class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegate: SocketDelegate) :
     WebSocketClient(url, headers) {
     companion object {
         object adapters {
@@ -32,6 +32,7 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
             val status: JsonAdapter<StatusMessage> = moshi.adapter(StatusMessage::class.java)
             val trackCmd: JsonAdapter<TrackCommand> = moshi.adapter(TrackCommand::class.java)
             val simple: JsonAdapter<SimpleCommand> = moshi.adapter(SimpleCommand::class.java)
+            val items: JsonAdapter<ItemsCommand> = moshi.adapter(ItemsCommand::class.java)
         }
 
         fun build(auth: AuthHeader, delegate: SocketDelegate): PimpSocket {
@@ -76,12 +77,16 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, val delegate: Socke
         }
     }
 
-    fun play(track: TrackId) = send(TrackCommand("play", track), adapters.trackCmd)
+    fun play(track: TrackId) = trackCommand("play", track)
+    fun add(track: TrackId) = trackCommand("add", track)
+    fun addFolder(folder: FolderId) = send(ItemsCommand("add_items", emptyList(), listOf(folder)), adapters.items)
     fun resume() = simple("resume")
     fun stop() = simple("stop")
     fun next() = simple("next")
     fun prev() = simple("prev")
     fun status() = simple("status")
+
+    fun trackCommand(cmd: String, track: TrackId) = send(TrackCommand(cmd, track), adapters.trackCmd)
 
     fun simple(cmd: String) = send(SimpleCommand(cmd), adapters.simple)
 }

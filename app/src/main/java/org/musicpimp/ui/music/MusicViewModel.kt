@@ -35,14 +35,12 @@ class MusicViewModelFactory(val app: Application, val main: MainActivityViewMode
 }
 
 class MusicViewModel(val app: Application, private val main: MainActivityViewModel) : AndroidViewModel(app) {
-    private val viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val dir = MutableLiveData<Outcome<Directory>>()
     val directory: LiveData<Outcome<Directory>> = dir
 
     fun loadFolder(id: FolderId) {
         main.http?.let { http ->
-            uiScope.launch {
+            viewModelScope.launch {
                 val name = http.name
                 dir.value = Outcome.loading()
                 try {

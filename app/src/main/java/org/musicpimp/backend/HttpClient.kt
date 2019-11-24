@@ -15,9 +15,9 @@ import java.nio.charset.Charset
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class HttpClient(ctx: Context, val authHeader: AuthHeader) {
+class HttpClient(ctx: Context, private val authHeader: AuthHeader) {
     companion object {
-        const val Authorization = "Authorization"
+        private const val Authorization = "Authorization"
 
         fun headers(authHeader: AuthHeader): Map<String, String> {
             val acceptPair = "Accept" to "application/json"

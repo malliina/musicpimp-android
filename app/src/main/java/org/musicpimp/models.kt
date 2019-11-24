@@ -88,7 +88,7 @@ data class Track(
     val artist: Artist,
     val path: String,
     val duration: Duration,
-    val size: Long,
+    val size: StorageSize,
     val url: FullUrl
 ) : MusicItem<TrackId>
 
@@ -117,6 +117,10 @@ data class Duration(val seconds: Double) {
     override fun toString() = formatted()
 
     fun formatted(): String = formatSeconds(seconds.toLong())
+}
+
+data class StorageSize(val bytes: Long) {
+    override fun toString(): String = "$bytes"
 }
 
 data class FullUrl(val proto: String, val hostAndPort: String, val uri: String) {

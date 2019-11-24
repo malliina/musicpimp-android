@@ -43,7 +43,7 @@ enum class PlaybackEvent(val code: String) {
 
 enum class Playstate(val code: String) {
     Playing("Playing"),
-    Started("Started"),
+//    Started("Started"),
     Paused("Paused"),
     Stopped("Stopped"),
     NoMedia("NoMedia"),
@@ -53,7 +53,7 @@ enum class Playstate(val code: String) {
         fun parse(s: String): Playstate {
             return when (s) {
                 "Playing" -> Playing
-                "Started" -> Started
+                "Started" -> Playing
                 "Paused" -> Paused
                 "Stopped" -> Stopped
                 "NoMedia" -> NoMedia
@@ -106,6 +106,9 @@ data class OtherMessage(val message: String) : ServerMessage
 // Client commands
 @JsonClass(generateAdapter = true)
 data class TrackCommand(val cmd: String, val track: TrackId)
+
+@JsonClass(generateAdapter = true)
+data class ItemsCommand(val cmd: String, val tracks: List<TrackId>, val folders: List<FolderId>)
 
 @JsonClass(generateAdapter = true)
 data class SimpleCommand(val cmd: String)
