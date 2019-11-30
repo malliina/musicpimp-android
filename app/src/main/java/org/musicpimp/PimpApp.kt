@@ -7,6 +7,8 @@ import com.microsoft.appcenter.crashes.Crashes
 import timber.log.Timber
 
 class PimpApp: Application() {
+    // TODO implement https://developer.android.com/training/dependency-injection/manual
+
     override fun onCreate() {
         super.onCreate()
         val tree = if (BuildConfig.DEBUG) Timber.DebugTree() else NoLogging()

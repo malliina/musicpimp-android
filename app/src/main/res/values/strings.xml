@@ -21,6 +21,7 @@
     <string name="time_zero">00:00</string>
     <string name="previous">Previous</string>
     <string name="play">Play</string>
+    <string name="pause">Pause</string>
     <string name="next">Next</string>
     <string name="no_music">No music in this folder.</string>
     <string name="no_track">No media.</string>
@@ -34,4 +35,7 @@
     <string name="more">More</string>
     <string name="cover">Cover</string>
     <string name="playlist_empty">Empty playlist.</string>
+
+    <string name="notification_channel">Now Playing</string>
+    <string name="notification_channel_description">Shows what music is currently playing in MusicPimp</string>
 </resources>
