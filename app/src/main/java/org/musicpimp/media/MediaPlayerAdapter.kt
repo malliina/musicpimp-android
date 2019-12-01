@@ -1,28 +1,36 @@
 package org.musicpimp.media
 
-import android.content.Context
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import org.musicpimp.PimpApp
+import org.musicpimp.Track
+import org.musicpimp.TrackId
+import org.musicpimp.backend.HttpClient
+import timber.log.Timber
 import java.lang.Exception
 
 /**
  * Exposes the functionality of the {@link MediaPlayer} and implements the {@link PlayerAdapter}
  * so that {@link MainActivity} can control music playback.
  */
-class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListener, val library: MusicLibrary) :
-    PlayerAdapter(context) {
-    val mContext = context.applicationContext
-    var mMediaPlayer: MediaPlayer? = null
-    var mFilename: String? = null
-    var mCurrentMedia: MediaMetadataCompat? = null
-    var mState: Int = 0
-    var mCurrentMediaPlayedToCompletion: Boolean = false
+class MediaPlayerAdapter(
+    val app: PimpApp,
+    private val listener: PlaybackInfoListener,
+    private val library: LocalPlaylist
+) : PlayerAdapter(app.applicationContext) {
+    private val appContext = app.applicationContext
+    private var mediaPlayer: MediaPlayer? = null
+    private var currentTrack: Track? = null
+    private var currentMedia: MediaMetadataCompat? = null
+    private var state: Int = 0
+    private var currentMediaPlayedToCompletion: Boolean = false
 
     // Work-around for a MediaPlayer bug related to the behavior of MediaPlayer.seekTo()
     // while not playing.
-    var mSeekWhileNotPlaying: Long = -1
+    private var seekWhileNotPlaying: Long = -1
 
     /**
      * Once the {@link MediaPlayer} is released, it can't be used again, and another one has to be
@@ -31,35 +39,40 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
      * object has to be created. That's why this method is private, and called by load(int) and
      * not the constructor.
      */
-    fun initializeMediaPlayer() {
-        if (mMediaPlayer == null) {
+    private fun initializeMediaPlayer() {
+        if (mediaPlayer == null) {
             val p = MediaPlayer()
             p.setOnCompletionListener {
                 listener.onPlaybackCompleted()
                 setNewState(PlaybackStateCompat.STATE_PAUSED)
             }
-            mMediaPlayer = p
+            mediaPlayer = p
         }
     }
 
     // Implements PlaybackControl.
     override fun playFromMedia(metadata: MediaMetadataCompat) {
-        mCurrentMedia = metadata
-        val mediaId = metadata.description.mediaId
-        playFile(library.filename(mediaId))
+        Timber.i("Playing from media ${metadata.description.mediaId ?: "unknown id"}")
+        currentMedia = metadata
+        metadata.description.mediaId?.let { id ->
+            library.track(TrackId(id))?.let { track ->
+                playTrack(track)
+            }
+        }
     }
 
     override fun getCurrentMedia(): MediaMetadataCompat? {
-        return mCurrentMedia
+        return currentMedia
     }
 
-    fun playFile(filename: String) {
-        var mediaChanged = mFilename == null || filename != mFilename
-        if (mCurrentMediaPlayedToCompletion) {
+    private fun playTrack(track: Track) {
+        val current = currentTrack
+        var mediaChanged = current == null || current.id != track.id
+        if (currentMediaPlayedToCompletion) {
             // Last audio file was played to completion, the resourceId hasn't changed, but the
-            // player was released, so force a reload of the media file for playback.
+            // player was released, so force a reload of the media for playback.
             mediaChanged = true
-            mCurrentMediaPlayedToCompletion = false
+            currentMediaPlayedToCompletion = false
         }
         if (!mediaChanged) {
             if (!isPlaying()) {
@@ -69,24 +82,22 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
         } else {
             release()
         }
-
-        mFilename = filename
-
         initializeMediaPlayer()
         try {
-            val assetFileDescriptor = mContext.assets.openFd(filename)
-            mMediaPlayer?.setDataSource(
-                assetFileDescriptor.fileDescriptor,
-                assetFileDescriptor.startOffset,
-                assetFileDescriptor.length
+            val auth = app.conf.authHeader?.value ?: ""
+            Timber.i("Data source '${track.url}' with auth '$auth'.")
+            mediaPlayer?.setDataSource(
+                appContext,
+                Uri.parse(track.url.url),
+                mapOf(HttpClient.Authorization to auth)
             )
         } catch (e: Exception) {
-            throw RuntimeException("Failed to open file: $filename", e)
+            throw RuntimeException("Failed to open URL: ${track.url}", e)
         }
         try {
-            mMediaPlayer?.prepare()
+            mediaPlayer?.prepare()
         } catch (e: Exception) {
-            throw RuntimeException("Failed to open file: $filename", e)
+            throw RuntimeException("Failed to open URL: ${track.url}", e)
         }
         play()
     }
@@ -98,19 +109,19 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
         release()
     }
 
-    fun release() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer?.release()
-            mMediaPlayer = null
+    private fun release() {
+        if (mediaPlayer != null) {
+            mediaPlayer?.release()
+            mediaPlayer = null
         }
     }
 
     override fun isPlaying(): Boolean {
-        return mMediaPlayer != null && mMediaPlayer?.isPlaying() ?: false
+        return mediaPlayer != null && mediaPlayer?.isPlaying() ?: false
     }
 
     override fun onPlay() {
-        mMediaPlayer?.let {
+        mediaPlayer?.let {
             if (!it.isPlaying) {
                 it.start()
                 setNewState(PlaybackStateCompat.STATE_PLAYING)
@@ -119,7 +130,7 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
     }
 
     override fun onPause() {
-        mMediaPlayer?.let {
+        mediaPlayer?.let {
             if (it.isPlaying) {
                 it.pause()
                 setNewState(PlaybackStateCompat.STATE_PAUSED)
@@ -128,31 +139,27 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
     }
 
     // This is the main reducer for the player state machine.
-    fun setNewState(newPlayerState: Int) {
-        mState = newPlayerState
-
+    private fun setNewState(newPlayerState: Int) {
+        state = newPlayerState
         // Whether playback goes to completion, or whether it is stopped, the
         // mCurrentMediaPlayedToCompletion is set to true.
-        if (mState == PlaybackStateCompat.STATE_STOPPED) {
-            mCurrentMediaPlayedToCompletion = true
+        if (state == PlaybackStateCompat.STATE_STOPPED) {
+            currentMediaPlayedToCompletion = true
         }
-
         // Work around for MediaPlayer.getCurrentPosition() when it changes while not playing.
         var reportPosition = 0L
-        if (mSeekWhileNotPlaying >= 0) {
-            reportPosition = mSeekWhileNotPlaying;
-
-            if (mState == PlaybackStateCompat.STATE_PLAYING) {
-                mSeekWhileNotPlaying = -1
+        if (seekWhileNotPlaying >= 0) {
+            reportPosition = seekWhileNotPlaying
+            if (state == PlaybackStateCompat.STATE_PLAYING) {
+                seekWhileNotPlaying = -1
             }
         } else {
-            reportPosition = mMediaPlayer?.let { it.currentPosition.toLong() } ?: 0L
+            reportPosition = mediaPlayer?.currentPosition?.toLong() ?: 0L
         }
-
         val stateBuilder = PlaybackStateCompat.Builder()
         stateBuilder.setActions(availableActions())
         stateBuilder.setState(
-            mState,
+            state,
             reportPosition,
             1.0f,
             SystemClock.elapsedRealtime()
@@ -169,7 +176,7 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
     private fun availableActions(): Long {
         val actions =
             PlaybackStateCompat.ACTION_PLAY_FROM_MEDIA_ID or PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH or PlaybackStateCompat.ACTION_SKIP_TO_NEXT or PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
-        val additional =  when (mState) {
+        val additional = when (state) {
             PlaybackStateCompat.STATE_STOPPED -> {
                 PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_PAUSE
             }
@@ -187,19 +194,19 @@ class MediaPlayerAdapter(val context: Context, val listener: PlaybackInfoListene
     }
 
     override fun seekTo(position: Long) {
-        mMediaPlayer?.let { player ->
-            if (!player.isPlaying()) {
-                mSeekWhileNotPlaying = position
+        mediaPlayer?.let { player ->
+            if (!player.isPlaying) {
+                seekWhileNotPlaying = position
             }
             player.seekTo(position.toInt())
 
             // Set the state (to the current state) because the position changed and should
             // be reported to clients.
-            setNewState(mState)
+            setNewState(state)
         }
     }
 
     override fun setVolume(volume: Float) {
-        mMediaPlayer?.setVolume(volume, volume)
+        mediaPlayer?.setVolume(volume, volume)
     }
 }

@@ -115,6 +115,7 @@ data class Duration(val seconds: Double) {
     }
 
     override fun toString() = formatted()
+    fun toMillis(): Double = seconds * 1000
 
     fun formatted(): String = formatSeconds(seconds.toLong())
 }

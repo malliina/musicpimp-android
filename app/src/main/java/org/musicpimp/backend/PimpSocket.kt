@@ -5,6 +5,7 @@ import org.musicpimp.*
 import org.musicpimp.Json.Companion.moshi
 import timber.log.Timber
 import org.musicpimp.PlaybackEvent.*
+import org.musicpimp.audio.Player
 
 interface SocketDelegate {
     fun timeUpdated(time: Duration)
@@ -45,8 +46,10 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
         }
     }
 
+    val player = SocketPlayer(this)
+
     override fun onConnected(url: FullUrl) {
-        status()
+        player.status()
     }
 
     override fun onMessage(message: String) {
@@ -85,18 +88,29 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
             }
         }
     }
+}
 
-    fun play(track: TrackId) = trackCommand("play", track)
-    fun add(track: TrackId) = trackCommand("add", track)
-    fun addFolder(folder: FolderId) = send(ItemsCommand("add_items", emptyList(), listOf(folder)), adapters.items)
-    fun resume() = simple("resume")
-    fun stop() = simple("stop")
-    fun next() = simple("next")
-    fun prev() = simple("prev")
-    fun skip(idx: Int) = valueCommand("skip", idx)
-    fun remove(idx: Int) = valueCommand("remove", idx)
+class SocketPlayer(private val socket: PimpSocket) : Player {
+    override fun play(track: Track) = trackCommand("play", track.id)
+    override fun add(track: Track) = trackCommand("add", track.id)
+    override fun resume() = simple("resume")
+    override fun stop() = simple("stop")
+    override fun next() = simple("next")
+    override fun prev() = simple("prev")
+    override fun skip(idx: Int) = valueCommand("skip", idx)
+    override fun remove(idx: Int) = valueCommand("remove", idx)
+    override fun addFolder(folder: FolderId) = socket.send(
+        ItemsCommand("add_items", emptyList(), listOf(folder)),
+        PimpSocket.Companion.adapters.items
+    )
+
     fun status() = simple("status")
-    fun valueCommand(cmd: String, value: Int) = send(ValueCommand(cmd, value), adapters.valueCmd)
-    fun trackCommand(cmd: String, track: TrackId) = send(TrackCommand(cmd, track), adapters.trackCmd)
-    fun simple(cmd: String) = send(SimpleCommand(cmd), adapters.simple)
+    private fun valueCommand(cmd: String, value: Int) =
+        socket.send(ValueCommand(cmd, value), PimpSocket.Companion.adapters.valueCmd)
+
+    private fun trackCommand(cmd: String, track: TrackId) =
+        socket.send(TrackCommand(cmd, track), PimpSocket.Companion.adapters.trackCmd)
+
+    private fun simple(cmd: String) =
+        socket.send(SimpleCommand(cmd), PimpSocket.Companion.adapters.simple)
 }

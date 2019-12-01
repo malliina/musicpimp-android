@@ -40,7 +40,7 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
             adapter = viewAdapter
             addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
-        if (mainViewModel.http == null) {
+        if (mainViewModel.conf.http == null) {
             display(getString(R.string.no_music), view)
         }
         viewModel = ViewModelProviders.of(
@@ -88,19 +88,19 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
     }
 
     override fun onTrack(track: Track, position: Int) {
-        mainViewModel.playerSocket?.play(track.id)
+        mainViewModel.play(track)
     }
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
         showPopup(view) {
             Timber.i("Add track ${track.id}")
-            mainViewModel.playerSocket?.add(track.id)
+            mainViewModel.add(track)
         }
     }
 
     override fun onFolderMore(folder: Folder, view: ImageButton) {
         showPopup(view) {
-            mainViewModel.playerSocket?.addFolder(folder.id)
+            mainViewModel.addFolder(folder.id)
         }
     }
 

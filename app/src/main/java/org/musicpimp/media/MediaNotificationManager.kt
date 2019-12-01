@@ -21,13 +21,14 @@ import androidx.media.session.MediaButtonReceiver
 import org.musicpimp.MainActivity
 
 import org.musicpimp.R
+import org.musicpimp.TrackId
 import timber.log.Timber
 
 /**
  * Keeps track of a notification and updates it automatically for a given MediaSession. This is
  * required so that the music service don't get killed during playback.
  */
-class MediaNotificationManager(val service: MusicService, val library: MusicLibrary) {
+class MediaNotificationManager(val service: MusicService, val library: LocalPlaylist) {
     companion object {
         const val notificationId = 412
     }
@@ -122,11 +123,9 @@ class MediaNotificationManager(val service: MusicService, val library: MusicLibr
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             // Pending intent that is fired when user clicks on notification.
             .setContentIntent(createContentIntent())
-            // Title - Usually Song name.
             .setContentTitle(description.title)
-            // Subtitle - Usually Artist name.
             .setContentText(description.subtitle)
-            .setLargeIcon(library.albumCover(description.mediaId, service))
+            .setLargeIcon(description.mediaId?.let { id -> library.albumCover(TrackId(id), service) })
             // When notification is deleted (when playback is paused and notification can be
             // deleted) fire MediaButtonPendingIntent with ACTION_STOP.
             .setDeleteIntent(
@@ -171,7 +170,6 @@ class MediaNotificationManager(val service: MusicService, val library: MusicLibr
                 enableVibration(true)
                 vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
             }
-
             mNotificationManager.createNotificationChannel(mChannel)
             Log.d(tag, "createChannel: New channel created")
         } else {
@@ -181,11 +179,11 @@ class MediaNotificationManager(val service: MusicService, val library: MusicLibr
 
     private fun isAndroidOOrHigher(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
     private fun createContentIntent(): PendingIntent {
-        val openUI = Intent(service, MainActivity::class.java)
-        openUI.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val openUI = Intent(service, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+        }
         return PendingIntent.getActivity(
             service, requestCode, openUI, PendingIntent.FLAG_CANCEL_CURRENT
         )
     }
-
 }

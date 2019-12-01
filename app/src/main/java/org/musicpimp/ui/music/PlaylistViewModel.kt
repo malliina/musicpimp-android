@@ -16,6 +16,4 @@ class PlaylistViewModelFactory(val app: Application, val main: MainActivityViewM
 
 class PlaylistViewModel(val app: Application, private val main: MainActivityViewModel) :
     AndroidViewModel(app) {
-
-
 }

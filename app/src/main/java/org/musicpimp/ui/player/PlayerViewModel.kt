@@ -3,13 +3,15 @@ package org.musicpimp.ui.player
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import org.musicpimp.FullUrl
-import org.musicpimp.MainActivityViewModel
-import org.musicpimp.Track
-import org.musicpimp.Utils
+import org.musicpimp.*
 import org.musicpimp.Utils.urlEncode
+import org.musicpimp.audio.Player
 import org.musicpimp.backend.OkClient
 import timber.log.Timber
 import java.io.File
@@ -24,24 +26,30 @@ class PlayerViewModelFactory(val app: Application, val main: MainActivityViewMod
 
 class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
     AndroidViewModel(app) {
+    private val conf = (app as PimpApp).conf
+    private val player: Player
+        get() = conf.player
     private val coversDir = app.applicationContext.cacheDir.resolve("covers")
     private val coversStream = MutableLiveData<Bitmap?>()
+    private val metadataStream = MutableLiveData<MediaMetadataCompat>()
+
     val covers: LiveData<Bitmap?> = coversStream
+    val metadata: LiveData<MediaMetadataCompat> = metadataStream
 
     fun onPlay() {
-        main.playerSocket?.resume()
+        player.resume()
     }
 
     fun onPause() {
-        main.playerSocket?.stop()
+        player.stop()
     }
 
     fun onNext() {
-        main.playerSocket?.next()
+        player.next()
     }
 
     fun onPrevious() {
-        main.playerSocket?.prev()
+        player.prev()
     }
 
     fun updateCover(track: Track) {

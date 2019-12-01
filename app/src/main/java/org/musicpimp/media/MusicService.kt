@@ -7,35 +7,43 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.media.MediaBrowserServiceCompat
+import org.musicpimp.PimpApp
+import org.musicpimp.TrackId
+import timber.log.Timber
 
 class MusicService : MediaBrowserServiceCompat() {
     private val tag = "MusicService"
-    private lateinit var mSession: MediaSessionCompat
-    private lateinit var mPlayback: PlayerAdapter
-    private lateinit var mMediaNotificationManager: MediaNotificationManager
-    private lateinit var mCallback: MediaSessionCallback
-    private var mServiceInStartedState = false
-    private val library = MusicLibrary()
+    private lateinit var session: MediaSessionCompat
+    private lateinit var playback: PlayerAdapter
+    private lateinit var mediaNotificationManager: MediaNotificationManager
+    private lateinit var callback: MediaSessionCallback
+    private var serviceInStartedState = false
+    private lateinit var library: LocalPlaylist
+    private lateinit var listener: MediaPlayerListener
 
     override fun onCreate() {
         super.onCreate()
+        val app = application as PimpApp
         // Create a new MediaSession.
-        mCallback = MediaSessionCallback()
-        mSession = MediaSessionCompat(this, "MusicService").apply {
-            setCallback(mCallback)
+        callback = MediaSessionCallback()
+        session = MediaSessionCompat(this, tag).apply {
+            setCallback(callback)
             setFlags(
                 MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or
                         MediaSessionCompat.FLAG_HANDLES_QUEUE_COMMANDS or
                         MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS
             )
         }
-        sessionToken = mSession.sessionToken
-        mMediaNotificationManager = MediaNotificationManager(this, library)
-        mPlayback = MediaPlayerAdapter(this, MediaPlayerListener(), library)
-        Log.d(tag, "onCreate: MusicService creating MediaSession, and MediaNotificationManager")
+        sessionToken = session.sessionToken
+        library = app.conf.local.playlist
+        mediaNotificationManager = MediaNotificationManager(this, library)
+        listener = MediaPlayerListener()
+        playback = MediaPlayerAdapter(app, listener, library)
+        Timber.d(tag, "onCreate: MusicService creating MediaSession, and MediaNotificationManager")
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
@@ -44,10 +52,10 @@ class MusicService : MediaBrowserServiceCompat() {
     }
 
     override fun onDestroy() {
-        mMediaNotificationManager.onDestroy()
-        mPlayback.stop()
-        mSession.release()
-        Log.d(tag, "onDestroy: MediaPlayerAdapter stopped, and MediaSession released")
+        mediaNotificationManager.onDestroy()
+        playback.stop()
+        session.release()
+        Timber.d(tag, "onDestroy: MediaPlayerAdapter stopped, and MediaSession released")
     }
 
     override fun onGetRoot(
@@ -67,142 +75,159 @@ class MusicService : MediaBrowserServiceCompat() {
 
     // MediaSession Callback: Transport Controls -> MediaPlayerAdapter
     inner class MediaSessionCallback : MediaSessionCompat.Callback() {
-        val mPlaylist = mutableListOf<MediaSessionCompat.QueueItem>()
-        private var mQueueIndex = -1
-        private var mPreparedMedia: MediaMetadataCompat? = null
+        private val playlist = mutableListOf<MediaSessionCompat.QueueItem>()
+        private var queueIndex = -1
+        private var preparedMedia: MediaMetadataCompat? = null
 
         override fun onAddQueueItem(description: MediaDescriptionCompat) {
-            mPlaylist.add(
+            playlist.add(
                 MediaSessionCompat.QueueItem(
                     description,
                     description.hashCode().toLong()
                 )
             )
-            mQueueIndex = if (mQueueIndex == -1) 0 else mQueueIndex
-            mSession.setQueue(mPlaylist)
+            queueIndex = if (queueIndex == -1) 0 else queueIndex
+            session.setQueue(playlist)
+            Timber.i("Added $description to queue.")
         }
 
         override fun onRemoveQueueItem(description: MediaDescriptionCompat) {
-            mPlaylist.remove(
+            playlist.remove(
                 MediaSessionCompat.QueueItem(
                     description,
                     description.hashCode().toLong()
                 )
             )
-            mQueueIndex = if (mPlaylist.isEmpty()) -1 else mQueueIndex
-            mSession.setQueue(mPlaylist)
+            queueIndex = if (playlist.isEmpty()) -1 else queueIndex
+            session.setQueue(playlist)
+        }
+
+        override fun onPlayFromMediaId(mediaId: String?, extras: Bundle?) {
+            Timber.i("Media $mediaId")
+            mediaId?.let {
+                library.metadata(TrackId(it))?.let { meta ->
+                    playlist.clear()
+                    onAddQueueItem(meta.description)
+                    onPlay()
+                }
+            }
         }
 
         override fun onPrepare() {
-            if (mQueueIndex < 0 && mPlaylist.isEmpty()) {
-                // Nothing to play.
+            if (queueIndex < 0 && playlist.isEmpty()) {
+                Timber.i("Prepared but nothing to play.")
+                // Nothing to play
                 return
             }
 
-            val mediaId = mPlaylist[mQueueIndex].description.mediaId
-            mPreparedMedia = library.metadata(this@MusicService, mediaId)
-            mSession.setMetadata(mPreparedMedia)
+            val mediaId = playlist[queueIndex].description.mediaId
+            preparedMedia = mediaId?.let { library.metadata(TrackId(it)) }
+            session.setMetadata(preparedMedia)
 
-            if (!mSession.isActive()) {
-                mSession.setActive(true)
+            if (!session.isActive) {
+                session.isActive = true
             }
         }
 
         override fun onPlay() {
+            Timber.i("onPlay start")
             if (!isReadyToPlay()) {
                 // Nothing to play.
+                Timber.i("Called onPlay with nothing to play.")
                 return
             }
-            if (mPreparedMedia == null) {
+            if (preparedMedia == null) {
                 onPrepare()
             }
-            mPreparedMedia?.let {
-                mPlayback.playFromMedia(it)
-                Log.d(tag, "onPlayFromMediaId: MediaSession active")
+            preparedMedia?.let {
+                Timber.i("Playing from ${it.description}")
+                playback.playFromMedia(it)
+                Timber.d(tag, "onPlayFromMediaId: MediaSession active")
             }
+            Timber.i("onPlay done")
         }
 
         override fun onPause() {
-            mPlayback.pause()
+            playback.pause()
         }
 
         override fun onStop() {
-            mPlayback.stop()
-            mSession.isActive = false
+            playback.stop()
+            session.isActive = false
         }
 
         override fun onSkipToNext() {
-            mQueueIndex = (++mQueueIndex % mPlaylist.size)
-            mPreparedMedia = null
+            queueIndex = ++queueIndex % playlist.size
+            preparedMedia = null
             onPlay()
         }
 
         override fun onSkipToPrevious() {
-            mQueueIndex = if (mQueueIndex > 0) mQueueIndex - 1 else (mPlaylist.size - 1)
-            mPreparedMedia = null
+            queueIndex = if (queueIndex > 0) queueIndex - 1 else playlist.size - 1
+            preparedMedia = null
             onPlay()
         }
 
         override fun onSeekTo(pos: Long) {
-            mPlayback.seekTo(pos)
+            playback.seekTo(pos)
         }
 
-        fun isReadyToPlay() = mPlaylist.isNotEmpty()
+        private fun isReadyToPlay() = playlist.isNotEmpty()
     }
 
     // MediaPlayerAdapter Callback: MediaPlayerAdapter state -> MusicService.
     inner class MediaPlayerListener : PlaybackInfoListener() {
-        val mServiceManager = ServiceManager()
+        private val serviceManager = ServiceManager()
+        private val stateUpdates = MutableLiveData<PlaybackStateCompat>()
+        val updates: LiveData<PlaybackStateCompat> = stateUpdates
 
         override fun onPlaybackStateChange(state: PlaybackStateCompat) {
             // Report the state to the MediaSession.
-            mSession.setPlaybackState(state)
+            session.setPlaybackState(state)
 
             // Manage the started state of this service.
             when (state.state) {
                 PlaybackStateCompat.STATE_PLAYING -> {
-                    mServiceManager.moveServiceToStartedState(state)
+                    serviceManager.moveServiceToStartedState(state)
                 }
                 PlaybackStateCompat.STATE_PAUSED -> {
-                    mServiceManager.updateNotificationForPause(state)
+                    serviceManager.updateNotificationForPause(state)
                 }
                 PlaybackStateCompat.STATE_STOPPED -> {
-                    mServiceManager.moveServiceOutOfStartedState(state)
+                    serviceManager.moveServiceOutOfStartedState(state)
                 }
-
             }
+            stateUpdates.postValue(state)
         }
 
         inner class ServiceManager {
             fun moveServiceToStartedState(state: PlaybackStateCompat) {
-                mPlayback.getCurrentMedia()?.let { current ->
+                playback.getCurrentMedia()?.let { current ->
                     sessionToken?.let { token ->
                         val notification =
-                            mMediaNotificationManager.getNotification(
+                            mediaNotificationManager.getNotification(
                                 current, state, token
                             )
 
-                        if (!mServiceInStartedState) {
+                        if (!serviceInStartedState) {
                             ContextCompat.startForegroundService(
                                 this@MusicService,
                                 Intent(this@MusicService, MusicService::class.java)
                             )
-                            mServiceInStartedState = true
+                            serviceInStartedState = true
                         }
                         startForeground(MediaNotificationManager.notificationId, notification)
                     }
                 }
-
-
             }
 
             fun updateNotificationForPause(state: PlaybackStateCompat) {
                 stopForeground(false)
-                mPlayback.getCurrentMedia()?.let { current ->
+                playback.getCurrentMedia()?.let { current ->
                     sessionToken?.let { token ->
                         val notification =
-                            mMediaNotificationManager.getNotification(current, state, token)
-                        mMediaNotificationManager.mNotificationManager
+                            mediaNotificationManager.getNotification(current, state, token)
+                        mediaNotificationManager.mNotificationManager
                             .notify(MediaNotificationManager.notificationId, notification)
                     }
 
@@ -213,7 +238,7 @@ class MusicService : MediaBrowserServiceCompat() {
             fun moveServiceOutOfStartedState(state: PlaybackStateCompat) {
                 stopForeground(true)
                 stopSelf()
-                mServiceInStartedState = false
+                serviceInStartedState = false
             }
         }
     }

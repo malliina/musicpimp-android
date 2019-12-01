@@ -6,10 +6,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import org.musicpimp.Directory
-import org.musicpimp.FolderId
-import org.musicpimp.MainActivityViewModel
-import org.musicpimp.SingleError
+import org.musicpimp.*
 import org.musicpimp.backend.PimpHttpClient
 import timber.log.Timber
 
@@ -27,19 +24,22 @@ data class Outcome<out T>(val status: Status, val data: T?, val error: SingleErr
     }
 }
 
-class MusicViewModelFactory(val app: Application, val main: MainActivityViewModel): ViewModelProvider.Factory {
+class MusicViewModelFactory(val app: Application, val main: MainActivityViewModel) :
+    ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return MusicViewModel(app, main) as T
     }
 }
 
-class MusicViewModel(val app: Application, private val main: MainActivityViewModel) : AndroidViewModel(app) {
+class MusicViewModel(val app: Application, private val main: MainActivityViewModel) :
+    AndroidViewModel(app) {
+    private val conf = (app as PimpApp).conf
     private val dir = MutableLiveData<Outcome<Directory>>()
     val directory: LiveData<Outcome<Directory>> = dir
 
     fun loadFolder(id: FolderId) {
-        main.http?.let { http ->
+        conf.http?.let { http ->
             viewModelScope.launch {
                 val name = http.name
                 dir.value = Outcome.loading()
@@ -48,6 +48,7 @@ class MusicViewModel(val app: Application, private val main: MainActivityViewMod
                     val response = http.folder(id)
                     dir.value = Outcome.success(response)
                     val path = response.folder.path
+                    conf.local.playlist.resetAll(response.tracks)
                     val describe = if (id == FolderId.root) "Root folder" else path
                     Timber.i("Loaded '$describe' from '$name'.")
                 } catch (e: Exception) {

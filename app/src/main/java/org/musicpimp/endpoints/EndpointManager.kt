@@ -13,8 +13,9 @@ class EndpointAdapter {
     @ToJson
     fun toJson(e: Endpoint): String {
         return when (e) {
-            is DirectEndpoint -> EndpointManager.directAdapter.toJson(e)
+//            is DirectEndpoint -> EndpointManager.directAdapter.toJson(e)
             is CloudEndpoint -> EndpointManager.cloudAdapter.toJson(e)
+            is LocalEndpoint -> EndpointManager.localAdapter.toJson(e)
             else -> throw JsonDataException("Cannot serialize endpoint $e.")
         }
     }
@@ -22,9 +23,8 @@ class EndpointAdapter {
     @FromJson
     fun fromJson(str: String): Endpoint? {
         Timber.i("Reading '$str'...")
-        return EndpointManager.cloudAdapter.readOpt(str) ?: EndpointManager.directAdapter.readOpt(
-            str
-        )
+        return EndpointManager.cloudAdapter.readOpt(str)
+            ?: EndpointManager.localAdapter.readOpt(str)
     }
 }
 
@@ -37,24 +37,24 @@ interface EndpointInput<T : Endpoint> {
     fun withId(id: EndpointId): T
 }
 
-data class DirectEndpointInput(
-    val name: NonEmptyString,
-    val address: NonEmptyString,
-    val port: Int,
-    val creds: DirectCredential
-) : EndpointInput<DirectEndpoint> {
-    override fun withId(id: EndpointId): DirectEndpoint =
-        DirectEndpoint(id, name, address, port, creds)
-}
+//data class DirectEndpointInput(
+//    val name: NonEmptyString,
+//    val address: NonEmptyString,
+//    val port: Int,
+//    val creds: DirectCredential
+//) : EndpointInput<DirectEndpoint> {
+//    override fun withId(id: EndpointId): DirectEndpoint =
+//        DirectEndpoint(id, name, address, port, creds)
+//}
 
-@JsonClass(generateAdapter = true)
-data class DirectEndpoint(
-    override val id: EndpointId,
-    override val name: NonEmptyString,
-    val address: NonEmptyString,
-    val port: Int,
-    val creds: DirectCredential
-) : Endpoint
+//@JsonClass(generateAdapter = true)
+//data class DirectEndpoint(
+//    override val id: EndpointId,
+//    override val name: NonEmptyString,
+//    val address: NonEmptyString,
+//    val port: Int,
+//    val creds: DirectCredential
+//) : Endpoint
 
 data class CloudEndpointInput(
     val name: NonEmptyString,
@@ -70,6 +70,14 @@ data class CloudEndpoint(
     val creds: CloudCredential
 ) : Endpoint {
     // For dropdowns
+    override fun toString(): String = name.value
+}
+
+@JsonClass(generateAdapter = true)
+data class LocalEndpoint(override val id: EndpointId, override val name: NonEmptyString): Endpoint {
+    companion object {
+        val local = LocalEndpoint(EndpointId("0"), NonEmptyString("This device"))
+    }
     override fun toString(): String = name.value
 }
 
@@ -90,8 +98,10 @@ class EndpointManager(private val prefs: SharedPreferences) {
 
         val activeAdapter: JsonAdapter<ActiveEndpoint> =
             Json.moshi.adapter(ActiveEndpoint::class.java)
-        val directAdapter: JsonAdapter<DirectEndpoint> =
-            Json.moshi.adapter(DirectEndpoint::class.java)
+//        val directAdapter: JsonAdapter<DirectEndpoint> =
+//            Json.moshi.adapter(DirectEndpoint::class.java)
+        val localAdapter: JsonAdapter<LocalEndpoint> =
+            Json.moshi.adapter(LocalEndpoint::class.java)
         val cloudAdapter: JsonAdapter<CloudEndpoint> = Json.moshi.adapter(CloudEndpoint::class.java)
         val endpointsAdapter: JsonAdapter<Endpoints> = Json.moshi.adapter(Endpoints::class.java)
 
@@ -105,8 +115,8 @@ class EndpointManager(private val prefs: SharedPreferences) {
         }
     }
 
-    fun activePlayer(): CloudEndpoint? {
-        return active(activePlayerKey)
+    fun activePlayer(): Endpoint {
+        return active(activePlayerKey) ?: LocalEndpoint.local
     }
 
     fun saveActivePlayer(id: EndpointId) {
@@ -134,7 +144,7 @@ class EndpointManager(private val prefs: SharedPreferences) {
 
     fun save(endpoint: Endpoint): Endpoints {
         val newValue =
-            Endpoints(fetch().endpoints.filterNot { e -> e.id == endpoint.id }.plus(endpoint))
+            Endpoints(fetchCustom().endpoints.filterNot { e -> e.id == endpoint.id }.plus(endpoint))
         saveAll(newValue)
         return newValue
     }
@@ -144,10 +154,12 @@ class EndpointManager(private val prefs: SharedPreferences) {
     }
 
     fun remove(endpointId: EndpointId) {
-        saveAll(fetch().remove(endpointId))
+        saveAll(fetchCustom().remove(endpointId))
     }
 
-    fun fetch(): Endpoints = load(endpointsKey, endpointsAdapter, Endpoints(emptyList()))
+    fun fetch(): Endpoints = Endpoints(listOf(LocalEndpoint.local).plus(fetchCustom().endpoints))
+
+    private fun fetchCustom(): Endpoints = load(endpointsKey, endpointsAdapter, Endpoints(emptyList()))
 
     fun <T> load(key: String, adapter: JsonAdapter<T>, default: T): T {
         return loadOpt(key, adapter) ?: default

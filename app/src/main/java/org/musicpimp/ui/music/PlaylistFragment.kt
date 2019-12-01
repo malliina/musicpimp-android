@@ -58,12 +58,12 @@ class PlaylistFragment : Fragment(), TrackDelegate {
     }
 
     override fun onTrack(track: Track, position: Int) {
-        mainViewModel.playerSocket?.skip(position)
+        mainViewModel.skip(position)
     }
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
         showPopup(view) {
-            mainViewModel.playerSocket?.remove(position)
+            mainViewModel.remove(position)
         }
     }
 

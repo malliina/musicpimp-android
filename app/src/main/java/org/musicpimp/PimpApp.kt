@@ -7,8 +7,10 @@ import com.microsoft.appcenter.crashes.Crashes
 import timber.log.Timber
 
 class PimpApp: Application() {
-    // TODO implement https://developer.android.com/training/dependency-injection/manual
-
+    // https://developer.android.com/training/dependency-injection/manual
+    private lateinit var pimpConf: PimpConf
+    val conf: PimpConf
+        get() = pimpConf
     override fun onCreate() {
         super.onCreate()
         val tree = if (BuildConfig.DEBUG) Timber.DebugTree() else NoLogging()
@@ -16,6 +18,8 @@ class PimpApp: Application() {
 
         AppCenter.start(this, "f7857cd4-6b66-42ba-b916-5a4382849a23",
             Analytics::class.java, Crashes::class.java)
+
+        pimpConf = PimpConf(this.applicationContext)
     }
 
     class NoLogging: Timber.Tree() {

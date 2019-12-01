@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.endpoint_item.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
+import org.musicpimp.endpoints.LocalEndpoint
 
 class EndpointsFragment : Fragment(), EndpointsDelegate {
     private lateinit var mainViewModel: MainActivityViewModel
@@ -55,9 +56,11 @@ class EndpointsFragment : Fragment(), EndpointsDelegate {
     }
 
     override fun onEndpoint(e: Endpoint) {
-        viewModel.onEndpoint(e)
-        val action = EndpointsFragmentDirections.endpointsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
-        findNavController().navigate(action)
+        if (e.id != LocalEndpoint.local.id) {
+            viewModel.onEndpoint(e)
+            val action = EndpointsFragmentDirections.endpointsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
+            findNavController().navigate(action)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

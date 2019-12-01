@@ -1,20 +1,20 @@
 package org.musicpimp
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.*
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.musicpimp.media.LocalPlayer
 
 class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var local: LocalPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+//        local.registerCallback(MediaBrowserListener())
+        local = (application as PimpApp).conf.local
+//        local.browser.registerCallback()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -35,11 +38,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        local.browser.onStart()
         viewModel.openSocket()
     }
 
     override fun onStop() {
         super.onStop()
+        local.browser.onStop()
         viewModel.closeSocket()
     }
 

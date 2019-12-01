@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import org.musicpimp.EndpointId
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.EndpointManager
+import org.musicpimp.endpoints.LocalEndpoint
 
 class SettingsViewModel(app: Application) : AndroidViewModel(app), EndpointsDelegate {
     private val settings = EndpointManager.load(app)
@@ -15,9 +16,7 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app), EndpointsDele
         value = settings.fetch().endpoints
     }
     private val playback = MutableLiveData<Endpoint>().apply {
-        settings.activePlayer()?.let {
-            value = it
-        }
+        value = settings.activePlayer()
     }
     private val source = MutableLiveData<Endpoint>().apply {
         settings.activeSource()?.let {
