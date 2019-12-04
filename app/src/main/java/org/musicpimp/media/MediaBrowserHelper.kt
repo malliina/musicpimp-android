@@ -20,7 +20,6 @@ class MediaBrowserHelper(
     val context: Context,
     private val serviceClass: Class<out MediaBrowserServiceCompat>
 ) {
-    private val tag = "MediaBrowserHelper"
     private val callbackList = mutableListOf<Callback>()
     private val mediaBrowserConnectionCallback = MediaBrowserConnectionCallback()
     private val mediaControllerCallback = MediaControllerCallback()
@@ -63,7 +62,7 @@ class MediaBrowserHelper(
             mediaBrowser = browser
             browser.connect()
         }
-        Timber.d(tag, "onStart: Creating MediaBrowser, and connecting")
+        Timber.d("onStart: Creating MediaBrowser, and connecting")
     }
 
     fun onStop() {
@@ -78,7 +77,7 @@ class MediaBrowserHelper(
             }
         }
         resetState()
-        Timber.d(tag, "onStop: Releasing MediaController, Disconnecting from MediaBrowser")
+        Timber.d( "onStop: Releasing MediaController, Disconnecting from MediaBrowser")
     }
 
     /**
@@ -117,10 +116,9 @@ class MediaBrowserHelper(
     fun resetState() {
         performOnAllCallbacks(object : CallbackCommand {
             override fun perform(callback: MediaControllerCompat.Callback) {
-                callback.onPlaybackStateChanged(null)
+                callback.onPlaybackStateChanged(PlaybackStateCompat.fromPlaybackState(PlaybackStateCompat.STATE_NONE))
             }
         })
-        Timber.d(tag, "resetState: ")
     }
 
     fun transportControls(): MediaControllerCompat.TransportControls? {
@@ -179,7 +177,7 @@ class MediaBrowserHelper(
                     (this@MediaBrowserHelper).onConnected(ctrl)
                 }
             } catch (e: RemoteException) {
-                Timber.d(tag, String.format("onConnected: Problem: %s", e.toString()))
+                Timber.d(e, "onConnected problem.")
                 throw RuntimeException(e)
             }
             mediaBrowser?.let {
@@ -211,7 +209,6 @@ class MediaBrowserHelper(
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
-            Timber.i("pstate $state")
             performOnAllCallbacks(object : CallbackCommand {
                 override fun perform(callback: MediaControllerCompat.Callback) {
                     callback.onPlaybackStateChanged(state)

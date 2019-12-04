@@ -18,7 +18,7 @@
 
     <fragment
         android:id="@+id/playlist"
-        android:name="org.musicpimp.ui.music.PlaylistFragment"
+        android:name="org.musicpimp.ui.player.PlaylistFragment"
         android:label="@string/title_playlist"
         tools:layout="@layout/fragment_playlist"/>
 </navigation>

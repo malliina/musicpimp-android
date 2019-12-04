@@ -15,7 +15,7 @@ import android.support.v4.media.session.PlaybackStateCompat
  * simple.
  */
 private class MediaBrowserListener : MediaControllerCompat.Callback() {
-    override fun onPlaybackStateChanged(playbackState: PlaybackStateCompat) {
+    override fun onPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
 //        mIsPlaying = playbackState != null &&
 //                playbackState.state == PlaybackStateCompat.STATE_PLAYING
 //        mMediaControlsImage.setPressed(mIsPlaying)

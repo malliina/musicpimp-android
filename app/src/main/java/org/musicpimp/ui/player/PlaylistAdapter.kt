@@ -1,4 +1,4 @@
-package org.musicpimp.ui.music
+package org.musicpimp.ui.player
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.track_item.view.*
 import org.musicpimp.R
 import org.musicpimp.Track
+import org.musicpimp.ui.music.TrackDelegate
 
 class PlaylistAdapter(
     var list: List<Track>,

@@ -1,4 +1,4 @@
-package org.musicpimp.ui.music
+package org.musicpimp.ui.player
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

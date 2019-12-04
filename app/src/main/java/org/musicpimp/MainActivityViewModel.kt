@@ -32,7 +32,6 @@ private class MediaBrowserListener : MediaControllerCompat.Callback() {
     val updates: LiveData<PlaybackStateCompat> = localUpdates
 
     override fun onPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
-        Timber.i("State $playbackState")
         localUpdates.postValue(playbackState ?: LocalPlayer.emptyPlaybackState)
     }
 
@@ -150,6 +149,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         PlaybackStateCompat.STATE_PLAYING -> Playstate.Playing
         PlaybackStateCompat.STATE_STOPPED -> Playstate.Stopped
         PlaybackStateCompat.STATE_PAUSED -> Playstate.Paused
+        PlaybackStateCompat.STATE_NONE -> Playstate.NoMedia
         else -> Playstate.Other
     }
 
@@ -184,6 +184,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         } else {
             conf.playerSocket = null
             conf.player = conf.local
+            playlist.postValue(conf.local.playlist.tracks)
         }
     }
 

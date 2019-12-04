@@ -2,6 +2,7 @@ package org.musicpimp
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonClass
+import timber.log.Timber
 
 class EnumAdapter {
     @FromJson

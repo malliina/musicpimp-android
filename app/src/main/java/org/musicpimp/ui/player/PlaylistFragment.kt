@@ -1,4 +1,4 @@
-package org.musicpimp.ui.music
+package org.musicpimp.ui.player
 
 import android.os.Bundle
 import android.view.*
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import org.musicpimp.*
+import org.musicpimp.ui.music.TrackDelegate
 
 class PlaylistFragment : Fragment(), TrackDelegate {
     private lateinit var viewAdapter: PlaylistAdapter
