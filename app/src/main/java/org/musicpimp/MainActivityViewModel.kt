@@ -23,45 +23,8 @@ import org.musicpimp.endpoints.CloudEndpoint
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.EndpointManager
 import org.musicpimp.media.LocalPlayer
+import org.musicpimp.media.MediaBrowserListener
 import timber.log.Timber
-
-private class MediaBrowserListener : MediaControllerCompat.Callback() {
-    private val localUpdates = MutableLiveData<PlaybackStateCompat>().apply {
-        value = LocalPlayer.emptyPlaybackState
-    }
-    val updates: LiveData<PlaybackStateCompat> = localUpdates
-
-    override fun onPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
-        localUpdates.postValue(playbackState ?: LocalPlayer.emptyPlaybackState)
-    }
-
-    override fun onMetadataChanged(mediaMetadata: MediaMetadataCompat?) {
-//        mediaMetadata.description.mediaId
-//        if (mediaMetadata == null) {
-//            return
-//        }
-//        mTitleTextView.setText(
-//            mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
-//        )
-//        mArtistTextView.setText(
-//            mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)
-//        )
-//        mAlbumArt.setImageBitmap(
-//            MusicLibrary.getAlbumBitmap(
-//                this@MainActivity,
-//                mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)
-//            )
-//        )
-    }
-
-    override fun onSessionDestroyed() {
-        super.onSessionDestroyed()
-    }
-
-    override fun onQueueChanged(queue: List<MediaSessionCompat.QueueItem>) {
-        super.onQueueChanged(queue)
-    }
-}
 
 class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     val conf = (app as PimpApp).conf
@@ -130,8 +93,9 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     init {
-        settings.activeSource()?.let { source ->
-            setupSource(source)
+        val src = settings.activeSource()
+        if (src is CloudEndpoint) {
+            setupSource(src)
         }
         setupPlayer(settings.activePlayer())
         val listener = MediaBrowserListener()

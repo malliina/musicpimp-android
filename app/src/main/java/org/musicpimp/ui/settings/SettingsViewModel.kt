@@ -19,9 +19,7 @@ class SettingsViewModel(app: Application) : AndroidViewModel(app), EndpointsDele
         value = settings.activePlayer()
     }
     private val source = MutableLiveData<Endpoint>().apply {
-        settings.activeSource()?.let {
-            value = it
-        }
+        value = settings.activeSource()
     }
 
     val endpoints: LiveData<List<Endpoint>> = endpointsData

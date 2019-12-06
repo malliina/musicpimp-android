@@ -2,10 +2,10 @@ package org.musicpimp.ui.settings
 
 import android.content.Context
 import android.os.Bundle
-import android.view.*
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.TextView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.settings_fragment.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
-import org.musicpimp.ui.music.MusicFragmentDirections
 import timber.log.Timber
 
 class SettingsFragment : Fragment() {
@@ -55,11 +54,13 @@ class SettingsFragment : Fragment() {
             view.music_source_dropdown.setText(it.name.value, false)
         }
         view.playback_device_dropdown.setOnItemClickListener { parent, v, position, id ->
+            view.playback_device_dropdown.clearFocus()
             playbackAdapter.getItem(position)?.let {
                 viewModel.onPlayback(it)
             }
         }
         view.music_source_dropdown.setOnItemClickListener { parent, v, position, id ->
+            view.music_source_dropdown.clearFocus()
             sourceAdapter.getItem(position)?.let {
                 viewModel.onSource(it)
             }
@@ -71,27 +72,44 @@ class SettingsFragment : Fragment() {
     }
 }
 
-class DropdownAdapter(context: Context, val endpoints: MutableList<Endpoint>) :
-    ArrayAdapter<Endpoint>(context, 0, endpoints) {
+class NonFilter : Filter() {
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        return FilterResults()
+    }
+
+    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+    }
+}
+
+class DropdownAdapter(val context: Context, val endpoints: MutableList<Endpoint>) :
+    BaseAdapter(), Filterable {
+
+    private val nonFilter = NonFilter()
+
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val target = (convertView ?: LayoutInflater.from(context).inflate(
             R.layout.endpoint_dropdown_item,
             parent,
             false
         )) as TextView
-        getItem(position)?.let { endpoint ->
-            target.text = endpoint.name.value
-            // Apparently interferes with framework functionality if set
+        val endpoint = endpoints[position]
+        target.text = endpoint.name.value
+        // Apparently interferes with framework functionality if set
 //            target.setOnClickListener { ... }
-        }
         return target
     }
 
     fun update(es: List<Endpoint>) {
-        clear()
-        addAll(es)
+        endpoints.clear()
+        endpoints.addAll(es)
         notifyDataSetChanged()
     }
+
+    override fun getFilter(): Filter = nonFilter
+    override fun getItemId(position: Int): Long = position.toLong()
+    override fun getCount(): Int = endpoints.size
+    override fun getItem(position: Int): Endpoint? =
+        if (endpoints.size > position) endpoints[position] else null
 }
 
 interface EndpointsDelegate {

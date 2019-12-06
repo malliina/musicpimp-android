@@ -4,6 +4,8 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 /**
  * Implementation of the [MediaControllerCompat.Callback] methods we're interested in.
@@ -14,14 +16,23 @@ import android.support.v4.media.session.PlaybackStateCompat
  * are added or removed from the queue. We don't do this here in order to keep the UI
  * simple.
  */
-private class MediaBrowserListener : MediaControllerCompat.Callback() {
+class MediaBrowserListener : MediaControllerCompat.Callback() {
+    private val localUpdates = MutableLiveData<PlaybackStateCompat>().apply {
+        value = LocalPlayer.emptyPlaybackState
+    }
+    val updates: LiveData<PlaybackStateCompat> = localUpdates
+
     override fun onPlaybackStateChanged(playbackState: PlaybackStateCompat?) {
-//        mIsPlaying = playbackState != null &&
-//                playbackState.state == PlaybackStateCompat.STATE_PLAYING
-//        mMediaControlsImage.setPressed(mIsPlaying)
+        // Change play/pause button state
+        localUpdates.postValue(playbackState ?: LocalPlayer.emptyPlaybackState)
     }
 
     override fun onMetadataChanged(mediaMetadata: MediaMetadataCompat?) {
+        // Change titles, etc
+//        mediaMetadata.description.mediaId
+//        if (mediaMetadata == null) {
+//            return
+//        }
 //        mTitleTextView.setText(
 //            mediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE)
 //        )

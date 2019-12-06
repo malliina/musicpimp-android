@@ -72,14 +72,23 @@ class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
         return if (destination.exists()) {
             destination
         } else {
-            val artistEnc = urlEncode(track.artist.value)
-            val albumEnc = urlEncode(track.album.value)
-            val url =
-                FullUrl("https", "api.musicpimp.org", "/covers?artist=$artistEnc&album=$albumEnc")
-            OkClient.default.download(url, destination)?.let { _ ->
-                coversStream.postValue(BitmapFactory.decodeFile(destination.absolutePath))
-                destination
+            if (track.artist.value.isNotBlank() && track.album.value.isNotBlank()) {
+                val artistEnc = urlEncode(track.artist.value)
+                val albumEnc = urlEncode(track.album.value)
+                val url =
+                    FullUrl(
+                        "https",
+                        "api.musicpimp.org",
+                        "/covers?artist=$artistEnc&album=$albumEnc"
+                    )
+                OkClient.default.download(url, destination)?.let { _ ->
+                    coversStream.postValue(BitmapFactory.decodeFile(destination.absolutePath))
+                    destination
+                }
+            } else {
+                null
             }
+
         }
     }
 }
