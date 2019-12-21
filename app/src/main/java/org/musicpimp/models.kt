@@ -120,9 +120,15 @@ data class Duration(val seconds: Double) {
     fun formatted(): String = formatSeconds(seconds.toLong())
 }
 
+inline val Long.millis: Duration
+    get() = Duration(this.toDouble() / 1000)
+
 data class StorageSize(val bytes: Long) {
     override fun toString(): String = "$bytes"
 }
+
+inline val Long.bytes: StorageSize
+    get() = StorageSize(this)
 
 data class FullUrl(val proto: String, val hostAndPort: String, val uri: String) {
     private val host = hostAndPort.takeWhile { c -> c != ':' }

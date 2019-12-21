@@ -91,6 +91,9 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         updatePosition = isPlaying
         states.postValue(toState(state))
     }
+    private val trackObserver = Observer<Track> { track ->
+        tracks.postValue(track)
+    }
 
     init {
         val src = settings.activeSource()
@@ -98,14 +101,15 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
             setupSource(src)
         }
         setupPlayer(settings.activePlayer())
-        val listener = MediaBrowserListener()
         conf.local.browser.registerCallback(listener)
         listener.updates.observeForever(stateObserver)
+        listener.tracks.observeForever(trackObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
         listener.updates.removeObserver(stateObserver)
+        listener.tracks.removeObserver(trackObserver)
         updatePosition = false
     }
 

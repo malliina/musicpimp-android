@@ -3,24 +3,42 @@ package org.musicpimp.media
 import android.graphics.Bitmap
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
-import org.musicpimp.Track
-import org.musicpimp.TrackId
+import org.musicpimp.*
 import timber.log.Timber
+import kotlin.time.milliseconds
 
 class LocalPlaylist {
     val tracks: MutableList<Track> = mutableListOf()
 
     companion object {
+        private const val path = "org.musicpimp.metadata.path"
+        private const val size = "org.musicpimp.metadata.size"
+        private const val url = "org.musicpimp.metadata.url"
+
         fun toMedia(track: Track): MediaMetadataCompat = MediaMetadataCompat.Builder().apply {
             putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.id.value)
+            putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
             putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album.value)
             putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist.value)
             putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.duration.toMillis().toLong())
+            putString(path, track.path)
+            putLong(size, track.size.bytes)
+            putString(url, track.url.url)
 //        putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
 //        putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, getAlbumArtUri(albumArtResName))
 //        putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, getAlbumArtUri(albumArtResName))
-            putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
         }.build()
+
+        fun fromMedia(media: MediaMetadataCompat): Track = Track(
+            TrackId(media.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)),
+            media.getString(MediaMetadataCompat.METADATA_KEY_TITLE),
+            Album(media.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)),
+            Artist(media.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)),
+            media.getString(path),
+            media.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).millis,
+            media.getLong(size).bytes,
+            FullUrl.build(media.getString(url))!!
+        )
     }
 
     fun root(): String {
