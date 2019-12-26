@@ -3,9 +3,9 @@ package org.musicpimp.media
 import android.graphics.Bitmap
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaMetadataCompat
+import okhttp3.internal.toImmutableList
 import org.musicpimp.*
 import timber.log.Timber
-import kotlin.time.milliseconds
 
 class LocalPlaylist {
     val tracks: MutableList<Track> = mutableListOf()
@@ -71,7 +71,8 @@ class LocalPlaylist {
     }
 
     fun resetAll(ts: List<Track>) {
+        Timber.i("Reset with ${ts.size} tracks")
         tracks.clear()
-        tracks.addAll(ts)
+        tracks.addAll(ts.toImmutableList())
     }
 }

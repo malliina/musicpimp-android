@@ -72,9 +72,9 @@ class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
         return if (destination.exists()) {
             destination
         } else {
-            if (track.artist.value.isNotBlank() && track.album.value.isNotBlank()) {
-                val artistEnc = urlEncode(track.artist.value)
-                val albumEnc = urlEncode(track.album.value)
+            if (track.artist.isNotBlank() && track.album.isNotBlank()) {
+                val artistEnc = urlEncode(track.artist)
+                val albumEnc = urlEncode(track.album)
                 val url =
                     FullUrl(
                         "https",
@@ -88,7 +88,6 @@ class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
             } else {
                 null
             }
-
         }
     }
 }

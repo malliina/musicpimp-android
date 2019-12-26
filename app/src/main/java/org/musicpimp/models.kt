@@ -11,6 +11,7 @@ import java.util.regex.Pattern
 
 interface Primitive : CharSequence {
     val value: String
+    val isNotBlank: Boolean get() = value.isNotBlank()
     override val length: Int get() = value.length
     override fun get(index: Int): Char = value.get(index)
     override fun subSequence(startIndex: Int, endIndex: Int): CharSequence =

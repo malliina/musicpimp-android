@@ -68,8 +68,11 @@ class PlayerFragment : Fragment() {
             }
         }
         viewModel.covers.observe(viewLifecycleOwner) { cover ->
-            view.album_cover.setImageResource(R.drawable.ic_launcher_foreground)
-            view.album_cover.setImageBitmap(cover)
+            if (cover == null) {
+                view.album_cover.setImageResource(R.drawable.ic_launcher_foreground)
+            } else {
+                view.album_cover.setImageBitmap(cover)
+            }
         }
         view.play_button.setOnClickListener {
             viewModel.onPlay()

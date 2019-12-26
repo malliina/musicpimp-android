@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.media.AudioFocusRequest
 import android.media.AudioManager
-import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.MediaMetadataCompat
+import androidx.media.AudioManagerCompat
 
 /**
  * Abstract player implementation that handles playing music with proper handling of headphones
@@ -21,17 +23,17 @@ abstract class PlayerAdapter(context: Context) {
         IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
     private var mAudioNoisyReceiverRegistered = false
     private val mAudioFocusHelper = object: AudioManager.OnAudioFocusChangeListener {
+        val request = AudioFocusRequest.Builder(AudioManagerCompat.AUDIOFOCUS_GAIN)
+            .setOnAudioFocusChangeListener(this)
+            .build()
+
         fun requestAudioFocus(): Boolean {
-            val result = audioManager.requestAudioFocus(
-                this,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN
-            )
+            val result = audioManager.requestAudioFocus(request)
             return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED
         }
 
         fun abandonAudioFocus() {
-            audioManager.abandonAudioFocus(this)
+            audioManager.abandonAudioFocusRequest(request)
         }
 
         override fun onAudioFocusChange(focusChange: Int) {
@@ -54,7 +56,7 @@ abstract class PlayerAdapter(context: Context) {
                     }
                 }
                 AudioManager.AUDIOFOCUS_LOSS -> {
-                    audioManager.abandonAudioFocus(this)
+                    audioManager.abandonAudioFocusRequest(request)
                     mPlayOnAudioFocus = false
                     stop()
                 }

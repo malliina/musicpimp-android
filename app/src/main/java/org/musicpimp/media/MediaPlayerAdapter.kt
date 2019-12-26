@@ -46,16 +46,22 @@ class MediaPlayerAdapter(
                 listener.onPlaybackCompleted()
                 setNewState(PlaybackStateCompat.STATE_PAUSED)
             }
+            p.setOnPreparedListener { player ->
+                if (player == p) {
+                    play()
+                }
+            }
             mediaPlayer = p
         }
     }
 
     // Implements PlaybackControl.
     override fun playFromMedia(metadata: MediaMetadataCompat) {
-        Timber.i("Playing from media ${metadata.description.mediaId ?: "unknown id"}")
+        Timber.i("Playing media ID ${metadata.description.mediaId ?: "unknown id"}")
         currentMedia = metadata
         metadata.description.mediaId?.let { id ->
             library.track(TrackId(id))?.let { track ->
+                Timber.i("Playing ${track.title} by ${track.artist}...")
                 playTrack(track)
             }
         }
@@ -95,7 +101,7 @@ class MediaPlayerAdapter(
             throw RuntimeException("Failed to open URL: ${track.url}", e)
         }
         try {
-            mediaPlayer?.prepare()
+            mediaPlayer?.prepareAsync()
         } catch (e: Exception) {
             throw RuntimeException("Failed to open URL: ${track.url}", e)
         }

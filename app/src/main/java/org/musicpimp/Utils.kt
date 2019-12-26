@@ -6,7 +6,7 @@ import java.security.MessageDigest
 object Utils {
     private const val hexChars = "0123456789abcdef"
 
-    fun urlEncode(s: String): String = URLEncoder.encode(s, "utf-8")
+    fun urlEncode(s: Primitive): String = URLEncoder.encode(s.value, "utf-8")
 
     fun hashString(input: String, type: String = "MD5"): String {
         val bytes = MessageDigest

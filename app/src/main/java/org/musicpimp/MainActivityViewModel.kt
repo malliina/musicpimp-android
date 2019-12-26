@@ -4,9 +4,6 @@ import android.app.Application
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
-import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -59,11 +56,13 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
                 states.postValue(status.state)
                 times.postValue(status.position)
             }
+            Timber.i("Status with ${status.playlist.size} tracks")
             playlist.postValue(status.playlist)
             index.postValue(status.index)
         }
 
         override fun playlistUpdated(list: List<Track>) {
+            Timber.i("Updated with ${list.size} tracks")
             playlist.postValue(list)
         }
 
@@ -143,6 +142,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private fun setupPlayer(e: Endpoint) {
+        Timber.i("Setup main")
         closeSocket()
         if (e is CloudEndpoint) {
             val socket = PimpSocket.build(e.creds.authHeader, liveDataDelegate)
@@ -152,6 +152,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         } else {
             conf.playerSocket = null
             conf.player = conf.local
+            Timber.i("Setup with ${conf.local.playlist.tracks.size} tracks")
             playlist.postValue(conf.local.playlist.tracks)
         }
     }

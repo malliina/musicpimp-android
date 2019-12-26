@@ -137,12 +137,13 @@ class MusicService : MediaBrowserServiceCompat() {
                 return
             }
             if (preparedMedia == null) {
+                Timber.i("Preparing...")
                 onPrepare()
             }
             preparedMedia?.let {
                 Timber.i("Playing from ${it.description}")
                 playback.playFromMedia(it)
-                Timber.d(tag, "onPlayFromMediaId: MediaSession active")
+                Timber.d("onPlayFromMediaId: MediaSession active")
             }
             Timber.i("onPlay done")
         }

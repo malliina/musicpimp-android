@@ -48,8 +48,8 @@ class MusicViewModel(val app: Application, private val main: MainActivityViewMod
                     val response = http.folder(id)
                     dir.value = Outcome.success(response)
                     val path = response.folder.path
-                    conf.local.playlist.resetAll(response.tracks)
-                    val describe = if (id == FolderId.root) "Root folder" else path
+//                    conf.local.playlist.resetAll(response.tracks)
+                    val describe = if (id == FolderId.root || id.isBlank()) "Root folder" else path
                     Timber.i("Loaded '$describe' from '$name'.")
                 } catch (e: Exception) {
                     val msg =
