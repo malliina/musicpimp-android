@@ -116,7 +116,7 @@ class MediaBrowserHelper(
     fun resetState() {
         performOnAllCallbacks(object : CallbackCommand {
             override fun perform(callback: MediaControllerCompat.Callback) {
-                callback.onPlaybackStateChanged(PlaybackStateCompat.fromPlaybackState(PlaybackStateCompat.STATE_NONE))
+                callback.onPlaybackStateChanged(null)
             }
         })
     }
@@ -220,7 +220,7 @@ class MediaBrowserHelper(
         // foreground and onStart() has been called (but not onStop()).
         override fun onSessionDestroyed() {
             resetState()
-//            onPlaybackStateChanged(null)
+            onPlaybackStateChanged(null)
             (this@MediaBrowserHelper).onDisconnected()
         }
     }
