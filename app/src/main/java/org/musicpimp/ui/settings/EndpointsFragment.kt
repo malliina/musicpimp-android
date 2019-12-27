@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.endpoint_item.view.*
+import kotlinx.android.synthetic.main.endpoints_fragment.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.LocalEndpoint
+import org.musicpimp.ui.music.init
 
 class EndpointsFragment : Fragment(), EndpointsDelegate {
     private lateinit var mainViewModel: MainActivityViewModel
@@ -38,12 +40,7 @@ class EndpointsFragment : Fragment(), EndpointsDelegate {
             activity?.run { ViewModelProviders.of(this).get(SettingsViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = EndpointsAdapter(emptyList(), this)
-        view.findViewById<RecyclerView>(R.id.endpoints_list).apply {
-            setHasFixedSize(false)
-            layoutManager = viewManager
-            adapter = viewAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
+        view.endpoints_list.init(viewManager, viewAdapter)
         viewModel.endpoints.observe(viewLifecycleOwner) { es ->
             viewAdapter.endpoints = es
             viewAdapter.notifyDataSetChanged()

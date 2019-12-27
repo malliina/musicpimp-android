@@ -34,12 +34,7 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = MusicAdapter(Directory.empty, this)
-        view.tracks_view.apply {
-            setHasFixedSize(false)
-            layoutManager = viewManager
-            adapter = viewAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
+        view.tracks_view.init(viewManager, viewAdapter)
         if (mainViewModel.conf.http == null) {
             display(getString(R.string.no_music), view)
         }
@@ -118,4 +113,13 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
         }
         popup.show()
     }
+}
+
+fun <VH : RecyclerView.ViewHolder> RecyclerView.init(layout: RecyclerView.LayoutManager, vhAdapter: RecyclerView.Adapter<VH>) {
+    setHasFixedSize(false)
+    layoutManager = layout
+    adapter = vhAdapter
+    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
+        setDrawable(resources.getDrawable(R.drawable.horizontal_divider, context.theme))
+    })
 }

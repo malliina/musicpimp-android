@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorTint</item>
+        <item name="colorControlNormal">@color/colorTint</item>
     </style>
 
     <style name="ProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">

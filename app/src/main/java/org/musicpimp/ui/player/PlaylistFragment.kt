@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import org.musicpimp.*
 import org.musicpimp.ui.music.TrackDelegate
+import org.musicpimp.ui.music.init
 import timber.log.Timber
 
 class PlaylistFragment : Fragment(), TrackDelegate {
@@ -40,12 +41,7 @@ class PlaylistFragment : Fragment(), TrackDelegate {
 
         viewManager = LinearLayoutManager(context)
         viewAdapter = PlaylistAdapter(emptyList(), -1, requireContext(), this)
-        view.playlist_list.apply {
-            setHasFixedSize(false)
-            layoutManager = viewManager
-            adapter = viewAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
-        }
+        view.playlist_list.init(viewManager, viewAdapter)
         mainViewModel.playlistUpdates.observe(viewLifecycleOwner) { list ->
             Timber.i("Got playlist with ${list.size} tracks"    )
             viewAdapter.list = list

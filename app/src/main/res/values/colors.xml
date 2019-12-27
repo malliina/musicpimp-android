@@ -3,8 +3,25 @@
     <!--    <color name="colorPrimary">#008577</color>-->
     <!--    <color name="colorPrimaryDark">#00574B</color>-->
     <!--    <color name="colorAccent">#D81B60</color>-->
-    <color name="colorPrimary">#6200EE</color>
+<!--    <color name="colorPrimary">#6200EE</color>-->
+    <color name="colorPrimary">#1c1c1e</color>
+    <color name="colorSecondary">#a1a1a1</color>
     <color name="colorPrimaryDark">#DADCE0</color>
     <color name="colorAccent">#E0E0E0</color>
     <color name="colorDanger">#D81B60</color>
+    <color name="colorBar">#1c1c1e</color>
+
+    <!-- Consistent with the iOS app -->
+    <color name="colorWhite">#f4f4f4</color>
+    <color name="colorTitles">#f4f4f4</color>
+    <color name="colorText">#f4f4f4</color>
+    <color name="colorBackground">#02172a</color>
+    <color name="colorLighterBackground">#032034</color>
+    <color name="colorHeader">#172e54</color>
+    <color name="colorNotSelected">#a1a1a1</color>
+    <color name="colorSubtitles">#a1a1a1</color>
+    <color name="colorDivider">#4da1a1a1</color>
+    <color name="colorSelected">#2483e9</color>
+    <color name="colorTint">#2483e9</color>
+    <color name="colorDeletionHighlighted">#8b0000</color>
 </resources>

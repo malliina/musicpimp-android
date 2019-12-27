@@ -60,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
         android:text="@string/delete"
-        android:textColor="@color/colorDanger"
+        android:textColor="@color/colorDeletionHighlighted"
         app:layout_constraintTop_toBottomOf="@id/save_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

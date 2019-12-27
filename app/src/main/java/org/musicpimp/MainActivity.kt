@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 //        local.registerCallback(MediaBrowserListener())
         local = (application as PimpApp).conf.local
 //        local.browser.registerCallback()
+        window.decorView.setBackgroundColor(resources.getColor(R.color.colorBackground, theme))
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {

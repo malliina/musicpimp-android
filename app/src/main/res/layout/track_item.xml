@@ -3,20 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackground">
 
     <TextView
         android:id="@+id/music_item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingStart="8dp"
-        android:paddingTop="8dp"
+        android:paddingTop="12dp"
         android:paddingEnd="8dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/colorTitles"
         android:textSize="18sp"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/music_item_more_button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Artist 123 long long long text bla bla bla bla bla aaaa" />
@@ -26,12 +28,12 @@
         android:layout_width="42dp"
         android:layout_height="28dp"
         android:background="?attr/selectableItemBackground"
-        android:src="@drawable/ic_more_foreground"
         android:contentDescription="@string/more"
         android:scaleType="fitCenter"
-        app:layout_constraintStart_toEndOf="@id/music_item_title"
+        android:src="@drawable/ic_more_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toEndOf="@id/music_item_title"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

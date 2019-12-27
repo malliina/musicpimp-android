@@ -6,19 +6,19 @@
     android:layout_height="match_parent">
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         android:id="@+id/playlist_loading"
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        app:mpb_progressStyle="horizontal"
-        app:mpb_useIntrinsicPadding="false"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0"
-        android:visibility="gone"
-        android:indeterminate="true" />
+        app:mpb_progressStyle="horizontal"
+        app:mpb_useIntrinsicPadding="false" />
 
     <TextView
         android:id="@+id/empty_playlist_text"
@@ -26,11 +26,13 @@
         android:layout_height="wrap_content"
         android:text="@string/playlist_empty"
         android:textAlignment="center"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playlist_list"
