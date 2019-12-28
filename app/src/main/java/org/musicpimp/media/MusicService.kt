@@ -43,7 +43,7 @@ class MusicService : MediaBrowserServiceCompat() {
         mediaNotificationManager = MediaNotificationManager(this, library)
         listener = MediaPlayerListener()
         playback = MediaPlayerAdapter(app, listener, library)
-        Timber.d(tag, "onCreate: MusicService creating MediaSession, and MediaNotificationManager")
+        Timber.d("onCreate: MusicService creating MediaSession, and MediaNotificationManager")
     }
 
     override fun onTaskRemoved(rootIntent: Intent) {
@@ -55,7 +55,7 @@ class MusicService : MediaBrowserServiceCompat() {
         mediaNotificationManager.onDestroy()
         playback.stop()
         session.release()
-        Timber.d(tag, "onDestroy: MediaPlayerAdapter stopped, and MediaSession released")
+        Timber.d("onDestroy: MediaPlayerAdapter stopped, and MediaSession released")
     }
 
     override fun onGetRoot(
@@ -108,6 +108,7 @@ class MusicService : MediaBrowserServiceCompat() {
                 library.metadata(TrackId(it))?.let { meta ->
                     playlist.clear()
                     onAddQueueItem(meta.description)
+                    preparedMedia = null
                     onPlay()
                 }
             }

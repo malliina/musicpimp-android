@@ -42,6 +42,7 @@ class MediaBrowserHelper(
     }
 
     private fun clear() {
+        // WTF?
         ctrl?.let { c ->
             c.queue?.let { q ->
                 q.forEach { item ->
@@ -77,7 +78,7 @@ class MediaBrowserHelper(
             }
         }
         resetState()
-        Timber.d( "onStop: Releasing MediaController, Disconnecting from MediaBrowser")
+        Timber.d("onStop: Releasing MediaController, Disconnecting from MediaBrowser")
     }
 
     /**
@@ -122,9 +123,6 @@ class MediaBrowserHelper(
     }
 
     fun transportControls(): MediaControllerCompat.TransportControls? {
-        if (mediaController == null) {
-            Timber.w("Media controller is null...")
-        }
         return mediaController?.transportControls
     }
 
@@ -156,10 +154,10 @@ class MediaBrowserHelper(
     }
 
     // Receives callbacks from the MediaBrowser when it has successfully connected to the
-// MediaBrowserService (MusicService).
+    // MediaBrowserService (MusicService).
     inner class MediaBrowserConnectionCallback : MediaBrowserCompat.ConnectionCallback() {
 
-        // Happens as a result of onStart().
+        // Called as a result of onStart().
         override fun onConnected() {
             try {
                 val sessionToken = mediaBrowser?.sessionToken

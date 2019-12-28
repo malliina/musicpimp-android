@@ -13,6 +13,7 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
             .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)
             .build()
     }
+
     private val transport: MediaControllerCompat.TransportControls?
             get() = browser.transportControls()
 
@@ -20,8 +21,8 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
         Timber.i("Playing ${track.title} with controls $transport")
         playlist.reset(track)
         browser.reset(track)
-        resume()
-        Timber.i("Resumed.")
+        transport?.stop()
+        transport?.playFromMediaId(track.id.value, null)
     }
 
     override fun add(track: Track) {
@@ -32,6 +33,7 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
     override fun resume() {
         transport?.let {
             Timber.i("Playing...")
+            // I guess this triggers MediaSessionCallback.onPlay()
             it.play()
         }
     }
@@ -59,7 +61,7 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
     override fun addFolder(folder: FolderId) {
     }
 
-    fun reset(track: Track) {
-        browser.ctrl?.queue?.forEach { item -> browser.ctrl?.removeQueueItem(item.description) }
-    }
+//    fun reset(track: Track) {
+//        browser.ctrl?.queue?.forEach { item -> browser.ctrl?.removeQueueItem(item.description) }
+//    }
 }
