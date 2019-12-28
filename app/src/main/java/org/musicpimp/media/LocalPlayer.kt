@@ -39,7 +39,7 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
     }
 
     override fun stop() {
-        transport?.stop()
+        transport?.pause()
     }
 
     override fun next() {

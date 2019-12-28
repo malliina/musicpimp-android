@@ -40,6 +40,7 @@ class MediaPlayerAdapter(
      * not the constructor.
      */
     private fun initializeMediaPlayer() {
+        Timber.i("Initializing media player...")
         if (mediaPlayer == null) {
             val p = MediaPlayer()
             p.setOnCompletionListener {
@@ -73,13 +74,13 @@ class MediaPlayerAdapter(
 
     private fun playTrack(track: Track) {
         val current = currentTrack
-        var mediaChanged = current == null || current.id != track.id
+        val mediaChanged = current == null || current.id != track.id || currentMediaPlayedToCompletion
         if (currentMediaPlayedToCompletion) {
             // Last audio file was played to completion, the resourceId hasn't changed, but the
             // player was released, so force a reload of the media for playback.
-            mediaChanged = true
             currentMediaPlayedToCompletion = false
         }
+        Timber.i("Playing track ${track.title}. Was ${current?.title ?: "no track"}. Changed: $mediaChanged.")
         if (!mediaChanged) {
             if (!isPlaying()) {
                 play()
@@ -88,6 +89,7 @@ class MediaPlayerAdapter(
         } else {
             release()
         }
+        currentTrack = track
         initializeMediaPlayer()
         try {
             val auth = app.conf.authHeader?.value ?: ""
@@ -130,6 +132,7 @@ class MediaPlayerAdapter(
         mediaPlayer?.let {
             if (!it.isPlaying) {
                 it.start()
+                Timber.i("onPlay from ${it.currentPosition}...")
                 setNewState(PlaybackStateCompat.STATE_PLAYING)
             }
         }
@@ -171,6 +174,7 @@ class MediaPlayerAdapter(
             SystemClock.elapsedRealtime()
         )
         listener.onPlaybackStateChange(stateBuilder.build())
+        Timber.i("Updated state at position $reportPosition")
     }
 
     /**

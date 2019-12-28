@@ -1,6 +1,7 @@
 package org.musicpimp.media
 
 import android.content.Intent
+import android.content.res.AssetFileDescriptor
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -150,27 +151,34 @@ class MusicService : MediaBrowserServiceCompat() {
         }
 
         override fun onPause() {
+            Timber.i("onPause")
             playback.pause()
         }
 
         override fun onStop() {
+            Timber.i("onStop")
             playback.stop()
             session.isActive = false
         }
 
         override fun onSkipToNext() {
-            queueIndex = ++queueIndex % playlist.size
-            preparedMedia = null
-            onPlay()
+            if (playlist.size > queueIndex) {
+                queueIndex += 1
+                preparedMedia = null
+                onPlay()
+            }
         }
 
         override fun onSkipToPrevious() {
-            queueIndex = if (queueIndex > 0) queueIndex - 1 else playlist.size - 1
-            preparedMedia = null
-            onPlay()
+            if (queueIndex > 0) {
+                queueIndex -= 1
+                preparedMedia = null
+                onPlay()
+            }
         }
 
         override fun onSeekTo(pos: Long) {
+            Timber.i("onSeekTo $pos")
             playback.seekTo(pos)
         }
 
