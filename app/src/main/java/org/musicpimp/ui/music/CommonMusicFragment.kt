@@ -68,7 +68,7 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
                 }
             }
         }
-        setHasOptionsMenu(true)
+//        setHasOptionsMenu(true)
     }
 
     private fun display(message: String, view: View) {
@@ -78,9 +78,9 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
         view.no_music_text.text = message
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.music_top_nav_menu, menu)
-    }
+//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+//        inflater.inflate(R.menu.music_top_nav_menu, menu)
+//    }
 
     override fun onTrack(track: Track, position: Int) {
         mainViewModel.play(track)

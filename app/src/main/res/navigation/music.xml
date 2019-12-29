@@ -14,10 +14,6 @@
             android:id="@+id/home_to_music"
             app:destination="@id/music_folder"
             app:enterAnim="@anim/enter_from_right" />
-        <action
-            android:id="@+id/home_to_settings"
-            app:destination="@id/settings"
-            app:enterAnim="@anim/enter_from_right"/>
     </fragment>
 
     <fragment
@@ -38,43 +34,5 @@
             android:id="@+id/music_to_music"
             app:destination="@id/music_folder"
             app:enterAnim="@anim/enter_from_right"/>
-        <action
-            android:id="@+id/music_to_settings"
-            app:destination="@id/settings"
-            app:enterAnim="@anim/enter_from_right"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/settings"
-        android:name="org.musicpimp.ui.settings.SettingsFragment"
-        android:label="@string/title_settings"
-        tools:layout="@layout/settings_fragment">
-        <action android:id="@+id/settings_to_endpoints"
-            app:destination="@id/endpoints"
-            app:enterAnim="@anim/enter_from_right"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/endpoints"
-        android:name="org.musicpimp.ui.settings.EndpointsFragment"
-        android:label="@string/title_endpoints"
-        tools:layout="@layout/endpoints_fragment">
-        <action android:id="@+id/endpoints_to_endpoint"
-            app:destination="@id/endpoint_edit"
-            app:enterAnim="@anim/enter_from_right"/>
-    </fragment>
-
-    <fragment
-        android:id="@+id/endpoint_edit"
-        android:name="org.musicpimp.ui.settings.EditEndpointFragment"
-        android:label="{title}"
-        tools:layout="@layout/edit_endpoint_fragment">
-        <argument
-            android:name="endpointId"
-            app:argType="org.musicpimp.EndpointId"
-            app:nullable="true"/>
-        <argument
-            android:name="title"
-            app:argType="string" />
     </fragment>
 </navigation>

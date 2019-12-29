@@ -26,14 +26,14 @@ class RootMusicFragment : CommonMusicFragment() {
         )
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.settings -> {
-                val action = RootMusicFragmentDirections.homeToSettings()
-                findNavController().navigate(action)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        return when (item.itemId) {
+//            R.id.settings -> {
+//                val action = RootMusicFragmentDirections.homeToSettings()
+//                findNavController().navigate(action)
+//                true
+//            }
+//            else -> super.onOptionsItemSelected(item)
+//        }
+//    }
 }
