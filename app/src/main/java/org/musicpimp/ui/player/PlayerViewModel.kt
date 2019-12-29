@@ -52,6 +52,10 @@ class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
         player.prev()
     }
 
+    fun onSeek(to: Duration) {
+        player.seek(to)
+    }
+
     fun updateCover(track: Track) {
         viewModelScope.launch {
             val bitmap = try {

@@ -2,6 +2,7 @@ package org.musicpimp.ui.player
 
 import android.os.Bundle
 import android.view.*
+import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
@@ -10,7 +11,23 @@ import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.Playstate
 import org.musicpimp.R
+import org.musicpimp.seconds
 import timber.log.Timber
+
+class SeekBarChangeListener(private val vm: PlayerViewModel) : SeekBar.OnSeekBarChangeListener {
+    override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+    }
+
+    override fun onStartTrackingTouch(seekBar: SeekBar) {
+        // TODO Disable advancing the seek bar
+//        Timber.i("Started at ${seekBar.progress}")
+    }
+
+    override fun onStopTrackingTouch(seekBar: SeekBar) {
+        // TODO Enable advancing the seek bar
+        vm.onSeek(seekBar.progress.seconds)
+    }
+}
 
 class PlayerFragment : Fragment() {
     private lateinit var mainViewModel: MainActivityViewModel
@@ -86,6 +103,7 @@ class PlayerFragment : Fragment() {
         view.prev_button.setOnClickListener {
             viewModel.onPrevious()
         }
+        view.player_slider.setOnSeekBarChangeListener(SeekBarChangeListener(viewModel))
         setHasOptionsMenu(true)
     }
 

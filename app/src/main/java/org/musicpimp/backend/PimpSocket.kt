@@ -103,6 +103,7 @@ class SocketPlayer(private val socket: PimpSocket) : Player {
         ItemsCommand("add_items", emptyList(), listOf(folder)),
         PimpSocket.Companion.adapters.items
     )
+    override fun seek(to: Duration) = valueCommand("seek", to.seconds.toInt())
 
     fun status() = simple("status")
     private fun valueCommand(cmd: String, value: Int) =

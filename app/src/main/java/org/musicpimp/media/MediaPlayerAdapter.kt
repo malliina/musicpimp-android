@@ -208,6 +208,7 @@ class MediaPlayerAdapter(
             if (!player.isPlaying) {
                 seekWhileNotPlaying = position
             }
+            Timber.i("Attempting to seek to $position...")
             player.seekTo(position.toInt())
 
             // Set the state (to the current state) because the position changed and should

@@ -124,6 +124,9 @@ data class Duration(val seconds: Double) {
 inline val Long.millis: Duration
     get() = Duration(this.toDouble() / 1000)
 
+inline val Int.seconds: Duration
+    get() = Duration(this.toDouble())
+
 data class StorageSize(val bytes: Long) {
     override fun toString(): String = "$bytes"
 }

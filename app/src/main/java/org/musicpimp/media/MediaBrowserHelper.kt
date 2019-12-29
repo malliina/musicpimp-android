@@ -15,6 +15,8 @@ import timber.log.Timber
 /**
  * Helper class for a MediaBrowser that handles connecting, disconnecting,
  * and basic browsing with simplified callbacks.
+ *
+ * TODO This class is potentially useless; let's try to get rid of it.
  */
 class MediaBrowserHelper(
     val context: Context,

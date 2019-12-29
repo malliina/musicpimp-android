@@ -125,6 +125,8 @@ class MusicService : MediaBrowserServiceCompat() {
             val mediaId = playlist[queueIndex].description.mediaId
             preparedMedia = mediaId?.let { library.metadata(TrackId(it)) }
             session.setMetadata(preparedMedia)
+            val d = preparedMedia?.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)
+            Timber.i("Prepared duration of ${d ?: "nothing"}")
 
             if (!session.isActive) {
                 session.isActive = true

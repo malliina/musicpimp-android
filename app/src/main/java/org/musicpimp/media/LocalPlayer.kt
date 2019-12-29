@@ -2,6 +2,7 @@ package org.musicpimp.media
 
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import org.musicpimp.Duration
 import org.musicpimp.FolderId
 import org.musicpimp.Track
 import org.musicpimp.audio.Player
@@ -61,7 +62,11 @@ class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist):
     override fun addFolder(folder: FolderId) {
     }
 
-//    fun reset(track: Track) {
+    override fun seek(to: Duration) {
+        transport?.seekTo(to.toMillis().toLong())
+    }
+
+    //    fun reset(track: Track) {
 //        browser.ctrl?.queue?.forEach { item -> browser.ctrl?.removeQueueItem(item.description) }
 //    }
 }
