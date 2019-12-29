@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
-import kotlinx.android.synthetic.main.settings_fragment.view.*
+import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
@@ -25,7 +25,7 @@ class SettingsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.settings_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

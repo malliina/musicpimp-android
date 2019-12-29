@@ -9,7 +9,7 @@
         android:id="@+id/settings"
         android:name="org.musicpimp.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/settings_fragment">
+        tools:layout="@layout/fragment_settings">
         <action android:id="@+id/settings_to_endpoints"
             app:destination="@id/endpoints"
             app:enterAnim="@anim/enter_from_right"/>
