@@ -15,13 +15,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.media.LocalPlayer
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     private lateinit var viewModel: MainActivityViewModel
     private lateinit var local: LocalPlayer
+    private var latestState: Playstate = Playstate.NoMedia
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             viewModel.previous()
         }
         viewModel.stateUpdates.observe(this) { state ->
+            latestState = state
             if (state == Playstate.Playing) {
                 view.visibility = View.VISIBLE
                 view.pause_button.visibility = View.VISIBLE
@@ -67,10 +68,12 @@ class MainActivity : AppCompatActivity() {
                         // may arrive before onAnimationEnd is called for the
                         // previous animation.
                         var isCancelled = false
+
                         override fun onAnimationCancel(animation: Animator?) {
                             super.onAnimationCancel(animation)
                             isCancelled = true
                         }
+
                         override fun onAnimationEnd(animation: Animator?) {
                             super.onAnimationEnd(animation)
                             if (!isCancelled)
@@ -79,6 +82,11 @@ class MainActivity : AppCompatActivity() {
                     })
             }
         }
+    }
+
+    fun toggleControls(block: Boolean) {
+        val visibility = if (latestState == Playstate.Playing && !block) View.VISIBLE else View.GONE
+        floating_playback.visibility = visibility
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -90,14 +98,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStart() {
-        Timber.i("Starting main activity...")
         super.onStart()
         local.browser.onStart()
         viewModel.openSocket()
     }
 
     override fun onStop() {
-        Timber.i("Stopping main activity...")
         super.onStop()
         local.browser.onStop()
         viewModel.closeSocket()

@@ -8,10 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_player.view.*
-import org.musicpimp.MainActivityViewModel
-import org.musicpimp.Playstate
-import org.musicpimp.R
-import org.musicpimp.seconds
+import org.musicpimp.*
 import timber.log.Timber
 
 class SeekBarChangeListener(private val vm: MainActivityViewModel) : SeekBar.OnSeekBarChangeListener {
@@ -72,7 +69,6 @@ class PlayerFragment : Fragment() {
             viewModel.updateCover(track)
         }
         mainViewModel.stateUpdates.observe(viewLifecycleOwner) { state ->
-            Timber.i("State $state")
             view.no_track_text.visibility =
                 if (state == Playstate.NoMedia) View.VISIBLE else View.GONE
             view.playback_controls.visibility =
@@ -107,6 +103,18 @@ class PlayerFragment : Fragment() {
         view.player_slider.setOnSeekBarChangeListener(SeekBarChangeListener(mainViewModel))
         setHasOptionsMenu(true)
     }
+
+    override fun onStart() {
+        super.onStart()
+        mainActivity().toggleControls(block = true)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mainActivity().toggleControls(block = false)
+    }
+
+    private fun mainActivity(): MainActivity = (requireActivity() as MainActivity)
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.player_top_nav_menu, menu)
