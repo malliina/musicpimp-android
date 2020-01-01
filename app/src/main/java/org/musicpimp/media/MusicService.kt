@@ -1,7 +1,6 @@
 package org.musicpimp.media
 
 import android.content.Intent
-import android.content.res.AssetFileDescriptor
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
@@ -40,7 +39,7 @@ class MusicService : MediaBrowserServiceCompat() {
             )
         }
         sessionToken = session.sessionToken
-        library = app.conf.local.playlist
+        library = app.components.local.playlist
         mediaNotificationManager = MediaNotificationManager(this, library)
         listener = MediaPlayerListener()
         playback = MediaPlayerAdapter(app, listener, library)

@@ -92,7 +92,7 @@ class MediaPlayerAdapter(
         currentTrack = track
         initializeMediaPlayer()
         try {
-            val auth = app.conf.authHeader?.value ?: ""
+            val auth = app.components.authHeader?.value ?: ""
             Timber.i("Data source '${track.url}' with auth '$auth'.")
             mediaPlayer?.setDataSource(
                 appContext,

@@ -4,9 +4,6 @@ import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.support.v4.media.MediaMetadataCompat
-import android.support.v4.media.session.MediaControllerCompat
-import android.support.v4.media.session.MediaSessionCompat
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import org.musicpimp.*
@@ -26,7 +23,7 @@ class PlayerViewModelFactory(val app: Application, val main: MainActivityViewMod
 
 class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
     AndroidViewModel(app) {
-    private val conf = (app as PimpApp).conf
+    private val conf = (app as PimpApp).components
     private val player: Player
         get() = conf.player
     private val coversDir = app.applicationContext.cacheDir.resolve("covers")
@@ -35,26 +32,6 @@ class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
 
     val covers: LiveData<Bitmap?> = coversStream
     val metadata: LiveData<MediaMetadataCompat> = metadataStream
-
-    fun onPlay() {
-        player.resume()
-    }
-
-    fun onPause() {
-        player.stop()
-    }
-
-    fun onNext() {
-        player.next()
-    }
-
-    fun onPrevious() {
-        player.prev()
-    }
-
-    fun onSeek(to: Duration) {
-        player.seek(to)
-    }
 
     fun updateCover(track: Track) {
         viewModelScope.launch {

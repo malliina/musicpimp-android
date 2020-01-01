@@ -8,7 +8,7 @@ import org.musicpimp.Track
 import org.musicpimp.audio.Player
 import timber.log.Timber
 
-class LocalPlayer(val browser: MediaBrowserHelper, val playlist: LocalPlaylist): Player {
+class LocalPlayer(val browser: PimpMediaBrowser, val playlist: LocalPlaylist): Player {
     companion object {
         val emptyPlaybackState: PlaybackStateCompat = PlaybackStateCompat.Builder()
             .setState(PlaybackStateCompat.STATE_NONE, 0, 0f)

@@ -14,7 +14,7 @@ import org.musicpimp.R
 import org.musicpimp.seconds
 import timber.log.Timber
 
-class SeekBarChangeListener(private val vm: PlayerViewModel) : SeekBar.OnSeekBarChangeListener {
+class SeekBarChangeListener(private val vm: MainActivityViewModel) : SeekBar.OnSeekBarChangeListener {
     override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
     }
 
@@ -25,7 +25,7 @@ class SeekBarChangeListener(private val vm: PlayerViewModel) : SeekBar.OnSeekBar
 
     override fun onStopTrackingTouch(seekBar: SeekBar) {
         // TODO Enable advancing the seek bar
-        vm.onSeek(seekBar.progress.seconds)
+        vm.seek(seekBar.progress.seconds)
     }
 }
 
@@ -72,6 +72,7 @@ class PlayerFragment : Fragment() {
             viewModel.updateCover(track)
         }
         mainViewModel.stateUpdates.observe(viewLifecycleOwner) { state ->
+            Timber.i("State $state")
             view.no_track_text.visibility =
                 if (state == Playstate.NoMedia) View.VISIBLE else View.GONE
             view.playback_controls.visibility =
@@ -92,18 +93,18 @@ class PlayerFragment : Fragment() {
             }
         }
         view.play_button.setOnClickListener {
-            viewModel.onPlay()
+            mainViewModel.resume()
         }
         view.pause_button.setOnClickListener {
-            viewModel.onPause()
+            mainViewModel.pause()
         }
         view.next_button.setOnClickListener {
-            viewModel.onNext()
+            mainViewModel.next()
         }
         view.prev_button.setOnClickListener {
-            viewModel.onPrevious()
+            mainViewModel.previous()
         }
-        view.player_slider.setOnSeekBarChangeListener(SeekBarChangeListener(viewModel))
+        view.player_slider.setOnSeekBarChangeListener(SeekBarChangeListener(mainViewModel))
         setHasOptionsMenu(true)
     }
 

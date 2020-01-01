@@ -18,7 +18,7 @@ import timber.log.Timber
  *
  * TODO This class is potentially useless; let's try to get rid of it.
  */
-class MediaBrowserHelper(
+class PimpMediaBrowser(
     val context: Context,
     private val serviceClass: Class<out MediaBrowserServiceCompat>
 ) {
@@ -174,7 +174,7 @@ class MediaBrowserHelper(
                     mediaControllerCallback.onPlaybackStateChanged(
                         ctrl.playbackState
                     )
-                    (this@MediaBrowserHelper).onConnected(ctrl)
+                    (this@PimpMediaBrowser).onConnected(ctrl)
                 }
             } catch (e: RemoteException) {
                 Timber.d(e, "onConnected problem.")
@@ -193,7 +193,7 @@ class MediaBrowserHelper(
             parentId: String,
             children: List<MediaBrowserCompat.MediaItem>
         ) {
-            (this@MediaBrowserHelper).onChildrenLoaded(parentId, children)
+            (this@PimpMediaBrowser).onChildrenLoaded(parentId, children)
         }
     }
 
@@ -221,7 +221,7 @@ class MediaBrowserHelper(
         override fun onSessionDestroyed() {
             resetState()
             onPlaybackStateChanged(null)
-            (this@MediaBrowserHelper).onDisconnected()
+            (this@PimpMediaBrowser).onDisconnected()
         }
     }
 }

@@ -2,12 +2,8 @@ package org.musicpimp.ui.music
 
 import android.app.Application
 import androidx.lifecycle.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.musicpimp.*
-import org.musicpimp.backend.PimpHttpClient
 import timber.log.Timber
 
 enum class Status {
@@ -34,7 +30,7 @@ class MusicViewModelFactory(val app: Application, val main: MainActivityViewMode
 
 class MusicViewModel(val app: Application, private val main: MainActivityViewModel) :
     AndroidViewModel(app) {
-    private val conf = (app as PimpApp).conf
+    private val conf = (app as PimpApp).components
     private val dir = MutableLiveData<Outcome<Directory>>()
     val directory: LiveData<Outcome<Directory>> = dir
 

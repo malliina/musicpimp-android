@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.musicpimp.audio.Player
 import org.musicpimp.backend.PimpHttpClient
 import org.musicpimp.backend.PimpSocket
 import org.musicpimp.backend.SocketDelegate
@@ -24,7 +25,8 @@ import org.musicpimp.media.MediaBrowserListener
 import timber.log.Timber
 
 class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
-    val conf = (app as PimpApp).conf
+    val components = (app as PimpApp).components
+    val player: Player get() = components.player
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val settings: EndpointManager = EndpointManager.load(app)
@@ -99,8 +101,8 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         if (src is CloudEndpoint) {
             setupSource(src)
         }
-        setupPlayer(settings.activePlayer())
-        conf.local.browser.registerCallback(listener)
+        setupPlayer(settings.activePlayer(), connect = false)
+        components.local.browser.registerCallback(listener)
         listener.updates.observeForever(stateObserver)
         listener.tracks.observeForever(trackObserver)
     }
@@ -122,7 +124,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun activatePlayer(player: Endpoint) {
         settings.saveActivePlayer(player.id)
-        setupPlayer(player)
+        setupPlayer(player, connect = true)
     }
 
     fun activateSource(source: Endpoint) {
@@ -137,30 +139,29 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private fun updateSource(header: AuthHeader, name: String) {
-        conf.http = PimpHttpClient.build(app, header, name)
+        components.http = PimpHttpClient.build(app, header, name)
         Timber.i("Updated backend to '$name'.")
     }
 
-    private fun setupPlayer(e: Endpoint) {
-        Timber.i("Setup main")
+    private fun setupPlayer(e: Endpoint, connect: Boolean) {
         closeSocket()
         if (e is CloudEndpoint) {
             val socket = PimpSocket.build(e.creds.authHeader, liveDataDelegate)
-            conf.playerSocket = socket
-            conf.player = socket.player
-            openSocket()
+            components.playerSocket = socket
+            components.player = socket.player
+            if (connect)
+                openSocket()
         } else {
-            conf.playerSocket = null
-            conf.player = conf.local
-            Timber.i("Setup with ${conf.local.playlist.tracks.size} tracks")
-            playlist.postValue(conf.local.playlist.tracks)
+            components.playerSocket = null
+            components.player = components.local
+            playlist.postValue(components.local.playlist.tracks)
         }
     }
 
     fun openSocket() {
         uiScope.launch {
             try {
-                conf.playerSocket?.connect()
+                components.playerSocket?.connect()
             } catch (e: Exception) {
                 Timber.e(e)
             }
@@ -169,30 +170,50 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun closeSocket() {
         try {
-            conf.playerSocket?.disconnect()
+            components.playerSocket?.disconnect()
         } catch (e: Exception) {
             Timber.e(e, "Failed to disconnect.")
         }
     }
 
     fun skip(toIndex: Int) {
-        conf.player.skip(toIndex)
+        player.skip(toIndex)
     }
 
     fun remove(idx: Int) {
-        conf.player.remove(idx)
+        player.remove(idx)
     }
 
     fun play(track: Track) {
-        conf.player.play(track)
+        player.play(track)
     }
 
     fun add(id: Track) {
-        conf.player.add(id)
+        player.add(id)
     }
 
     fun addFolder(id: FolderId) {
-        conf.player.addFolder(id)
+        player.addFolder(id)
+    }
+
+    fun resume() {
+        player.resume()
+    }
+
+    fun pause() {
+        player.stop()
+    }
+
+    fun next() {
+        player.next()
+    }
+
+    fun previous() {
+        player.prev()
+    }
+
+    fun seek(to: Duration) {
+        player.seek(to)
     }
 
     private fun checkPlaybackPosition(): Boolean = handler.postDelayed({

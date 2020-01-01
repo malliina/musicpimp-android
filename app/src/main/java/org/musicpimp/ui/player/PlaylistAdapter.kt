@@ -34,9 +34,8 @@ class PlaylistAdapter(
         val title = layout.music_item_title
         val track = list[position]
         title.text = track.title
-        if (position == activeIndex) {
-            title.setTextColor(context.getColor(R.color.colorPrimary))
-        }
+        val color = if (position == activeIndex) R.color.colorSelected else R.color.colorTitles
+        title.setTextColor(context.getColor(color))
         layout.setOnClickListener {
             delegate.onTrack(track, position)
         }

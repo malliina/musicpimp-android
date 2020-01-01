@@ -43,7 +43,7 @@ class PlaylistFragment : Fragment(), TrackDelegate {
         viewAdapter = PlaylistAdapter(emptyList(), -1, requireContext(), this)
         view.playlist_list.init(viewManager, viewAdapter)
         mainViewModel.playlistUpdates.observe(viewLifecycleOwner) { list ->
-            Timber.i("Got playlist with ${list.size} tracks"    )
+            Timber.i("Got playlist with ${list.size} tracks")
             viewAdapter.list = list
             viewAdapter.notifyDataSetChanged()
             val emptyText = view.empty_playlist_text

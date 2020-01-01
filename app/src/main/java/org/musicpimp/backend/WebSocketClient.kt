@@ -26,6 +26,7 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
         ) {
             onConnected(url)
         }
+
         override fun onTextMessage(websocket: WebSocket?, text: String?) {
             try {
                 text?.let { onMessage(it) }
@@ -45,7 +46,6 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
     }
 
     init {
-        socket.addListener(listener)
         headers.forEach { (k, v) -> socket.addHeader(k, v) }
     }
 
@@ -63,12 +63,18 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
                 }
 
                 override fun onConnectError(websocket: WebSocket?, exception: WebSocketException?) {
-                    Timber.w("Unable to connect to '$url'.")
+                    Timber.w(exception, "Unable to connect to '$url'.")
                     val e = exception ?: Exception("Unable to connect to '$url'.")
                     socket.removeListener(this)
                     cont.resumeWithException(e)
                 }
             }
+            if (socket.isOpen)
+                disconnect()
+            socket = socket.recreate()
+            socket.clearListeners()
+            socket.removeListener(listener)
+            socket.addListener(listener)
             socket.addListener(connectCallback)
             socket.connectAsynchronously()
         }
@@ -87,5 +93,6 @@ abstract class WebSocketClient(val url: FullUrl, headers: Map<String, String>) {
     fun disconnect() {
         socket.removeListener(listener)
         socket.disconnect()
+        Timber.i("Disconnected from '$url'.")
     }
 }

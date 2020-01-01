@@ -9,10 +9,63 @@
         android:id="@+id/nav_host_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+        app:layout_constraintBottom_toTopOf="@id/floating_playback"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/floating_playback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorLighterBackground"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+        app:layout_constraintTop_toBottomOf="@id/nav_host_container">
+
+        <Button
+            android:id="@+id/prev_button"
+            style="@style/SmallPlaybackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_skip_previous_24px"
+            app:iconTint="@color/colorTint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/play_button"
+            style="@style/SmallPlaybackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_play_arrow_24px"
+            app:iconTint="@color/colorTint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/next_button"
+            app:layout_constraintStart_toEndOf="@id/prev_button" />
+
+        <Button
+            android:id="@+id/pause_button"
+            style="@style/SmallPlaybackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:icon="@drawable/ic_pause_24px"
+            app:iconTint="@color/colorTint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/next_button"
+            app:layout_constraintStart_toEndOf="@id/prev_button" />
+
+        <Button
+            android:id="@+id/next_button"
+            style="@style/SmallPlaybackButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:icon="@drawable/ic_skip_next_24px"
+            app:iconTint="@color/colorTint"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
@@ -27,5 +80,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/floating_playback"
         app:menu="@menu/bottom_nav_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
