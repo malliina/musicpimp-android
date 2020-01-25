@@ -38,7 +38,7 @@ class HttpClient(ctx: Context, val authHeader: AuthHeader) {
     private val queue: RequestQueue = Volley.newRequestQueue(ctx.applicationContext)
 
     // https://jankotlin.wordpress.com/2017/10/16/volley-for-lazy-kotliniers/
-    suspend fun getData(url: FullUrl): JSONObject = makeRequest(RequestConf.get(url, authHeader))
+    private suspend fun getData(url: FullUrl): JSONObject = makeRequest(RequestConf.get(url, authHeader))
 
     suspend fun <T> getJson(url: FullUrl, adapter: JsonAdapter<T>): T {
         val json = getData(url)

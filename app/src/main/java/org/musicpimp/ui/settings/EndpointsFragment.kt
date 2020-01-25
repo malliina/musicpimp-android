@@ -16,7 +16,7 @@ import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.LocalEndpoint
-import org.musicpimp.ui.music.init
+import org.musicpimp.ui.init
 
 class EndpointsFragment : Fragment(), EndpointsDelegate {
     private lateinit var mainViewModel: MainActivityViewModel

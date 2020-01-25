@@ -19,7 +19,7 @@ interface SocketDelegate {
 class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegate: SocketDelegate) :
     WebSocketClient(url, headers) {
     companion object {
-        object adapters {
+        object Adapters {
             val event: JsonAdapter<ServerEvent> = moshi.adapter(ServerEvent::class.java)
             val position: JsonAdapter<PositionMessage> = moshi.adapter(PositionMessage::class.java)
             val track: JsonAdapter<TrackMessage> = moshi.adapter(TrackMessage::class.java)
@@ -54,34 +54,34 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
 
     override fun onMessage(message: String) {
         Timber.i("Got '$message'.")
-        adapters.event.fromJson(message)?.let {
+        Adapters.event.fromJson(message)?.let {
             when (it.event) {
                 Welcome -> OtherMessage(message)
                 Ping -> OtherMessage(message)
                 TimeUpdated -> {
-                    val position = adapters.position.read(message)
+                    val position = Adapters.position.read(message)
                     delegate.timeUpdated(position.position)
                 }
                 TrackChanged -> {
-                    val track = adapters.track.read(message)
+                    val track = Adapters.track.read(message)
                     delegate.trackUpdated(track.track)
                 }
                 PlaystateChanged -> {
-                    val state = adapters.playstate.read(message)
+                    val state = Adapters.playstate.read(message)
                     delegate.playstateUpdated(state.state)
                 }
                 PlaylistModified -> {
-                    val list = adapters.playlist.read(message)
+                    val list = Adapters.playlist.read(message)
                     delegate.playlistUpdated(list.playlist)
                 }
                 PlaylistIndexChanged -> {
-                    val idx = adapters.index.read(message)
+                    val idx = Adapters.index.read(message)
                     delegate.indexUpdated(idx.playlist_index)
                 }
-                VolumeChanged -> adapters.volume.read(message)
-                MuteToggled -> adapters.mute.read(message)
+                VolumeChanged -> Adapters.volume.read(message)
+                MuteToggled -> Adapters.mute.read(message)
                 Status -> {
-                    val status = adapters.status.read(message)
+                    val status = Adapters.status.read(message)
                     delegate.onStatus(status)
                 }
                 Other -> OtherMessage(message)
@@ -101,17 +101,17 @@ class SocketPlayer(private val socket: PimpSocket) : Player {
     override fun remove(idx: Int) = valueCommand("remove", idx)
     override fun addFolder(folder: FolderId) = socket.send(
         ItemsCommand("add_items", emptyList(), listOf(folder)),
-        PimpSocket.Companion.adapters.items
+        PimpSocket.Companion.Adapters.items
     )
     override fun seek(to: Duration) = valueCommand("seek", to.seconds.toInt())
 
     fun status() = simple("status")
     private fun valueCommand(cmd: String, value: Int) =
-        socket.send(ValueCommand(cmd, value), PimpSocket.Companion.adapters.valueCmd)
+        socket.send(ValueCommand(cmd, value), PimpSocket.Companion.Adapters.valueCmd)
 
     private fun trackCommand(cmd: String, track: TrackId) =
-        socket.send(TrackCommand(cmd, track), PimpSocket.Companion.adapters.trackCmd)
+        socket.send(TrackCommand(cmd, track), PimpSocket.Companion.Adapters.trackCmd)
 
     private fun simple(cmd: String) =
-        socket.send(SimpleCommand(cmd), PimpSocket.Companion.adapters.simple)
+        socket.send(SimpleCommand(cmd), PimpSocket.Companion.Adapters.simple)
 }

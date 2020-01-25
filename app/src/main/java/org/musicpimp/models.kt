@@ -103,6 +103,19 @@ data class Directory(val folder: Folder, val folders: List<Folder>, val tracks: 
     }
 }
 
+@JsonClass(generateAdapter = true)
+data class PopularTrack(val track: Track, val playbackCount: Int)
+
+@JsonClass(generateAdapter = true)
+data class PopularTracks(val populars: List<PopularTrack>)
+
+// when is millis
+@JsonClass(generateAdapter = true)
+data class RecentTrack(val track: Track, val `when`: Long)
+
+@JsonClass(generateAdapter = true)
+data class RecentTracks(val recents: List<RecentTrack>)
+
 data class Duration(val seconds: Double) {
     companion object {
         private fun formatSeconds(seconds: Long): String {

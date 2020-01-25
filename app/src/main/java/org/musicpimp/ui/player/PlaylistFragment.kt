@@ -1,19 +1,22 @@
 package org.musicpimp.ui.player
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
-import org.musicpimp.*
+import org.musicpimp.MainActivityViewModel
+import org.musicpimp.R
+import org.musicpimp.Track
+import org.musicpimp.ui.init
 import org.musicpimp.ui.music.TrackDelegate
-import org.musicpimp.ui.music.init
 import timber.log.Timber
 
 class PlaylistFragment : Fragment(), TrackDelegate {

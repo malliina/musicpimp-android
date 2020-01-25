@@ -1,17 +1,19 @@
 package org.musicpimp.ui.music
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_music.view.*
 import org.musicpimp.*
+import org.musicpimp.ui.init
 import timber.log.Timber
 
 abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
@@ -113,13 +115,4 @@ abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
         }
         popup.show()
     }
-}
-
-fun <VH : RecyclerView.ViewHolder> RecyclerView.init(layout: RecyclerView.LayoutManager, vhAdapter: RecyclerView.Adapter<VH>) {
-    setHasFixedSize(false)
-    layoutManager = layout
-    adapter = vhAdapter
-    addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL).apply {
-        setDrawable(resources.getDrawable(R.drawable.horizontal_divider, context.theme))
-    })
 }
