@@ -11,10 +11,8 @@ import kotlinx.android.synthetic.main.item_recent.view.*
 import kotlinx.coroutines.launch
 import org.musicpimp.*
 import org.musicpimp.R
-import org.musicpimp.backend.PimpHttpClient
 import org.musicpimp.ui.music.Outcome
 import org.musicpimp.ui.music.TrackDelegate
-import org.musicpimp.ui.player.PlaylistViewModel
 import timber.log.Timber
 import java.lang.Exception
 
@@ -32,7 +30,7 @@ class RecentsViewModelFactory(val app: Application) : ViewModelProvider.Factory 
     }
 }
 
-abstract class TopViewModel<T>(val app: Application) : AndroidViewModel(app) {
+abstract class TracksViewModel<T>(val app: Application) : AndroidViewModel(app) {
     private val conf = (app as PimpApp).components
     private val data = MutableLiveData<Outcome<List<T>>>()
     val tracks: LiveData<Outcome<List<T>>> = data
@@ -55,18 +53,18 @@ abstract class TopViewModel<T>(val app: Application) : AndroidViewModel(app) {
     }
 }
 
-class PopularsViewModel(app: Application) : TopViewModel<PopularTrack>(app) {
+class PopularsViewModel(app: Application) : TracksViewModel<PopularTrack>(app) {
     override suspend fun load(from: Int, until: Int): List<PopularTrack> =
         http.popular(from, until).populars
 }
 
-class RecentsViewModel(app: Application) : TopViewModel<RecentTrack>(app) {
+class RecentsViewModel(app: Application) : TracksViewModel<RecentTrack>(app) {
     override suspend fun load(from: Int, until: Int): List<RecentTrack> =
         http.recent(from, until).recents
 }
 
 class PopularsAdapter(initial: List<PopularTrack>, private val delegate: TrackDelegate) :
-    TopAdapter<PopularTrack>(initial, R.layout.item_popular) {
+    PimpAdapter<PopularTrack>(initial, R.layout.item_popular) {
     override fun onBindViewHolder(holder: TopHolder, position: Int) {
         val layout = holder.layout
         val track = list[position].track
@@ -82,7 +80,7 @@ class PopularsAdapter(initial: List<PopularTrack>, private val delegate: TrackDe
 }
 
 class RecentsAdapter(initial: List<RecentTrack>, private val delegate: TrackDelegate) :
-    TopAdapter<RecentTrack>(initial, R.layout.item_recent) {
+    PimpAdapter<RecentTrack>(initial, R.layout.item_recent) {
 
     override fun onBindViewHolder(holder: TopHolder, position: Int) {
         val layout = holder.layout
@@ -98,11 +96,11 @@ class RecentsAdapter(initial: List<RecentTrack>, private val delegate: TrackDele
     }
 }
 
-abstract class TopAdapter<T>(
+abstract class PimpAdapter<T>(
     var list: List<T>,
     private val itemResource: Int
 ) :
-    RecyclerView.Adapter<TopAdapter.TopHolder>() {
+    RecyclerView.Adapter<PimpAdapter.TopHolder>() {
     class TopHolder(val layout: ConstraintLayout) : RecyclerView.ViewHolder(layout)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopHolder {

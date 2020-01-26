@@ -16,18 +16,11 @@ import org.musicpimp.*
 import org.musicpimp.endpoints.CloudEndpoint
 import org.musicpimp.endpoints.CloudEndpointInput
 import org.musicpimp.endpoints.Endpoint
+import org.musicpimp.ui.ResourceFragment
 import timber.log.Timber
 
-class EditEndpointFragment : Fragment() {
+class EditEndpointFragment : ResourceFragment(R.layout.edit_endpoint_fragment) {
     private lateinit var viewModel: SettingsViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.edit_endpoint_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

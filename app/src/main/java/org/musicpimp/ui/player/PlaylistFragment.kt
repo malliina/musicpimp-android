@@ -1,50 +1,48 @@
 package org.musicpimp.ui.player
 
+import android.app.Application
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
-import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.Track
+import org.musicpimp.ui.BaseTracksFragment
+import org.musicpimp.ui.Controls
 import org.musicpimp.ui.init
-import org.musicpimp.ui.music.TrackDelegate
 import timber.log.Timber
 
-class PlaylistFragment : Fragment(), TrackDelegate {
-    private lateinit var viewAdapter: PlaylistAdapter
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var mainViewModel: MainActivityViewModel
-    private lateinit var viewModel: PlaylistViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_playlist, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
-        viewModel = ViewModelProviders.of(
+class PlaylistFragment :
+    BaseTracksFragment<Track, PlaylistAdapter, PlaylistViewModel>(R.layout.fragment_playlist) {
+    override fun newViewModel(fragment: Fragment, app: Application): PlaylistViewModel {
+        return ViewModelProviders.of(
             this,
             PlaylistViewModelFactory(requireActivity().application, mainViewModel)
         ).get(PlaylistViewModel::class.java)
+    }
 
-        viewManager = LinearLayoutManager(context)
-        viewAdapter = PlaylistAdapter(emptyList(), -1, requireContext(), this)
-        view.playlist_list.init(viewManager, viewAdapter)
+    override fun newAdapter(): PlaylistAdapter {
+        return PlaylistAdapter(emptyList(), -1, requireContext(), this)
+    }
+
+    override fun init(
+        view: View,
+        viewManager: RecyclerView.LayoutManager,
+        adapter: PlaylistAdapter
+    ) {
+        view.playlist_list.init(viewManager, adapter)
+    }
+
+    override fun controls(view: View): Controls =
+        Controls(null, view.playlist_list, view.empty_playlist_text)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         mainViewModel.playlistUpdates.observe(viewLifecycleOwner) { list ->
             Timber.i("Got playlist with ${list.size} tracks")
             viewAdapter.list = list

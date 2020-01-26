@@ -1,34 +1,24 @@
 package org.musicpimp.ui.music
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.PopupMenu
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_music.view.*
 import org.musicpimp.*
+import org.musicpimp.ui.ResourceFragment
 import org.musicpimp.ui.init
 import timber.log.Timber
 
-abstract class CommonMusicFragment : Fragment(), MusicItemDelegate {
+abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), MusicItemDelegate {
     private lateinit var viewAdapter: MusicAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var mainViewModel: MainActivityViewModel
     protected lateinit var viewModel: MusicViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_music, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

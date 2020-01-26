@@ -3,11 +3,9 @@ package org.musicpimp.ui.settings
 import android.os.Bundle
 import android.view.*
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.endpoint_item.view.*
@@ -16,21 +14,14 @@ import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.LocalEndpoint
+import org.musicpimp.ui.ResourceFragment
 import org.musicpimp.ui.init
 
-class EndpointsFragment : Fragment(), EndpointsDelegate {
+class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), EndpointsDelegate {
     private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var viewModel: SettingsViewModel
     private lateinit var viewAdapter: EndpointsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.endpoints_fragment, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

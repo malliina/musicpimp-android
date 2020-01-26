@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
-import androidx.fragment.app.Fragment
+import android.widget.BaseAdapter
+import android.widget.Filter
+import android.widget.Filterable
+import android.widget.TextView
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -14,19 +16,12 @@ import kotlinx.android.synthetic.main.fragment_settings.view.*
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
+import org.musicpimp.ui.ResourceFragment
 import timber.log.Timber
 
-class SettingsFragment : Fragment() {
+class SettingsFragment : ResourceFragment(R.layout.fragment_settings) {
     private lateinit var mainViewModel: MainActivityViewModel
     private lateinit var viewModel: SettingsViewModel
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_settings, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

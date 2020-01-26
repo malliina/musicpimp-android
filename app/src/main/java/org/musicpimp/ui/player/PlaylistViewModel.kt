@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import org.musicpimp.MainActivityViewModel
+import org.musicpimp.Track
+import org.musicpimp.ui.playlists.TracksViewModel
 
 class PlaylistViewModelFactory(val app: Application, val main: MainActivityViewModel) :
     ViewModelProvider.Factory {
@@ -14,6 +16,9 @@ class PlaylistViewModelFactory(val app: Application, val main: MainActivityViewM
     }
 }
 
-class PlaylistViewModel(val app: Application, private val main: MainActivityViewModel) :
-    AndroidViewModel(app) {
+class PlaylistViewModel(app: Application, private val main: MainActivityViewModel) :
+    TracksViewModel<Track>(app) {
+    override suspend fun load(from: Int, until: Int): List<Track> {
+        return emptyList<Track>()
+    }
 }
