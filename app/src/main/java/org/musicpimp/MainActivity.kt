@@ -19,8 +19,9 @@ class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     private lateinit var viewModel: MainActivityViewModel
-//    private lateinit var local: LocalPlayer
+    //    private lateinit var local: LocalPlayer
     private var latestState: Playstate = Playstate.NoMedia
+    private var isFloatingPlaybackBlocked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,9 @@ class MainActivity : AppCompatActivity() {
         viewModel.stateUpdates.observe(this) { state ->
             latestState = state
             if (state == Playstate.Playing) {
-                view.visibility = View.VISIBLE
+                if (!isFloatingPlaybackBlocked) {
+                    view.visibility = View.VISIBLE
+                }
                 view.pause_button.visibility = View.VISIBLE
                 view.play_button.visibility = View.GONE
                 view.animate().translationY(0f).alpha(1f).setListener(null)
@@ -84,6 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun toggleControls(block: Boolean) {
+        isFloatingPlaybackBlocked = block
         val visibility = if (latestState == Playstate.Playing && !block) View.VISIBLE else View.GONE
         floating_playback.visibility = visibility
     }
@@ -111,7 +115,12 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNavigationBar() {
         val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav_view)
         val topLevelDestinations =
-            listOf(R.navigation.music, R.navigation.player, R.navigation.playlists, R.navigation.settings)
+            listOf(
+                R.navigation.music,
+                R.navigation.player,
+                R.navigation.playlists,
+                R.navigation.settings
+            )
         val controller = bottomNav.setupWithNavController(
             navGraphIds = topLevelDestinations,
             fragmentManager = supportFragmentManager,
