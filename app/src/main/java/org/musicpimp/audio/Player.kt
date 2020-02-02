@@ -8,12 +8,14 @@ import org.musicpimp.TrackId
 interface Player {
     fun play(track: Track)
     fun add(track: Track)
+    fun addAll(tracks: List<Track>)
     fun resume()
+    fun pause()
     fun stop()
     fun next()
     fun prev()
     fun skip(idx: Int)
     fun remove(idx: Int)
-    fun addFolder(folder: FolderId)
+//    fun addFolder(folder: FolderId)
     fun seek(to: Duration)
 }

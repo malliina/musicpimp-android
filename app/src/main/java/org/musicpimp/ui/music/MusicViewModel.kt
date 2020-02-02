@@ -35,7 +35,7 @@ class MusicViewModel(val app: Application, private val main: MainActivityViewMod
     val directory: LiveData<Outcome<Directory>> = dir
 
     fun loadFolder(id: FolderId) {
-        conf.http?.let { http ->
+        conf.library?.let { http ->
             viewModelScope.launch {
                 val name = http.name
                 dir.value = Outcome.loading()

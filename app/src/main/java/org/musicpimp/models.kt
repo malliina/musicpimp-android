@@ -4,8 +4,7 @@ import android.os.Parcelable
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONException
-import org.musicpimp.backend.HttpClient
-import org.musicpimp.backend.PimpHttpClient
+import org.musicpimp.backend.PimpLibrary
 import java.util.*
 import java.util.regex.Pattern
 
@@ -103,20 +102,25 @@ data class Directory(val folder: Folder, val folders: List<Folder>, val tracks: 
     }
 }
 
+interface TrackContainer {
+    val track: Track
+}
+
 @JsonClass(generateAdapter = true)
-data class PopularTrack(val track: Track, val playbackCount: Int)
+data class PopularTrack(override val track: Track, val playbackCount: Int) : TrackContainer
 
 @JsonClass(generateAdapter = true)
 data class PopularTracks(val populars: List<PopularTrack>)
 
 // when is millis
 @JsonClass(generateAdapter = true)
-data class RecentTrack(val track: Track, val `when`: Long)
+data class RecentTrack(override val track: Track, val `when`: Long) : TrackContainer
 
 @JsonClass(generateAdapter = true)
 data class RecentTracks(val recents: List<RecentTrack>)
 
-data class Duration(val seconds: Double) {
+@Parcelize
+data class Duration(val seconds: Double): Parcelable {
     companion object {
         private fun formatSeconds(seconds: Long): String {
             val s = seconds % 60
@@ -135,6 +139,9 @@ data class Duration(val seconds: Double) {
 }
 
 inline val Long.millis: Duration
+    get() = Duration(this.toDouble() / 1000)
+
+inline val Int.millis: Duration
     get() = Duration(this.toDouble() / 1000)
 
 inline val Int.seconds: Duration
@@ -218,11 +225,11 @@ interface Credential {
 data class CloudCredential(val server: CloudId, val username: Username, val password: Password) :
     Credential {
     override val authHeader: AuthHeader
-        get() = PimpHttpClient.authHeader("Pimp", "$server:$username:$password")
+        get() = PimpLibrary.authHeader("Pimp", "$server:$username:$password")
 }
 
 @JsonClass(generateAdapter = true)
 data class DirectCredential(val username: Username, val password: Password) : Credential {
     override val authHeader: AuthHeader
-        get() = PimpHttpClient.authHeader("Basic", "$username:$password")
+        get() = PimpLibrary.authHeader("Basic", "$username:$password")
 }

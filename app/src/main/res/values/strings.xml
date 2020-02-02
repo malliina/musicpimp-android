@@ -36,6 +36,7 @@
     <string name="music_source">Music source</string>
     <string name="manage_endpoints">Manage endpoints</string>
     <string name="add_to_playlist">Add to playlist</string>
+    <string name="start_playback_here">Start playback here</string>
     <string name="remove_from_playlist">Remove from playlist</string>
     <string name="more">More</string>
     <string name="cover">Cover</string>

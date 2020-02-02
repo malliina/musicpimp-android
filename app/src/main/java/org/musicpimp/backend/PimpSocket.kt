@@ -3,11 +3,10 @@ package org.musicpimp.backend
 import com.squareup.moshi.JsonAdapter
 import org.musicpimp.*
 import org.musicpimp.Json.Companion.moshi
-import timber.log.Timber
 import org.musicpimp.PlaybackEvent.*
-import org.musicpimp.audio.Player
+import timber.log.Timber
 
-interface SocketDelegate {
+interface PlayerDelegate {
     fun timeUpdated(time: Duration)
     fun trackUpdated(track: Track)
     fun playlistUpdated(list: List<Track>)
@@ -16,7 +15,7 @@ interface SocketDelegate {
     fun onStatus(status: StatusMessage)
 }
 
-class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegate: SocketDelegate) :
+class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegate: PlayerDelegate) :
     WebSocketClient(url, headers) {
     companion object {
         object Adapters {
@@ -39,7 +38,7 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
             val valueCmd: JsonAdapter<ValueCommand> = moshi.adapter(ValueCommand::class.java)
         }
 
-        fun build(auth: AuthHeader, delegate: SocketDelegate): PimpSocket {
+        fun build(auth: AuthHeader, delegate: PlayerDelegate): PimpSocket {
             val socketUrl = baseUrl.append("/ws/playback")
             Timber.i("Setting socketUrl to '$socketUrl'.")
             return PimpSocket(socketUrl, HttpClient.headers(auth), delegate)
@@ -88,30 +87,4 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
             }
         }
     }
-}
-
-class SocketPlayer(private val socket: PimpSocket) : Player {
-    override fun play(track: Track) = trackCommand("play", track.id)
-    override fun add(track: Track) = trackCommand("add", track.id)
-    override fun resume() = simple("resume")
-    override fun stop() = simple("stop")
-    override fun next() = simple("next")
-    override fun prev() = simple("prev")
-    override fun skip(idx: Int) = valueCommand("skip", idx)
-    override fun remove(idx: Int) = valueCommand("remove", idx)
-    override fun addFolder(folder: FolderId) = socket.send(
-        ItemsCommand("add_items", emptyList(), listOf(folder)),
-        PimpSocket.Companion.Adapters.items
-    )
-    override fun seek(to: Duration) = valueCommand("seek", to.seconds.toInt())
-
-    fun status() = simple("status")
-    private fun valueCommand(cmd: String, value: Int) =
-        socket.send(ValueCommand(cmd, value), PimpSocket.Companion.Adapters.valueCmd)
-
-    private fun trackCommand(cmd: String, track: TrackId) =
-        socket.send(TrackCommand(cmd, track), PimpSocket.Companion.Adapters.trackCmd)
-
-    private fun simple(cmd: String) =
-        socket.send(SimpleCommand(cmd), PimpSocket.Companion.Adapters.simple)
 }

@@ -1,31 +1,25 @@
 package org.musicpimp
 
 import android.app.Application
-import android.os.Handler
-import android.os.Looper
-import android.os.SystemClock
 import android.support.v4.media.session.PlaybackStateCompat
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.musicpimp.audio.Player
-import org.musicpimp.backend.PimpHttpClient
+import org.musicpimp.backend.PimpLibrary
 import org.musicpimp.backend.PimpSocket
-import org.musicpimp.backend.SocketDelegate
+import org.musicpimp.backend.PlayerDelegate
 import org.musicpimp.endpoints.CloudEndpoint
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.EndpointManager
-import org.musicpimp.media.LocalPlayer
-import org.musicpimp.media.MediaBrowserListener
+import org.musicpimp.media.SimplePlayer
 import timber.log.Timber
 
 class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     val components = (app as PimpApp).components
+    private val localPlayer: SimplePlayer get() = components.localPlayer
     val player: Player get() = components.player
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -37,9 +31,9 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         value = Playstate.NoMedia
     }
     private val playlist = MutableLiveData<List<Track>>()
-    private val index = MutableLiveData<Int>()
+    private val index = MutableLiveData<Int?>()
 
-    private val liveDataDelegate = object : SocketDelegate {
+    private val liveDataDelegate = object : PlayerDelegate {
         override fun timeUpdated(time: Duration) {
             times.postValue(time)
         }
@@ -76,24 +70,28 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     val trackUpdates: LiveData<Track> = tracks
     val stateUpdates: LiveData<Playstate> = states
     val playlistUpdates: LiveData<List<Track>> = playlist
-    val indexUpdates: LiveData<Int> = index
+    val indexUpdates: LiveData<Int?> = index
 
-    private var updatePosition = true
-    private val handler = Handler(Looper.getMainLooper())
-    private val pollInterval = Duration(0.8)
-
-    private val listener = MediaBrowserListener()
     // workaround since listener.updates.value does not return the latest value
-    private var latestState: PlaybackStateCompat = LocalPlayer.emptyPlaybackState
-    private val stateObserver = Observer<PlaybackStateCompat> { state ->
+    private var latestState: Playstate = Playstate.NoMedia
+    private val stateObserver = Observer<Playstate> { state ->
         latestState = state
-        val isPlaying = state.state == PlaybackStateCompat.STATE_PLAYING
-        checkPlaybackPosition()
-        updatePosition = isPlaying
-        states.postValue(toState(state))
+//        val isPlaying = state == Playstate.Playing
+//        checkPlaybackPosition()
+//        updatePosition = isPlaying
+        states.postValue(state)
     }
     private val trackObserver = Observer<Track> { track ->
         tracks.postValue(track)
+    }
+    private val playlistObserver = Observer<List<Track>> { ts ->
+        playlist.postValue(ts)
+    }
+    private val indexObserver = Observer<Int?> { idx ->
+        index.postValue(idx)
+    }
+    private val positionObserver = Observer<Duration> { time ->
+        times.postValue(time)
     }
 
     init {
@@ -102,16 +100,20 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
             setupSource(src)
         }
         setupPlayer(settings.activePlayer(), connect = false)
-        components.local.browser.registerCallback(listener)
-        listener.updates.observeForever(stateObserver)
-        listener.tracks.observeForever(trackObserver)
+        localPlayer.tracks.observeForever(trackObserver)
+        localPlayer.index.observeForever(indexObserver)
+        localPlayer.states.observeForever(stateObserver)
+        localPlayer.list.observeForever(playlistObserver)
+        localPlayer.position.observeForever(positionObserver)
     }
 
     override fun onCleared() {
         super.onCleared()
-        listener.updates.removeObserver(stateObserver)
-        listener.tracks.removeObserver(trackObserver)
-        updatePosition = false
+        localPlayer.tracks.removeObserver(trackObserver)
+        localPlayer.index.removeObserver(indexObserver)
+        localPlayer.states.removeObserver(stateObserver)
+        localPlayer.list.removeObserver(playlistObserver)
+        localPlayer.position.removeObserver(positionObserver)
     }
 
     private fun toState(state: PlaybackStateCompat): Playstate = when (state.state) {
@@ -139,7 +141,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private fun updateSource(header: AuthHeader, name: String) {
-        components.http = PimpHttpClient.build(app, header, name)
+        components.library = PimpLibrary.build(app, header, name)
         Timber.i("Updated backend to '$name'.")
     }
 
@@ -153,8 +155,9 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
                 openSocket()
         } else {
             components.playerSocket = null
-            components.player = components.local
-            playlist.postValue(components.local.playlist.tracks)
+            components.player = localPlayer
+            localPlayer.list.value
+            playlist.postValue(localPlayer.list.value)
         }
     }
 
@@ -188,13 +191,25 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         player.play(track)
     }
 
+    fun playAll(tracks: List<Track>) {
+        tracks.firstOrNull()?.let {
+            player.play(it)
+        }
+        player.addAll(tracks.drop(1))
+    }
+
     fun add(id: Track) {
         player.add(id)
     }
 
     fun addFolder(id: FolderId) {
-        player.addFolder(id)
+        components.library?.let { lib ->
+            viewModelScope.launch {
+                player.addAll(lib.tracksRecursively(id))
+            }
+        }
     }
+
 
     fun resume() {
         player.resume()
@@ -216,20 +231,19 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         player.seek(to)
     }
 
-    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
-        val currPosition = latestState.currentPlaybackPosition
-        if (timeUpdates.value != currPosition)
-            times.postValue(currPosition)
-        if (updatePosition)
-            checkPlaybackPosition()
-
-    }, pollInterval.toMillis().toLong())
+//    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
+////        val currPosition = latestState.currentPlaybackPosition
+////        if (timeUpdates.value != currPosition)
+////            times.postValue(currPosition)
+//        if (updatePosition)
+//            checkPlaybackPosition()
+//    }, pollInterval.toMillis().toLong())
 }
-
-inline val PlaybackStateCompat.currentPlaybackPosition: Duration
-    get() = if (state == PlaybackStateCompat.STATE_PLAYING) {
-        val timeDelta = SystemClock.elapsedRealtime() - lastPositionUpdateTime
-        Duration(0.001 * (position + (timeDelta * playbackSpeed)))
-    } else {
-        Duration(0.001 * position)
-    }
+//
+//inline val PlaybackStateCompat.currentPlaybackPosition: Duration
+//    get() = if (state == PlaybackStateCompat.STATE_PLAYING) {
+//        val timeDelta = SystemClock.elapsedRealtime() - lastPositionUpdateTime
+//        Duration(0.001 * (position + (timeDelta * playbackSpeed)))
+//    } else {
+//        Duration(0.001 * position)
+//    }

@@ -9,7 +9,7 @@ import org.musicpimp.ui.playlists.PimpAdapter
 
 class PlaylistAdapter(
     initial: List<Track>,
-    var activeIndex: Int,
+    var activeIndex: Int?,
     val context: Context,
     private val delegate: TrackDelegate
 ) : PimpAdapter<Track>(initial, R.layout.track_item) {

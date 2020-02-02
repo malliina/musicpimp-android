@@ -6,13 +6,13 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import org.musicpimp.*
 
-class PimpHttpClient(val http: HttpClient, val name: String) {
+class PimpLibrary(val http: HttpClient, val name: String) {
     companion object {
         const val pimpFormat = "application/vnd.musicpimp.v18+json"
 
-        fun build(ctx: Context, authHeader: AuthHeader, name: String): PimpHttpClient {
+        fun build(ctx: Context, authHeader: AuthHeader, name: String): PimpLibrary {
             val http = HttpClient.getInstance(ctx, authHeader)
-            return PimpHttpClient(http, name)
+            return PimpLibrary(http, name)
         }
 
         fun authHeader(word: String, unencoded: String): AuthHeader {
@@ -31,6 +31,12 @@ class PimpHttpClient(val http: HttpClient, val name: String) {
     suspend fun folder(id: FolderId): Directory {
         val path = if (id == FolderId.root) "/folders" else "/folders/$id"
         return get(path, directoryAdapter)
+    }
+
+    suspend fun tracksRecursively(id: FolderId): List<Track> {
+        val init = folder(id)
+        val sub = init.folders.flatMap { f -> tracksRecursively(f.id) }
+        return sub + init.tracks
     }
 
     suspend fun popular(from: Int, until: Int): PopularTracks {

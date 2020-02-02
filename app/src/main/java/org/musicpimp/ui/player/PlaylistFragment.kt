@@ -62,18 +62,12 @@ class PlaylistFragment :
     }
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
-        showPopup(view) {
-            mainViewModel.remove(position)
-        }
-    }
-
-    private fun showPopup(v: View, onRemove: () -> Unit) {
-        val popup = PopupMenu(requireContext(), v)
+        val popup = PopupMenu(requireContext(), view)
         popup.inflate(R.menu.remove_menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.remove_from_playlist_item -> {
-                    onRemove()
+                    mainViewModel.remove(position)
                     true
                 }
                 else -> false

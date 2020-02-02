@@ -1,5 +1,6 @@
 package org.musicpimp.media
 
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -8,14 +9,15 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.support.v4.media.MediaMetadataCompat
 import androidx.media.AudioManagerCompat
+import org.musicpimp.Duration
 
 /**
  * Abstract player implementation that handles playing music with proper handling of headphones
  * and audio focus.
  */
-abstract class PlayerAdapter(context: Context) {
-    private val appContext = context.applicationContext
-    private val audioManager = appContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+abstract class MediaService: Service() {
+    private val audioManager: AudioManager
+        get() = getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private val defaultVolume = 1.0f
     private val duckVolume = 0.2f
 
@@ -74,13 +76,11 @@ abstract class PlayerAdapter(context: Context) {
     }
     private var mPlayOnAudioFocus = false
 
-    abstract fun playFromMedia(metadata: MediaMetadataCompat)
-    abstract fun getCurrentMedia(): MediaMetadataCompat?
     abstract fun isPlaying(): Boolean
     abstract fun onPlay()
     abstract fun onPause()
     abstract fun onStop()
-    abstract fun seekTo(position: Long)
+    abstract fun seekTo(position: Duration)
     abstract fun setVolume(volume: Float)
 
     fun play() {
@@ -106,14 +106,14 @@ abstract class PlayerAdapter(context: Context) {
 
     private fun registerAudioNoisyReceiver() {
         if (!mAudioNoisyReceiverRegistered) {
-            appContext.registerReceiver(mAudioNoisyReceiver, noisyIntentFilter)
+            applicationContext.registerReceiver(mAudioNoisyReceiver, noisyIntentFilter)
             mAudioNoisyReceiverRegistered = true
         }
     }
 
     private fun unregisterAudioNoisyReceiver() {
         if (mAudioNoisyReceiverRegistered) {
-            appContext.unregisterReceiver(mAudioNoisyReceiver)
+            applicationContext.unregisterReceiver(mAudioNoisyReceiver)
             mAudioNoisyReceiverRegistered = false
         }
     }

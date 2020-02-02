@@ -14,13 +14,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
-import org.musicpimp.media.LocalPlayer
 
 class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     private lateinit var viewModel: MainActivityViewModel
-    private lateinit var local: LocalPlayer
+//    private lateinit var local: LocalPlayer
     private var latestState: Playstate = Playstate.NoMedia
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
-        local = viewModel.components.local
+//        local = viewModel.components.local
         // Sets the app background apparently. Is there no easier way?
         window.decorView.setBackgroundColor(resources.getColor(R.color.colorBackground, theme))
 
@@ -99,13 +98,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        local.browser.onStart()
+//        local.browser.onStart()
         viewModel.openSocket()
     }
 
     override fun onStop() {
         super.onStop()
-        local.browser.onStop()
+//        local.browser.onStop()
         viewModel.closeSocket()
     }
 

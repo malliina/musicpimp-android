@@ -36,8 +36,7 @@ class PlaylistsFragmentAdapter(
     fm: FragmentManager,
     private val popularTitle: String,
     private val recentTitle: String
-) :
-    FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
     override fun getItem(position: Int): Fragment {
         return when (position) {
             0 -> PopularFragment()
@@ -57,7 +56,8 @@ class PlaylistsFragmentAdapter(
     }
 }
 
-class PopularFragment : TopTracksFragment<PopularTrack, PopularsAdapter, PopularsViewModel>(R.layout.fragment_popular) {
+class PopularFragment :
+    TopTracksFragment<PopularTrack, PopularsAdapter, PopularsViewModel>(R.layout.fragment_popular) {
     override fun newViewModel(fragment: Fragment, app: Application): PopularsViewModel {
         return ViewModelProviders.of(
             this,
@@ -81,7 +81,8 @@ class PopularFragment : TopTracksFragment<PopularTrack, PopularsAdapter, Popular
         Controls(null, view.popular_list, view.popular_feedback)
 }
 
-class RecentFragment : TopTracksFragment<RecentTrack, RecentsAdapter, RecentsViewModel>(R.layout.fragment_recent) {
+class RecentFragment :
+    TopTracksFragment<RecentTrack, RecentsAdapter, RecentsViewModel>(R.layout.fragment_recent) {
     override fun newViewModel(fragment: Fragment, app: Application): RecentsViewModel {
         return ViewModelProviders.of(
             this,

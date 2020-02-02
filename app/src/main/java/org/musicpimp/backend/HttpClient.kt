@@ -120,7 +120,7 @@ data class ResponseException(val error: VolleyError, val req: RequestConf) :
                 val charset =
                     Charset.forName(HttpHeaderParser.parseCharset(response.headers, "UTF-8"))
                 val str = String(response.data, charset)
-                val pimpError = PimpHttpClient.pimpErrorAdapter.read(str)
+                val pimpError = PimpLibrary.pimpErrorAdapter.read(str)
                 Errors.single("server", pimpError.reason)
             } catch (e: Exception) {
                 val msg = "Unable to parse response from '$url'."

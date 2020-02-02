@@ -27,7 +27,7 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
         viewManager = LinearLayoutManager(context)
         viewAdapter = MusicAdapter(Directory.empty, this)
         view.tracks_view.init(viewManager, viewAdapter)
-        if (mainViewModel.components.http == null) {
+        if (mainViewModel.components.library == null) {
             display(getString(R.string.no_music), view)
         }
         viewModel = ViewModelProviders.of(

@@ -35,7 +35,7 @@ abstract class TracksViewModel<T>(val app: Application) : AndroidViewModel(app) 
     private val data = MutableLiveData<Outcome<List<T>>>()
     val tracks: LiveData<Outcome<List<T>>> = data
     // TODO make PimpComponents return non-null modules
-    val http = requireNotNull(conf.http)
+    val http = requireNotNull(conf.library)
 
     abstract suspend fun load(from: Int, until: Int): List<T>
 

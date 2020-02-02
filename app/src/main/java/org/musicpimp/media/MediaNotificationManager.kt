@@ -28,7 +28,7 @@ import timber.log.Timber
  * Keeps track of a notification and updates it automatically for a given MediaSession. This is
  * required so that the music service don't get killed during playback.
  */
-class MediaNotificationManager(val service: MusicService, val library: LocalPlaylist) {
+class MediaNotificationManager(val service: PimpMediaService) {
     companion object {
         const val notificationId = 412
     }
@@ -125,7 +125,7 @@ class MediaNotificationManager(val service: MusicService, val library: LocalPlay
             .setContentIntent(createContentIntent())
             .setContentTitle(description.title)
             .setContentText(description.subtitle)
-            .setLargeIcon(description.mediaId?.let { id -> library.albumCover(TrackId(id), service) })
+//            .setLargeIcon(description.mediaId?.let { id -> library.albumCover(TrackId(id), service) })
             // When notification is deleted (when playback is paused and notification can be
             // deleted) fire MediaButtonPendingIntent with ACTION_STOP.
             .setDeleteIntent(
