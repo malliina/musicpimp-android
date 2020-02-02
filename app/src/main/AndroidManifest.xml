@@ -22,11 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".media.MusicService">
-            <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService" />
-            </intent-filter>
-        </service>
         <service android:name=".media.PimpMediaService"/>
         <receiver android:name="androidx.media.session.MediaButtonReceiver">
             <intent-filter>

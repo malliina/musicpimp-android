@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.support.v4.media.MediaMetadataCompat
 import org.musicpimp.*
 import org.musicpimp.backend.HttpClient
 import timber.log.Timber
@@ -36,14 +35,6 @@ class PimpMediaService : MediaService() {
     private val handler = Handler(Looper.getMainLooper())
     private val pollInterval = Duration(0.8)
     private var updatePosition = false
-
-    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
-        mediaPlayer?.currentPosition?.millis?.let {
-            player.onPosition(it)
-        }
-        if (updatePosition)
-            checkPlaybackPosition()
-    }, pollInterval.toMillis().toLong())
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let { i ->
@@ -193,11 +184,22 @@ class PimpMediaService : MediaService() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    companion object {
-        private const val path = "org.musicpimp.metadata.path"
-        private const val size = "org.musicpimp.metadata.size"
-        private const val url = "org.musicpimp.metadata.url"
+    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
+        if (mediaPlayer?.isPlaying == true) {
+            try {
+                mediaPlayer?.currentPosition?.millis?.let {
+                    player.onPosition(it)
+                }
+            } catch (ise: IllegalStateException) {
+                Timber.d("Unable to check position.")
+            }
+        }
+        if (updatePosition)
+            checkPlaybackPosition()
+    }, pollInterval.toMillis().toLong())
 
+
+    companion object {
         val CLOSE_ACTION = "org.musicpimp.action.CLOSE"
         val NEXT_ACTION = "org.musicpimp.action.NEXT"
         val PAUSE_ACTION = "org.musicpimp.action.PAUSE"
@@ -208,36 +210,5 @@ class PimpMediaService : MediaService() {
         val SEEK_ACTION = "org.musicpimp.action.SEEK"
 
         val POSITION_EXTRA = "org.musicpimp.action.POSITION"
-
-        val TRACK_KEY = "org.musicpimp.keys.TRACK"
-
-        val WIFI_LOCK_TAG = "MusicPimpWifiLock"
-
-        fun toMedia(track: Track): MediaMetadataCompat = MediaMetadataCompat.Builder().apply {
-            putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, track.id.value)
-            putString(MediaMetadataCompat.METADATA_KEY_TITLE, track.title)
-            putString(MediaMetadataCompat.METADATA_KEY_ALBUM, track.album.value)
-            putString(MediaMetadataCompat.METADATA_KEY_ARTIST, track.artist.value)
-            putLong(MediaMetadataCompat.METADATA_KEY_DURATION, track.duration.toMillis().toLong())
-            putString(path, track.path)
-            putLong(size, track.size.bytes)
-            putString(url, track.url.url)
-//        putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
-//        putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI, getAlbumArtUri(albumArtResName))
-//        putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, getAlbumArtUri(albumArtResName))
-        }.build()
-
-        fun fromMedia(media: MediaMetadataCompat): Track = Track(
-            TrackId(media.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID)),
-            media.getString(MediaMetadataCompat.METADATA_KEY_TITLE),
-            Album(media.getString(MediaMetadataCompat.METADATA_KEY_ALBUM)),
-            Artist(media.getString(MediaMetadataCompat.METADATA_KEY_ARTIST)),
-            media.getString(path),
-            media.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).millis,
-            media.getLong(size).bytes,
-            FullUrl.build(media.getString(url))!!
-        )
     }
-
-
 }
