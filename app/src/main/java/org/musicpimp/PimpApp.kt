@@ -4,6 +4,7 @@ import android.app.Application
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
+import org.musicpimp.media.RemoteControlReceiver
 import timber.log.Timber
 
 class PimpApp: Application() {
@@ -21,6 +22,7 @@ class PimpApp: Application() {
             Analytics::class.java, Crashes::class.java)
 
         pimpConf = PimpComponents(this.applicationContext)
+        RemoteControlReceiver.register(pimpConf)
     }
 
     class NoLogging: Timber.Tree() {

@@ -1,11 +1,14 @@
 package org.musicpimp.media
 
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.os.PowerManager
 import org.musicpimp.*
 import org.musicpimp.backend.HttpClient
 import timber.log.Timber
@@ -27,6 +30,7 @@ class PimpMediaService : MediaService() {
     private val app: PimpApp get() = application as PimpApp
     private val player: SimplePlayer
         get() = app.components.localPlayer
+    private val audioManager: AudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     // Work-around for a MediaPlayer bug related to the behavior of MediaPlayer.seekTo()
     // while not playing.
@@ -162,6 +166,7 @@ class PimpMediaService : MediaService() {
                 Timber.e("Player error $what with $extra.")
                 false
             }
+            p.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
             mediaPlayer = p
             return p
         } else {
