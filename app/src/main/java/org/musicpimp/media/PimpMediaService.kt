@@ -30,7 +30,6 @@ class PimpMediaService : MediaService() {
     private val app: PimpApp get() = application as PimpApp
     private val player: SimplePlayer
         get() = app.components.localPlayer
-    private val audioManager: AudioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     // Work-around for a MediaPlayer bug related to the behavior of MediaPlayer.seekTo()
     // while not playing.

@@ -50,6 +50,7 @@ class Notifications(private val ctx: Context) {
                 .setSmallIcon(R.drawable.ic_library_music_background)
                 .setContentTitle(track.title)
                 .setContentText(contentText)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
         )
         val intent = Intent(ctx.applicationContext, MainActivity::class.java)
         // Ensures that when the notification is clicked and the user is taken to the app,
@@ -81,7 +82,7 @@ class Notifications(private val ctx: Context) {
         // clicking "clear all" will have no effect
         builder.setOngoing(true)
         // the notification id allows us to update the notification later on
-        notificationManager.notify(Notifications.PIMP_NOTIFICATION_ID, builder.build())
+        notificationManager.notify(PIMP_NOTIFICATION_ID, builder.build())
     }
 
     fun cancel(): Unit = notificationManager.cancel(PIMP_NOTIFICATION_ID)
