@@ -20,8 +20,7 @@ import timber.log.Timber
 /** Media player that delegates calls by sending intents to the background audio
  * <code>Service</code>. The Service in turn notifies this player of playback updates.
  */
-class SimplePlayer(private val appContext: Context, private val covers: CoverService) : Player {
-    private val notifications = Notifications(appContext)
+class LocalPlayer(private val appContext: Context, private val covers: CoverService) : Player {
     private val currentTracks: MutableList<Track> = mutableListOf()
     // The player may have a track which is not in the playlist
     var playerTrack: Track? = null
@@ -49,11 +48,11 @@ class SimplePlayer(private val appContext: Context, private val covers: CoverSer
     private val currentIndex: Int?
         get() = index.value
 
-    val dummy = states.observeForever { s ->
-        playerTrack?.let { t ->
-            updateNotification(t, s)
-        }
-    }
+//    val dummy = states.observeForever { s ->
+//        playerTrack?.let { t ->
+//            updateNotification(t, s)
+//        }
+//    }
 
     override fun play(track: Track) {
         currentTracks.clear()
@@ -136,23 +135,23 @@ class SimplePlayer(private val appContext: Context, private val covers: CoverSer
         playerTracks.postValue(track)
     }
 
-    private fun updateNotification(track: Track, playstate: Playstate) {
-        GlobalScope.launch {
-            withContext(Dispatchers.IO) {
-                if (playstate == Playstate.Stopped) {
-                    notifications.cancel()
-                } else {
-                    Timber.i("Updating notification with $playstate")
-                    val bitmap = covers.cover(track)
-                    notifications.displayTrackNotification(
-                        track,
-                        playstate == Playstate.Playing,
-                        bitmap
-                    )
-                }
-            }
-        }
-    }
+//    private fun updateNotification(track: Track, playstate: Playstate) {
+//        GlobalScope.launch {
+//            withContext(Dispatchers.IO) {
+//                if (playstate == Playstate.Stopped) {
+//                    notifications.cancel()
+//                } else {
+//                    Timber.i("Updating notification with $playstate")
+//                    val bitmap = covers.cover(track)
+//                    notifications.displayTrackNotification(
+//                        track,
+//                        playstate == Playstate.Playing,
+//                        bitmap
+//                    )
+//                }
+//            }
+//        }
+//    }
 
     fun onState(state: Playstate) {
         currentState = state

@@ -3,6 +3,7 @@ package org.musicpimp
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
@@ -14,6 +15,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
@@ -84,6 +86,11 @@ class MainActivity : AppCompatActivity() {
                     })
             }
         }
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        Timber.i("Got key down $keyCode")
+        return super.onKeyDown(keyCode, event)
     }
 
     fun toggleControls(block: Boolean) {

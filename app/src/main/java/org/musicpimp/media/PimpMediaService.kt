@@ -1,14 +1,18 @@
 package org.musicpimp.media
 
-import android.content.Context
 import android.content.Intent
-import android.media.AudioManager
+import android.media.MediaMetadata
 import android.media.MediaPlayer
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.musicpimp.*
 import org.musicpimp.backend.HttpClient
 import timber.log.Timber
@@ -28,7 +32,11 @@ import timber.log.Timber
 class PimpMediaService : MediaService() {
     private var mediaPlayer: MediaPlayer? = null
     private val app: PimpApp get() = application as PimpApp
-    private val player: SimplePlayer
+    private val notifications: Notifications by lazy {
+        Notifications(applicationContext)
+    }
+
+    private val player: LocalPlayer
         get() = app.components.localPlayer
 
     // Work-around for a MediaPlayer bug related to the behavior of MediaPlayer.seekTo()
@@ -48,7 +56,7 @@ class PimpMediaService : MediaService() {
                 PREV_ACTION -> player.toPrev()?.let { playTrack(it) }
                 RESUME_ACTION -> play()
                 PAUSE_ACTION -> pause()
-                CLOSE_ACTION -> pause()
+                CLOSE_ACTION -> stop()
                 SEEK_ACTION -> i.getParcelableExtra<Duration>(POSITION_EXTRA)?.let { seekTo(it) }
                 else -> {
                     Timber.w("Unknown intent action: '${i.action}'.")
@@ -82,6 +90,7 @@ class PimpMediaService : MediaService() {
                 mapOf(HttpClient.Authorization to auth)
             )
             player.onTrack(track)
+            onNewTrack(track)
         } catch (e: Exception) {
             Timber.e(e, "Failed to open URL '${track.url}'.")
         }
@@ -89,6 +98,67 @@ class PimpMediaService : MediaService() {
             mp.prepareAsync()
         } catch (e: Exception) {
             Timber.e(e, "Failed to prepare URL '${track.url}'.")
+        }
+    }
+
+    /**
+     * Update metadata to the session. Also sets the album cover on the lock screen.
+     */
+    private fun onNewTrack(track: Track) {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                updateNotification(track, Playstate.Playing)
+            }
+        }
+    }
+
+    private fun onNewState(state: Playstate) {
+        player.playerTrack?.let { track ->
+            updateNotification(track, state)
+        }
+    }
+
+    private fun updateNotification(track: Track, playstate: Playstate) {
+        val playbackState = when (playstate) {
+            Playstate.Playing -> PlaybackState.STATE_PLAYING
+            Playstate.Stopped -> PlaybackState.STATE_STOPPED
+            Playstate.Paused -> PlaybackState.STATE_PAUSED
+            else -> PlaybackState.STATE_NONE
+        }
+        session.setPlaybackState(
+            stateBuilder.setState(
+                playbackState,
+                PlaybackState.PLAYBACK_POSITION_UNKNOWN,
+                1f
+            ).build()
+        )
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                if (playstate == Playstate.Stopped) {
+                    notifications.cancel()
+                } else {
+                    Timber.i("Updating notification with $playstate")
+                    val cover = app.components.covers.cover(track)
+                    val meta = MediaMetadata.Builder()
+                        .putString(MediaMetadata.METADATA_KEY_TITLE, track.title)
+                        .putString(MediaMetadata.METADATA_KEY_ALBUM, track.album.value)
+                        .putString(MediaMetadata.METADATA_KEY_ARTIST, track.artist.value)
+                        .putLong(
+                            MediaMetadata.METADATA_KEY_DURATION,
+                            track.duration.toMillis().toLong()
+                        )
+                    cover?.let { bitmap ->
+                        meta.putBitmap(MediaMetadata.METADATA_KEY_ALBUM_ART, bitmap)
+                    }
+                    session.setMetadata(meta.build())
+                    notifications.displayTrackNotification(
+                        track,
+                        playstate == Playstate.Playing,
+                        session,
+                        cover
+                    )
+                }
+            }
         }
     }
 
@@ -134,8 +204,17 @@ class PimpMediaService : MediaService() {
         mediaPlayer?.setVolume(volume, volume)
     }
 
+    override fun onNext() {
+        player.next()
+    }
+
+    override fun onPrev() {
+        player.prev()
+    }
+
     private fun onState(state: Playstate) {
         player.onState(state)
+        onNewState(state)
         updatePosition = state == Playstate.Playing
         if (updatePosition) {
             checkPlaybackPosition()
@@ -166,6 +245,8 @@ class PimpMediaService : MediaService() {
                 false
             }
             p.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
+//            val audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+//            audioManager.registerMediaButtonEventReceiver()
             mediaPlayer = p
             return p
         } else {

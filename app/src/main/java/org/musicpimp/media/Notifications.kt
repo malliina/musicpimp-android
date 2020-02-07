@@ -1,5 +1,6 @@
 package org.musicpimp.media
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -7,9 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.drawable.Icon
+import android.media.session.MediaSession
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
 import org.musicpimp.MainActivity
 import org.musicpimp.R
@@ -29,8 +31,13 @@ class Notifications(private val ctx: Context) {
      *
      * @param track track to show in notification
      */
-    fun displayTrackNotification(track: Track, playing: Boolean, largeIcon: Bitmap?) {
-        displayNotification(track, playing) { b ->
+    fun displayTrackNotification(
+        track: Track,
+        playing: Boolean,
+        session: MediaSession,
+        largeIcon: Bitmap?
+    ) {
+        displayNotification(track, playing, session) { b ->
             if (largeIcon != null) b.setLargeIcon(largeIcon) else b
         }
     }
@@ -38,19 +45,25 @@ class Notifications(private val ctx: Context) {
     private fun displayNotification(
         track: Track,
         playing: Boolean,
-        f: (b: NotificationCompat.Builder) -> NotificationCompat.Builder
+        session: MediaSession,
+        f: (b: Notification.Builder) -> Notification.Builder
     ) {
         // Create the (mandatory) notification channel when running on Android Oreo or higher
         if (isAndroidOOrHigher()) {
             createChannel()
         }
         val contentText = if (playing) "Playing" else "Paused"
+        val mediaStyle = Notification.MediaStyle()
+            .setMediaSession(session.sessionToken)
+            .setShowActionsInCompactView(0)
         val builder = f(
-            NotificationCompat.Builder(ctx, channelId)
+            Notification.Builder(ctx, channelId)
                 .setSmallIcon(R.drawable.ic_library_music_background)
                 .setContentTitle(track.title)
+                .setSubText(track.artist.value)
                 .setContentText(contentText)
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setVisibility(Notification.VISIBILITY_PUBLIC)
+                .setStyle(mediaStyle)
         )
         val intent = Intent(ctx.applicationContext, MainActivity::class.java)
         // Ensures that when the notification is clicked and the user is taken to the app,
@@ -67,18 +80,22 @@ class Notifications(private val ctx: Context) {
             return PendingIntent.getService(ctx, 0, mediaIntent, 0)
         }
 
-        fun addAction(action: String, drawable: Int, title: CharSequence) {
-            val pi = servicePendingIntent(action)
-            builder.addAction(drawable, title, pi)
+        fun addAction(mediaAction: String, drawable: Int, title: CharSequence) {
+            val pi = servicePendingIntent(mediaAction)
+            val action =
+                Notification.Action.Builder(Icon.createWithResource(ctx, drawable), title, pi)
+                    .build()
+            builder.addAction(action)
         }
 
+        addAction(PimpMediaService.PREV_ACTION, R.drawable.ic_skip_previous_black_36dp, "Previous")
         if (playing) {
-            addAction(PimpMediaService.PAUSE_ACTION, R.drawable.ic_pause_24px, "Pause")
+            addAction(PimpMediaService.PAUSE_ACTION, R.drawable.ic_pause_black_42dp, "Pause")
         } else {
-            addAction(PimpMediaService.RESUME_ACTION, R.drawable.ic_play_arrow_24px, "Play")
+            addAction(PimpMediaService.RESUME_ACTION, R.drawable.ic_play_arrow_black_42dp, "Play")
         }
-        addAction(PimpMediaService.NEXT_ACTION, R.drawable.ic_skip_next_24px, "Next")
-        addAction(PimpMediaService.CLOSE_ACTION, R.drawable.ic_close_black_24dp, "Close")
+        addAction(PimpMediaService.NEXT_ACTION, R.drawable.ic_skip_next_black_36dp, "Next")
+        builder.setDeleteIntent(servicePendingIntent(PimpMediaService.CLOSE_ACTION))
         // clicking "clear all" will have no effect
         builder.setOngoing(true)
         // the notification id allows us to update the notification later on

@@ -7,11 +7,11 @@ import org.musicpimp.backend.PimpSocket
 import org.musicpimp.media.*
 import org.musicpimp.ui.player.CoverService
 
-class PimpComponents(val appContext: Context) {
+class PimpComponents(appContext: Context) {
     var library: PimpLibrary? = null
     var playerSocket: PimpSocket? = null
     val covers = CoverService(appContext)
-    val localPlayer: SimplePlayer = SimplePlayer(appContext, covers)
+    val localPlayer: LocalPlayer = LocalPlayer(appContext, covers)
     var player: Player = localPlayer
     val authHeader: AuthHeader?
         get() = library?.http?.authHeader

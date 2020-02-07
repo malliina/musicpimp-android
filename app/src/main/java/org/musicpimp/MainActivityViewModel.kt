@@ -14,12 +14,12 @@ import org.musicpimp.backend.PlayerDelegate
 import org.musicpimp.endpoints.CloudEndpoint
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.EndpointManager
-import org.musicpimp.media.SimplePlayer
+import org.musicpimp.media.LocalPlayer
 import timber.log.Timber
 
 class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     val components = (app as PimpApp).components
-    private val localPlayer: SimplePlayer get() = components.localPlayer
+    private val localPlayer: LocalPlayer get() = components.localPlayer
     val player: Player get() = components.player
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
