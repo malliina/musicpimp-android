@@ -36,11 +36,14 @@ class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), Endpoin
             viewAdapter.endpoints = es
             viewAdapter.notifyDataSetChanged()
         }
-        setHasOptionsMenu(true)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.settings_top_nav_menu, menu)
+        view.floating_action_button.setOnClickListener {
+            viewModel.editedEndpoint = null
+            val action = EndpointsFragmentDirections.endpointsToEndpoint(
+                null,
+                getString(R.string.title_add_endpoint)
+            )
+            findNavController().navigate(action)
+        }
     }
 
     override fun onEndpoint(e: Endpoint) {
@@ -48,21 +51,6 @@ class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), Endpoin
             viewModel.onEndpoint(e)
             val action = EndpointsFragmentDirections.endpointsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
             findNavController().navigate(action)
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.endpoint_edit -> {
-                viewModel.editedEndpoint = null
-                val action = EndpointsFragmentDirections.endpointsToEndpoint(
-                    null,
-                    getString(R.string.title_add_endpoint)
-                )
-                findNavController().navigate(action)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 }

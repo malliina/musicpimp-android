@@ -11,7 +11,7 @@ class PimpComponents(appContext: Context) {
     var library: PimpLibrary? = null
     var playerSocket: PimpSocket? = null
     val covers = CoverService(appContext)
-    val localPlayer: LocalPlayer = LocalPlayer(appContext, covers)
+    val localPlayer: LocalPlayer = LocalPlayer(appContext)
     var player: Player = localPlayer
     val authHeader: AuthHeader?
         get() = library?.http?.authHeader

@@ -4,23 +4,17 @@ import android.content.Context
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import okhttp3.internal.toImmutableList
 import org.musicpimp.Duration
 import org.musicpimp.Playstate
 import org.musicpimp.Track
 import org.musicpimp.audio.Player
 import org.musicpimp.millis
-import org.musicpimp.ui.player.CoverService
-import timber.log.Timber
 
 /** Media player that delegates calls by sending intents to the background audio
  * <code>Service</code>. The Service in turn notifies this player of playback updates.
  */
-class LocalPlayer(private val appContext: Context, private val covers: CoverService) : Player {
+class LocalPlayer(private val appContext: Context) : Player {
     private val currentTracks: MutableList<Track> = mutableListOf()
     // The player may have a track which is not in the playlist
     var playerTrack: Track? = null
@@ -47,12 +41,6 @@ class LocalPlayer(private val appContext: Context, private val covers: CoverServ
 
     private val currentIndex: Int?
         get() = index.value
-
-//    val dummy = states.observeForever { s ->
-//        playerTrack?.let { t ->
-//            updateNotification(t, s)
-//        }
-//    }
 
     override fun play(track: Track) {
         currentTracks.clear()
@@ -134,24 +122,6 @@ class LocalPlayer(private val appContext: Context, private val covers: CoverServ
         playerTrack = track
         playerTracks.postValue(track)
     }
-
-//    private fun updateNotification(track: Track, playstate: Playstate) {
-//        GlobalScope.launch {
-//            withContext(Dispatchers.IO) {
-//                if (playstate == Playstate.Stopped) {
-//                    notifications.cancel()
-//                } else {
-//                    Timber.i("Updating notification with $playstate")
-//                    val bitmap = covers.cover(track)
-//                    notifications.displayTrackNotification(
-//                        track,
-//                        playstate == Playstate.Playing,
-//                        bitmap
-//                    )
-//                }
-//            }
-//        }
-//    }
 
     fun onState(state: Playstate) {
         currentState = state
