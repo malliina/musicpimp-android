@@ -39,15 +39,22 @@ abstract class TracksViewModel<T>(val app: Application) : AndroidViewModel(app) 
 
     abstract suspend fun load(from: Int, until: Int): List<T>
 
-    fun loadTracks() {
+    fun loadTracks(from: Int, until: Int) {
         viewModelScope.launch {
-            data.value = Outcome.loading()
+            if (from == 0) {
+                data.value = Outcome.loading()
+            }
             try {
-                val items = load(0, 100)
-                data.value = Outcome.success(items)
-                Timber.i("Loaded recent tracks.")
+                val items = load(from, until)
+                val newList =
+                    if (from == 0) items
+                    else (data.value?.data ?: emptyList()) + items
+                data.value = Outcome.success(newList)
+                Timber.i("Loaded tracks from $from until $until, got ${items.size} items.")
             } catch (e: Exception) {
-                data.value = Outcome.error(SingleError.backend("Error."))
+                if (from == 0) {
+                    data.value = Outcome.error(SingleError.backend("Error."))
+                }
             }
         }
     }

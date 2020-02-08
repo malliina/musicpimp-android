@@ -24,7 +24,6 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     private val viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
     private val settings: EndpointManager = EndpointManager.load(app)
-
     private val times = MutableLiveData<Duration>()
     private val tracks = MutableLiveData<Track>()
     private val states = MutableLiveData<Playstate>().apply {
@@ -76,9 +75,6 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     private var latestState: Playstate = Playstate.NoMedia
     private val stateObserver = Observer<Playstate> { state ->
         latestState = state
-//        val isPlaying = state == Playstate.Playing
-//        checkPlaybackPosition()
-//        updatePosition = isPlaying
         states.postValue(state)
     }
     private val trackObserver = Observer<Track> { track ->
@@ -114,14 +110,6 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         localPlayer.states.removeObserver(stateObserver)
         localPlayer.list.removeObserver(playlistObserver)
         localPlayer.position.removeObserver(positionObserver)
-    }
-
-    private fun toState(state: PlaybackStateCompat): Playstate = when (state.state) {
-        PlaybackStateCompat.STATE_PLAYING -> Playstate.Playing
-        PlaybackStateCompat.STATE_STOPPED -> Playstate.Stopped
-        PlaybackStateCompat.STATE_PAUSED -> Playstate.Paused
-        PlaybackStateCompat.STATE_NONE -> Playstate.NoMedia
-        else -> Playstate.Other
     }
 
     fun activatePlayer(player: Endpoint) {

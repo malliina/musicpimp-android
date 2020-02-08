@@ -61,14 +61,17 @@ class RecentsAdapter(
     }
 
     private fun formattedTime(i: Instant): String =
-        DateUtils.formatDateTime(context, i.toEpochMilli(), DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME)
+        DateUtils.formatDateTime(
+            context,
+            i.toEpochMilli(),
+            DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME
+        )
 }
 
 abstract class PimpAdapter<T>(
     var list: List<T>,
     private val itemResource: Int
-) :
-    RecyclerView.Adapter<PimpAdapter.TopHolder>() {
+) : RecyclerView.Adapter<PimpAdapter.TopHolder>() {
     class TopHolder(val layout: ConstraintLayout) : RecyclerView.ViewHolder(layout)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopHolder {

@@ -9,7 +9,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
 import org.musicpimp.R
 import org.musicpimp.Track
@@ -33,7 +33,7 @@ class PlaylistFragment :
 
     override fun init(
         view: View,
-        viewManager: RecyclerView.LayoutManager,
+        viewManager: LinearLayoutManager,
         adapter: PlaylistAdapter
     ) {
         view.playlist_list.init(viewManager, adapter)

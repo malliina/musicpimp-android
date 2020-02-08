@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.ui.music.Status
@@ -19,16 +18,17 @@ import org.musicpimp.ui.playlists.PimpAdapter
 import org.musicpimp.ui.playlists.TracksViewModel
 
 abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>(private val fragmentResource: Int) :
-    Fragment(),
-    TrackDelegate {
+    Fragment(), TrackDelegate {
+    // Number of tracks to load per "page" (we use infinite scroll)
+    protected val itemsPerLoad = 40
     protected lateinit var mainViewModel: MainActivityViewModel
     protected lateinit var viewAdapter: A
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var viewModel: V
+    private lateinit var viewManager: LinearLayoutManager
+    protected lateinit var viewModel: V
 
     abstract fun newViewModel(fragment: Fragment, app: Application): V
     abstract fun newAdapter(context: Context): A
-    abstract fun init(view: View, viewManager: RecyclerView.LayoutManager, adapter: A)
+    abstract fun init(view: View, viewManager: LinearLayoutManager, adapter: A)
     abstract fun controls(view: View): Controls
 
     override fun onCreateView(
@@ -73,7 +73,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
                 }
             }
         }
-        viewModel.loadTracks()
+        viewModel.loadTracks(0, itemsPerLoad)
     }
 
     private fun display(message: String, ctrl: Controls) {

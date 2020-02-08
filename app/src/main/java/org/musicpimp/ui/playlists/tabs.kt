@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlists.view.*
 import kotlinx.android.synthetic.main.fragment_popular.view.*
@@ -72,10 +73,18 @@ class PopularFragment :
 
     override fun init(
         view: View,
-        viewManager: RecyclerView.LayoutManager,
+        viewManager: LinearLayoutManager,
         adapter: PopularsAdapter
     ) {
         view.popular_list.init(viewManager, adapter)
+        view.popular_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    lastVisibleIndex.postValue(viewManager.findLastVisibleItemPosition())
+                }
+            }
+        })
     }
 
     override fun controls(view: View): Controls =
@@ -97,7 +106,7 @@ class RecentFragment :
 
     override fun init(
         view: View,
-        viewManager: RecyclerView.LayoutManager,
+        viewManager: LinearLayoutManager,
         adapter: RecentsAdapter
     ) {
         view.recent_list.init(viewManager, adapter)
