@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorBackground"
-    android:orientation="vertical">
+    android:background="@color/colorBackground">
 
     <TextView
         android:id="@+id/popular_title"
@@ -14,14 +13,44 @@
         android:paddingStart="8dp"
         android:paddingTop="12dp"
         android:paddingEnd="8dp"
-        android:paddingBottom="12dp"
+        android:paddingBottom="4dp"
         android:textColor="@color/colorTitles"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/popular_more_button"
+        app:layout_constraintEnd_toStartOf="@id/popular_plays"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Best song ever" />
+
+    <TextView
+        android:id="@+id/popular_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/colorSubtitles"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/popular_plays"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popular_title"
+        tools:text="3 Doors Down" />
+
+    <TextView
+        android:id="@+id/popular_plays"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/colorSubtitles"
+        android:textSize="14sp"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/popular_more_button"
+        app:layout_constraintStart_toEndOf="@id/popular_artist"
+        app:layout_constraintTop_toBottomOf="@id/popular_title"
+        tools:text="16 plays" />
 
     <ImageButton
         android:id="@+id/popular_more_button"
@@ -33,6 +62,6 @@
         android:src="@drawable/ic_more_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/popular_title"
+        app:layout_constraintStart_toEndOf="@id/popular_plays"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

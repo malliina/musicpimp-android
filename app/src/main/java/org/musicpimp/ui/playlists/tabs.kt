@@ -1,6 +1,7 @@
 package org.musicpimp.ui.playlists
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -65,8 +66,8 @@ class PopularFragment :
         ).get(PopularsViewModel::class.java)
     }
 
-    override fun newAdapter(): PopularsAdapter {
-        return PopularsAdapter(emptyList(), this)
+    override fun newAdapter(context: Context): PopularsAdapter {
+        return PopularsAdapter(emptyList(), context, this)
     }
 
     override fun init(
@@ -90,8 +91,8 @@ class RecentFragment :
         ).get(RecentsViewModel::class.java)
     }
 
-    override fun newAdapter(): RecentsAdapter {
-        return RecentsAdapter(emptyList(), this)
+    override fun newAdapter(context: Context): RecentsAdapter {
+        return RecentsAdapter(emptyList(), context, this)
     }
 
     override fun init(

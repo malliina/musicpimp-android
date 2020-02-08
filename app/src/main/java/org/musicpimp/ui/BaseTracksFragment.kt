@@ -1,6 +1,7 @@
 package org.musicpimp.ui
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,7 +27,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
     private lateinit var viewModel: V
 
     abstract fun newViewModel(fragment: Fragment, app: Application): V
-    abstract fun newAdapter(): A
+    abstract fun newAdapter(context: Context): A
     abstract fun init(view: View, viewManager: RecyclerView.LayoutManager, adapter: A)
     abstract fun controls(view: View): Controls
 
@@ -44,7 +45,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
             activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
         val ctrl = controls(view)
         viewManager = LinearLayoutManager(context)
-        viewAdapter = newAdapter()
+        viewAdapter = newAdapter(requireContext())
         init(view, viewManager, viewAdapter)
         viewModel = newViewModel(this, requireActivity().application)
         viewModel.tracks.observe(viewLifecycleOwner) { outcome ->

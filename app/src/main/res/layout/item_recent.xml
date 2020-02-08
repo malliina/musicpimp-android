@@ -17,11 +17,41 @@
         android:paddingBottom="12dp"
         android:textColor="@color/colorTitles"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/recent_more_button"
+        app:layout_constraintEnd_toStartOf="@id/recent_timestamp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Best song ever remix" />
+
+    <TextView
+        android:id="@+id/recent_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/colorSubtitles"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recent_timestamp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/recent_title"
+        tools:text="Armin van Buuren" />
+
+    <TextView
+        android:id="@+id/recent_timestamp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp"
+        android:textColor="@color/colorSubtitles"
+        android:textSize="14sp"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/recent_more_button"
+        app:layout_constraintStart_toEndOf="@id/recent_artist"
+        app:layout_constraintTop_toBottomOf="@id/recent_title"
+        tools:text="Yesterday, 17:46" />
 
     <ImageButton
         android:id="@+id/recent_more_button"
@@ -33,6 +63,6 @@
         android:src="@drawable/ic_more_foreground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/recent_title"
+        app:layout_constraintStart_toEndOf="@id/recent_timestamp"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

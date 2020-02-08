@@ -1,6 +1,7 @@
 package org.musicpimp.ui.player
 
 import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -26,7 +27,7 @@ class PlaylistFragment :
         ).get(PlaylistViewModel::class.java)
     }
 
-    override fun newAdapter(): PlaylistAdapter {
+    override fun newAdapter(context: Context): PlaylistAdapter {
         return PlaylistAdapter(emptyList(), -1, requireContext(), this)
     }
 

@@ -44,4 +44,6 @@
 
     <string name="notification_channel">Now Playing</string>
     <string name="notification_channel_description">Shows what music is currently playing in MusicPimp</string>
+
+    <string name="popular_plays">%1$d plays</string>
 </resources>

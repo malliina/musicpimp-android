@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONException
 import org.musicpimp.backend.PimpLibrary
+import java.time.Instant
 import java.util.*
 import java.util.regex.Pattern
 
@@ -114,7 +115,9 @@ data class PopularTracks(val populars: List<PopularTrack>)
 
 // when is millis
 @JsonClass(generateAdapter = true)
-data class RecentTrack(override val track: Track, val `when`: Long) : TrackContainer
+data class RecentTrack(override val track: Track, val `when`: Long) : TrackContainer {
+    val timestamp: Instant get() = Instant.ofEpochMilli(`when`)
+}
 
 @JsonClass(generateAdapter = true)
 data class RecentTracks(val recents: List<RecentTrack>)

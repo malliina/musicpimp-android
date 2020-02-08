@@ -10,7 +10,6 @@
         android:id="@+id/popular_feedback"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/title_popular"
         android:textAlignment="center"
         android:textColor="@color/colorText"
         app:layout_constraintBottom_toBottomOf="parent"
