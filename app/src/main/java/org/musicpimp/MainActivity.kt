@@ -88,11 +88,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        Timber.i("Got key down $keyCode")
-        return super.onKeyDown(keyCode, event)
-    }
-
     fun toggleControls(block: Boolean) {
         isFloatingPlaybackBlocked = block
         val visibility = if (latestState == Playstate.Playing && !block) View.VISIBLE else View.GONE

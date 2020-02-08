@@ -51,7 +51,7 @@ class PimpMediaService : MediaService() {
         intent?.let { i ->
             when (i.action) {
                 RESTART_ACTION -> player.playerTrack?.let { playTrack(it) }
-                PLAY_PLAYLIST -> player.playerTrack?.let { playTrack(it) }
+                PLAY_PLAYLIST -> player.trackAtCurrentIndex()?.let { playTrack(it) }
                 NEXT_ACTION -> player.toNext()?.let { playTrack(it) }
                 PREV_ACTION -> player.toPrev()?.let { playTrack(it) }
                 RESUME_ACTION -> play()
@@ -285,15 +285,15 @@ class PimpMediaService : MediaService() {
 
 
     companion object {
-        val CLOSE_ACTION = "org.musicpimp.action.CLOSE"
-        val NEXT_ACTION = "org.musicpimp.action.NEXT"
-        val PAUSE_ACTION = "org.musicpimp.action.PAUSE"
-        val PLAY_PLAYLIST = "org.musicpimp.action.PLAY_PLAYLIST"
-        val PREV_ACTION = "org.musicpimp.action.PREV"
-        val RESTART_ACTION = "org.musicpimp.action.RESTART"
-        val RESUME_ACTION = "org.musicpimp.action.RESUME"
-        val SEEK_ACTION = "org.musicpimp.action.SEEK"
+        const val CLOSE_ACTION = "org.musicpimp.action.CLOSE"
+        const val NEXT_ACTION = "org.musicpimp.action.NEXT"
+        const val PAUSE_ACTION = "org.musicpimp.action.PAUSE"
+        const val PLAY_PLAYLIST = "org.musicpimp.action.PLAY_PLAYLIST"
+        const val PREV_ACTION = "org.musicpimp.action.PREV"
+        const val RESTART_ACTION = "org.musicpimp.action.RESTART"
+        const val RESUME_ACTION = "org.musicpimp.action.RESUME"
+        const val SEEK_ACTION = "org.musicpimp.action.SEEK"
 
-        val POSITION_EXTRA = "org.musicpimp.action.POSITION"
+        const val POSITION_EXTRA = "org.musicpimp.action.POSITION"
     }
 }

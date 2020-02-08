@@ -60,7 +60,6 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
                 }
             }
         }
-//        setHasOptionsMenu(true)
     }
 
     private fun display(message: String, view: View) {
@@ -70,34 +69,36 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
         view.no_music_text.text = message
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-//        inflater.inflate(R.menu.music_top_nav_menu, menu)
-//    }
-
     override fun onTrack(track: Track, position: Int) {
         mainViewModel.play(track)
     }
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
-        showPopup(view) {
-            Timber.i("Add track ${track.id}")
-            mainViewModel.add(track)
-        }
-    }
-
-    override fun onFolderMore(folder: Folder, view: ImageButton) {
-        showPopup(view) {
-            mainViewModel.addFolder(folder.id)
-        }
-    }
-
-    private fun showPopup(v: View, onAdd: () -> Unit) {
-        val popup = PopupMenu(requireContext(), v)
+        val popup = PopupMenu(requireContext(), view)
         popup.inflate(R.menu.music_item_menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.add_to_playlist_item -> {
-                    onAdd()
+                R.id.add_track_to_playlist_item -> {
+                    mainViewModel.add(track)
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
+    }
+
+    override fun onFolderMore(folder: Folder, view: ImageButton) {
+        val popup = PopupMenu(requireContext(), view)
+        popup.inflate(R.menu.music_item_menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.play_folder -> {
+                    mainViewModel.playFolder(folder.id)
+                    true
+                }
+                R.id.add_folder_to_playlist_item -> {
+                    mainViewModel.addFolder(folder.id)
                     true
                 }
                 else -> false

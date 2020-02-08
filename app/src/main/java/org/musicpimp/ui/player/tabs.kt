@@ -33,11 +33,12 @@ class TabbedPlayerFragment : ResourceFragment(R.layout.fragment_tabbed_player) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         context?.let {
-            view.player_pager.adapter = PlayerFragmentAdapter(
+            val adapter = PlayerFragmentAdapter(
                 childFragmentManager,
                 it.getString(R.string.title_player),
                 it.getString(R.string.title_playlist)
             )
+            view.player_pager.adapter = adapter
         }
     }
 }

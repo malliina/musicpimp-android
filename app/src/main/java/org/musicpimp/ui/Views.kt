@@ -25,7 +25,7 @@ fun <VH : RecyclerView.ViewHolder> RecyclerView.init(
 
 class Controls(val progress: MaterialProgressBar?, val list: RecyclerView, val feedback: TextView)
 
-abstract class ResourceFragment(val layoutResource: Int): Fragment() {
+abstract class ResourceFragment(private val layoutResource: Int): Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

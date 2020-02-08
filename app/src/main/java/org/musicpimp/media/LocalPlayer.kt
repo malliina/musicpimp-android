@@ -135,6 +135,8 @@ class LocalPlayer(private val appContext: Context) : Player {
     private fun withIndex(f: (old: Int) -> Int): Track? =
         currentIndex?.let { idx -> trackAt(f(idx)) }
 
+    fun trackAtCurrentIndex(): Track? = currentIndex?.let { trackAt(it) }
+
     private fun trackAt(index: Int): Track? =
         if (index < currentTracks.size && index >= 0) currentTracks[index] else null
 

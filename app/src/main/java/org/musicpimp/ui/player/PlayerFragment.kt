@@ -81,13 +81,13 @@ class PlayerFragment : ResourceFragment(R.layout.fragment_player) {
         setHasOptionsMenu(true)
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onResume() {
+        super.onResume()
         mainActivity().toggleControls(block = true)
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         mainActivity().toggleControls(block = false)
     }
 

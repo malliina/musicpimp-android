@@ -202,14 +202,26 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         player.add(id)
     }
 
-    fun addFolder(id: FolderId) {
-        components.library?.let { lib ->
-            viewModelScope.launch {
-                player.addAll(lib.tracksRecursively(id))
+    fun playFolder(id: FolderId) {
+        withAll(id) { all ->
+            all.firstOrNull()?.let {
+                player.play(it)
             }
+            player.addAll(all.drop(1))
         }
     }
 
+    fun addFolder(id: FolderId) {
+        withAll(id) { player.addAll(it) }
+    }
+
+    private fun withAll(id: FolderId, code: (ts: List<Track>) -> Unit) {
+        components.library?.let { lib ->
+            viewModelScope.launch {
+                code(lib.tracksRecursively(id))
+            }
+        }
+    }
 
     fun resume() {
         player.resume()
@@ -230,20 +242,4 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     fun seek(to: Duration) {
         player.seek(to)
     }
-
-//    private fun checkPlaybackPosition(): Boolean = handler.postDelayed({
-////        val currPosition = latestState.currentPlaybackPosition
-////        if (timeUpdates.value != currPosition)
-////            times.postValue(currPosition)
-//        if (updatePosition)
-//            checkPlaybackPosition()
-//    }, pollInterval.toMillis().toLong())
 }
-//
-//inline val PlaybackStateCompat.currentPlaybackPosition: Duration
-//    get() = if (state == PlaybackStateCompat.STATE_PLAYING) {
-//        val timeDelta = SystemClock.elapsedRealtime() - lastPositionUpdateTime
-//        Duration(0.001 * (position + (timeDelta * playbackSpeed)))
-//    } else {
-//        Duration(0.001 * position)
-//    }
