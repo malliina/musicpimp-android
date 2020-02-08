@@ -1,6 +1,7 @@
 package org.musicpimp.ui.playlists
 
 import android.content.Context
+import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,16 +12,13 @@ import org.musicpimp.PopularTrack
 import org.musicpimp.R
 import org.musicpimp.RecentTrack
 import org.musicpimp.ui.music.TrackDelegate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
+import java.time.Instant
 
 class PopularsAdapter(
     initial: List<PopularTrack>,
     private val context: Context,
     private val delegate: TrackDelegate
-) :
-    PimpAdapter<PopularTrack>(initial, R.layout.item_popular) {
+) : PimpAdapter<PopularTrack>(initial, R.layout.item_popular) {
 
     override fun onBindViewHolder(holder: TopHolder, position: Int) {
         val layout = holder.layout
@@ -46,16 +44,13 @@ class RecentsAdapter(
     private val delegate: TrackDelegate
 ) : PimpAdapter<RecentTrack>(initial, R.layout.item_recent) {
 
-    private val formatter =
-        DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withZone(ZoneId.systemDefault())
-
     override fun onBindViewHolder(holder: TopHolder, position: Int) {
         val layout = holder.layout
         val recentTrack = list[position]
         val track = recentTrack.track
         layout.recent_title.text = track.title
         layout.recent_artist.text = track.artist.value
-        layout.recent_timestamp.text = formatter.format(recentTrack.timestamp)
+        layout.recent_timestamp.text = formattedTime(recentTrack.timestamp)
         layout.setOnClickListener {
             delegate.onTrack(track, position)
         }
@@ -64,6 +59,9 @@ class RecentsAdapter(
             delegate.onTrackMore(track, moreButton, position)
         }
     }
+
+    private fun formattedTime(i: Instant): String =
+        DateUtils.formatDateTime(context, i.toEpochMilli(), DateUtils.FORMAT_ABBREV_MONTH or DateUtils.FORMAT_SHOW_DATE or DateUtils.FORMAT_SHOW_TIME)
 }
 
 abstract class PimpAdapter<T>(
