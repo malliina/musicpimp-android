@@ -1,9 +1,11 @@
 package org.musicpimp.ui.settings
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,9 +28,9 @@ class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), Endpoin
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         viewModel =
-            activity?.run { ViewModelProviders.of(this).get(SettingsViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = EndpointsAdapter(emptyList(), this)
         view.endpoints_list.init(viewManager, viewAdapter)

@@ -2,6 +2,7 @@ package org.musicpimp.ui.player
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.fragment_player.view.*
@@ -18,8 +19,8 @@ class PlayerFragment : ResourceFragment(R.layout.fragment_player) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
-        viewModel = ViewModelProviders.of(
+            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
+        viewModel = ViewModelProvider(
             this,
             PlayerViewModelFactory(requireActivity().application, mainViewModel)
         ).get(PlayerViewModel::class.java)

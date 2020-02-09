@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_playlist.view.*
@@ -21,7 +21,7 @@ import timber.log.Timber
 class PlaylistFragment :
     BaseTracksFragment<Track, PlaylistAdapter, PlaylistViewModel>(R.layout.fragment_playlist) {
     override fun newViewModel(fragment: Fragment, app: Application): PlaylistViewModel {
-        return ViewModelProviders.of(
+        return ViewModelProvider(
             this,
             PlaylistViewModelFactory(requireActivity().application, mainViewModel)
         ).get(PlaylistViewModel::class.java)

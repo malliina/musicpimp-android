@@ -7,7 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlists.view.*
@@ -61,7 +61,7 @@ class PlaylistsFragmentAdapter(
 class PopularFragment :
     TopTracksFragment<PopularTrack, PopularsAdapter, PopularsViewModel>(R.layout.fragment_popular) {
     override fun newViewModel(fragment: Fragment, app: Application): PopularsViewModel {
-        return ViewModelProviders.of(
+        return ViewModelProvider(
             this,
             PopularsViewModelFactory(requireActivity().application)
         ).get(PopularsViewModel::class.java)
@@ -94,7 +94,7 @@ class PopularFragment :
 class RecentFragment :
     TopTracksFragment<RecentTrack, RecentsAdapter, RecentsViewModel>(R.layout.fragment_recent) {
     override fun newViewModel(fragment: Fragment, app: Application): RecentsViewModel {
-        return ViewModelProviders.of(
+        return ViewModelProvider(
             this,
             RecentsViewModelFactory(requireActivity().application)
         ).get(RecentsViewModel::class.java)

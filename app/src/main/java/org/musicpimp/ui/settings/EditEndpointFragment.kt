@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.button.MaterialButton
@@ -25,7 +26,7 @@ class EditEndpointFragment : ResourceFragment(R.layout.edit_endpoint_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel =
-            activity?.run { ViewModelProviders.of(this).get(SettingsViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         Timber.i("Editing ${viewModel.editedEndpoint?.id ?: "new endpoint"}")
         view.save_button.setOnClickListener {
             val name = cloud_id_edit_text.text.string()

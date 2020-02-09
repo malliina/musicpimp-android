@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.musicpimp.MainActivityViewModel
@@ -42,7 +42,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         val ctrl = controls(view)
         viewManager = LinearLayoutManager(context)
         viewAdapter = newAdapter(requireContext())

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,14 +23,14 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = MusicAdapter(Directory.empty, this)
         view.tracks_view.init(viewManager, viewAdapter)
         if (mainViewModel.components.library == null) {
             display(getString(R.string.no_music), view)
         }
-        viewModel = ViewModelProviders.of(
+        viewModel = ViewModelProvider(
             this,
             MusicViewModelFactory(requireActivity().application, mainViewModel)
         ).get(MusicViewModel::class.java)

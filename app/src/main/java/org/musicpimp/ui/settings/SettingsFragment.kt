@@ -9,7 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import kotlinx.android.synthetic.main.fragment_settings.view.*
@@ -26,9 +26,9 @@ class SettingsFragment : ResourceFragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mainViewModel =
-            activity?.run { ViewModelProviders.of(this).get(MainActivityViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         viewModel =
-            activity?.run { ViewModelProviders.of(this).get(SettingsViewModel::class.java) }!!
+            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         val playbackAdapter = DropdownAdapter(requireContext(), mutableListOf())
         val sourceAdapter = DropdownAdapter(requireContext(), mutableListOf())
         view.playback_device_dropdown.setAdapter(playbackAdapter)

@@ -25,15 +25,4 @@ class RootMusicFragment : CommonMusicFragment() {
             RootMusicFragmentDirections.homeToMusic(folder.id, folder.title)
         )
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.settings -> {
-//                val action = RootMusicFragmentDirections.homeToSettings()
-//                findNavController().navigate(action)
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 }
