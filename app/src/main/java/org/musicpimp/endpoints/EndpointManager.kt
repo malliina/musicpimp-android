@@ -13,7 +13,6 @@ class EndpointAdapter {
     @ToJson
     fun toJson(e: Endpoint): String {
         return when (e) {
-//            is DirectEndpoint -> EndpointManager.directAdapter.toJson(e)
             is CloudEndpoint -> EndpointManager.cloudAdapter.toJson(e)
             is LocalEndpoint -> EndpointManager.localAdapter.toJson(e)
             else -> throw JsonDataException("Cannot serialize endpoint $e.")
@@ -36,8 +35,6 @@ class EndpointManager(private val prefs: SharedPreferences) {
 
         val activeAdapter: JsonAdapter<ActiveEndpoint> =
             Json.moshi.adapter(ActiveEndpoint::class.java)
-//        val directAdapter: JsonAdapter<DirectEndpoint> =
-//            Json.moshi.adapter(DirectEndpoint::class.java)
         val localAdapter: JsonAdapter<LocalEndpoint> =
             Json.moshi.adapter(LocalEndpoint::class.java)
         val cloudAdapter: JsonAdapter<CloudEndpoint> = Json.moshi.adapter(CloudEndpoint::class.java)
@@ -87,7 +84,7 @@ class EndpointManager(private val prefs: SharedPreferences) {
         return newValue
     }
 
-    fun saveAll(endpoints: Endpoints) {
+    private fun saveAll(endpoints: Endpoints) {
         save(endpoints, endpointsAdapter, endpointsKey)
     }
 
@@ -99,16 +96,16 @@ class EndpointManager(private val prefs: SharedPreferences) {
 
     private fun fetchCustom(): Endpoints = load(endpointsKey, endpointsAdapter, Endpoints(emptyList()))
 
-    fun <T> load(key: String, adapter: JsonAdapter<T>, default: T): T {
+    private fun <T> load(key: String, adapter: JsonAdapter<T>, default: T): T {
         return loadOpt(key, adapter) ?: default
     }
 
-    fun <T> loadOpt(key: String, adapter: JsonAdapter<T>): T? {
+    private fun <T> loadOpt(key: String, adapter: JsonAdapter<T>): T? {
         val str = prefs.getString(key, null)
         return str?.let { adapter.fromJson(it) }
     }
 
-    fun <T> save(item: T, adapter: JsonAdapter<T>, to: String) {
+    private fun <T> save(item: T, adapter: JsonAdapter<T>, to: String) {
         prefs.edit {
             val json = adapter.toJson(item)
             putString(to, json)

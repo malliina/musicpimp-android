@@ -14,21 +14,22 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
-import timber.log.Timber
-import java.util.*
+import org.musicpimp.endpoints.LocalEndpoint
+import org.musicpimp.ui.settings.SettingsViewModel
 
 class MainActivity : AppCompatActivity() {
     private var currentNavController: LiveData<NavController>? = null
 
     private lateinit var viewModel: MainActivityViewModel
+    private lateinit var settingsViewModel: SettingsViewModel
     private var latestState: Playstate = Playstate.NoMedia
     private var isFloatingPlaybackBlocked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.i("Locale is ${Locale.getDefault()}")
         setContentView(R.layout.activity_main)
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        settingsViewModel = ViewModelProviders.of(this).get(SettingsViewModel::class.java)
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
@@ -85,6 +86,11 @@ class MainActivity : AppCompatActivity() {
                     })
             }
         }
+        settingsViewModel.musicSource.observe(this) { source ->
+            val isLocal = source.id == LocalEndpoint.local.id
+            val bottomNav: BottomNavigationView = findViewById(R.id.bottom_nav_view)
+            bottomNav.menu.findItem(R.id.nav_playlists).isVisible = !isLocal
+        }
     }
 
     fun toggleControls(block: Boolean) {
@@ -131,6 +137,7 @@ class MainActivity : AppCompatActivity() {
             setupActionBarWithNavController(navController)
         })
         currentNavController = controller
+        bottomNav.menu.findItem(R.id.nav_playlists).isVisible = false
     }
 
     override fun onSupportNavigateUp(): Boolean {

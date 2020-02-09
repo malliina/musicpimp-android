@@ -1,7 +1,6 @@
 package org.musicpimp
 
 import android.app.Application
-import android.support.v4.media.session.PlaybackStateCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -21,15 +21,4 @@ class MusicFragment : CommonMusicFragment() {
     override fun onFolder(folder: Folder) {
         findNavController().navigate(MusicFragmentDirections.musicToMusic(folder.id, folder.title))
     }
-
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        return when (item.itemId) {
-//            R.id.settings -> {
-//                val action = MusicFragmentDirections.musicToSettings()
-//                findNavController().navigate(action)
-//                true
-//            }
-//            else -> super.onOptionsItemSelected(item)
-//        }
-//    }
 }
