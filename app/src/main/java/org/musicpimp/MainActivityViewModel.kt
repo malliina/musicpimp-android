@@ -127,7 +127,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         updateSource(e.creds.authHeader, e.creds.server.value)
     }
 
-    private fun updateSource(header: AuthHeader, name: String) {
+    private fun updateSource(header: HeaderValue, name: String) {
         components.library = PimpLibrary.build(app, header, name)
         Timber.i("Updated backend to '$name'.")
     }

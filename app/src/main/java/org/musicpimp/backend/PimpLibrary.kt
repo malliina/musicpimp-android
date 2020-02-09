@@ -8,17 +8,17 @@ import org.musicpimp.*
 
 class PimpLibrary(val http: HttpClient, val name: String) {
     companion object {
-        const val pimpFormat = "application/vnd.musicpimp.v18+json"
+        val pimpFormat = HeaderValue("application/vnd.musicpimp.v18+json")
 
-        fun build(ctx: Context, authHeader: AuthHeader, name: String): PimpLibrary {
-            val http = HttpClient.getInstance(ctx, authHeader)
+        fun build(ctx: Context, authHeader: HeaderValue, name: String): PimpLibrary {
+            val http = HttpClient.getInstance(ctx, pimpFormat, authHeader)
             return PimpLibrary(http, name)
         }
 
-        fun authHeader(word: String, unencoded: String): AuthHeader {
+        fun authHeader(word: String, unencoded: String): HeaderValue {
             val encoded =
                 Base64.encodeToString(unencoded.toByteArray(Charsets.UTF_8), Base64.NO_WRAP).trim()
-            return AuthHeader("$word $encoded")
+            return HeaderValue("$word $encoded")
         }
 
         private val moshi: Moshi = Json.moshi

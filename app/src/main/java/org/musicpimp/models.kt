@@ -60,7 +60,7 @@ data class Password(override val value: String) : Primitive {
     override fun toString(): String = value
 }
 
-data class AuthHeader(override val value: String) : Primitive {
+data class HeaderValue(override val value: String) : Primitive {
     override fun toString(): String = value
 }
 
@@ -221,18 +221,18 @@ data class Errors(val errors: List<SingleError>) {
 }
 
 interface Credential {
-    val authHeader: AuthHeader
+    val authHeader: HeaderValue
 }
 
 @JsonClass(generateAdapter = true)
 data class CloudCredential(val server: CloudId, val username: Username, val password: Password) :
     Credential {
-    override val authHeader: AuthHeader
+    override val authHeader: HeaderValue
         get() = PimpLibrary.authHeader("Pimp", "$server:$username:$password")
 }
 
 @JsonClass(generateAdapter = true)
 data class DirectCredential(val username: Username, val password: Password) : Credential {
-    override val authHeader: AuthHeader
+    override val authHeader: HeaderValue
         get() = PimpLibrary.authHeader("Basic", "$username:$password")
 }

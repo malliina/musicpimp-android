@@ -38,10 +38,10 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
             val valueCmd: JsonAdapter<ValueCommand> = moshi.adapter(ValueCommand::class.java)
         }
 
-        fun build(auth: AuthHeader, delegate: PlayerDelegate): PimpSocket {
+        fun build(auth: HeaderValue, delegate: PlayerDelegate): PimpSocket {
             val socketUrl = baseUrl.append("/ws/playback")
             Timber.i("Setting socketUrl to '$socketUrl'.")
-            return PimpSocket(socketUrl, HttpClient.headers(auth), delegate)
+            return PimpSocket(socketUrl, HttpClient.headers(PimpLibrary.pimpFormat, auth), delegate)
         }
     }
 

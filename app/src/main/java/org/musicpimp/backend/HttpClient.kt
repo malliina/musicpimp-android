@@ -15,22 +15,22 @@ import java.nio.charset.Charset
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class HttpClient(ctx: Context, val authHeader: AuthHeader) {
+class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderValue) {
     companion object {
         const val Authorization = "Authorization"
 
-        fun headers(authHeader: AuthHeader): Map<String, String> {
-            val acceptPair = "Accept" to "application/json"
-            return mapOf(Authorization to "$authHeader", acceptPair)
+        fun headers(accept: HeaderValue, auth: HeaderValue): Map<String, String> {
+            val acceptPair = "Accept" to "$accept"
+            return mapOf(Authorization to "$auth", acceptPair)
         }
 
         @Volatile
-        private var cache: MutableMap<AuthHeader, HttpClient> = mutableMapOf()
+        private var cache: MutableMap<HeaderValue, HttpClient> = mutableMapOf()
 
-        fun getInstance(context: Context, authHeader: AuthHeader): HttpClient =
-            cache[authHeader] ?: synchronized(this) {
-                cache.getOrPut(authHeader) {
-                    HttpClient(context, authHeader)
+        fun getInstance(context: Context, accept: HeaderValue, auth: HeaderValue): HttpClient =
+            cache[auth] ?: synchronized(this) {
+                cache.getOrPut(auth) {
+                    HttpClient(context, accept, auth)
                 }
             }
     }
@@ -65,13 +65,14 @@ class HttpClient(ctx: Context, val authHeader: AuthHeader) {
 
     private suspend fun makeRequest(conf: RequestConf): JSONObject =
         suspendCancellableCoroutine { cont ->
-            RequestWithHeaders(conf, cont).also {
+            RequestWithHeaders(conf, accept, cont).also {
                 queue.add(it)
             }
         }
 
     class RequestWithHeaders(
         private val conf: RequestConf,
+        private val accept: HeaderValue,
         cont: CancellableContinuation<JSONObject>
     ) : JsonObjectRequest(conf.method, conf.url.url, conf.payload,
         Response.Listener { cont.resume(it) },
@@ -92,18 +93,18 @@ class HttpClient(ctx: Context, val authHeader: AuthHeader) {
             else
                 emptyMap()
 
-        override fun getHeaders(): Map<String, String> = headers(conf.auth).plus(csrf)
+        override fun getHeaders(): Map<String, String> = headers(accept, conf.auth).plus(csrf)
     }
 }
 
 data class RequestConf(
     val method: Int,
     val url: FullUrl,
-    val auth: AuthHeader,
+    val auth: HeaderValue,
     val payload: JSONObject?
 ) {
     companion object {
-        fun get(url: FullUrl, auth: AuthHeader): RequestConf =
+        fun get(url: FullUrl, auth: HeaderValue): RequestConf =
             RequestConf(Request.Method.GET, url, auth, null)
     }
 }

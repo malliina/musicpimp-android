@@ -13,6 +13,6 @@ class PimpComponents(appContext: Context) {
     val covers = CoverService(appContext)
     val localPlayer: LocalPlayer = LocalPlayer(appContext)
     var player: Player = localPlayer
-    val authHeader: AuthHeader?
+    val authHeader: HeaderValue?
         get() = library?.http?.authHeader
 }

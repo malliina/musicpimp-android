@@ -4,14 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.support.v4.media.MediaMetadataCompat
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
 import org.musicpimp.*
 import org.musicpimp.Utils.urlEncode
-import org.musicpimp.audio.Player
 import org.musicpimp.backend.OkClient
-import timber.log.Timber
 import java.io.File
 
 class PlayerViewModelFactory(val app: Application, val main: MainActivityViewModel) :

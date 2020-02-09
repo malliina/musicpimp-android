@@ -47,22 +47,3 @@ data class Endpoints(val endpoints: List<Endpoint>) {
 
 @JsonClass(generateAdapter = true)
 data class ActiveEndpoint(val id: EndpointId)
-
-//data class DirectEndpointInput(
-//    val name: NonEmptyString,
-//    val address: NonEmptyString,
-//    val port: Int,
-//    val creds: DirectCredential
-//) : EndpointInput<DirectEndpoint> {
-//    override fun withId(id: EndpointId): DirectEndpoint =
-//        DirectEndpoint(id, name, address, port, creds)
-//}
-
-//@JsonClass(generateAdapter = true)
-//data class DirectEndpoint(
-//    override val id: EndpointId,
-//    override val name: NonEmptyString,
-//    val address: NonEmptyString,
-//    val port: Int,
-//    val creds: DirectCredential
-//) : Endpoint
