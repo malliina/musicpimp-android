@@ -2,15 +2,9 @@ package org.musicpimp.ui.settings
 
 import android.os.Bundle
 import android.text.Editable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.button.MaterialButton
-import com.google.android.material.textfield.TextInputEditText
 import kotlinx.android.synthetic.main.edit_endpoint_fragment.*
 import kotlinx.android.synthetic.main.edit_endpoint_fragment.view.*
 import org.musicpimp.*

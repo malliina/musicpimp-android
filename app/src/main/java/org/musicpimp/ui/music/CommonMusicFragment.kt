@@ -75,9 +75,13 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
         val popup = PopupMenu(requireContext(), view)
-        popup.inflate(R.menu.music_item_menu)
+        popup.inflate(R.menu.track_item_menu)
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
+                R.id.play_track_item -> {
+                    mainViewModel.play(track)
+                    true
+                }
                 R.id.add_track_to_playlist_item -> {
                     mainViewModel.add(track)
                     true
