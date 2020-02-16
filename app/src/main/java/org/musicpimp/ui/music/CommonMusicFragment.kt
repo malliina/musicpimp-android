@@ -1,6 +1,7 @@
 package org.musicpimp.ui.music
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
@@ -74,9 +75,7 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
     }
 
     override fun onTrackMore(track: Track, view: ImageButton, position: Int) {
-        val popup = PopupMenu(requireContext(), view)
-        popup.inflate(R.menu.track_item_menu)
-        popup.setOnMenuItemClickListener { item ->
+        handlePopup(view, R.menu.track_item_menu) { item ->
             when (item.itemId) {
                 R.id.play_track_item -> {
                     mainViewModel.play(track)
@@ -89,13 +88,10 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
                 else -> false
             }
         }
-        popup.show()
     }
 
     override fun onFolderMore(folder: Folder, view: ImageButton) {
-        val popup = PopupMenu(requireContext(), view)
-        popup.inflate(R.menu.music_item_menu)
-        popup.setOnMenuItemClickListener { item ->
+        handlePopup(view, R.menu.music_item_menu) { item ->
             when (item.itemId) {
                 R.id.play_folder -> {
                     mainViewModel.playFolder(folder.id)
@@ -107,6 +103,14 @@ abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), 
                 }
                 else -> false
             }
+        }
+    }
+
+    private fun handlePopup(view: ImageButton, menuRes: Int, itemClick: (i: MenuItem) -> Boolean) {
+        val popup = PopupMenu(requireContext(), view)
+        popup.inflate(menuRes)
+        popup.setOnMenuItemClickListener { item ->
+            itemClick(item)
         }
         popup.show()
     }
