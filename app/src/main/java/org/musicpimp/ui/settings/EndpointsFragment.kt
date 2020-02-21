@@ -51,7 +51,10 @@ class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), Endpoin
     override fun onEndpoint(e: Endpoint) {
         if (e.id != LocalEndpoint.local.id) {
             viewModel.onEndpoint(e)
-            val action = EndpointsFragmentDirections.endpointsToEndpoint(e.id, getString(R.string.title_edit_endpoint))
+            val action = EndpointsFragmentDirections.endpointsToEndpoint(
+                e.id,
+                getString(R.string.title_edit_endpoint)
+            )
             findNavController().navigate(action)
         }
     }

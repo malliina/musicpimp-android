@@ -51,12 +51,10 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
         viewModel.tracks.observe(viewLifecycleOwner) { outcome ->
             when (outcome.status) {
                 Status.Success -> {
-                    ctrl.progress?.let { it.visibility = View.GONE }
-                    ctrl.list.visibility = View.VISIBLE
-                    ctrl.feedback.visibility = View.GONE
+                    ctrl.showList()
                     outcome.data?.let { list ->
                         if (list.isEmpty()) {
-                            display(getString(R.string.no_tracks), ctrl)
+                            ctrl.display(getString(R.string.no_tracks))
                         } else {
                             viewAdapter.list = list
                             viewAdapter.notifyDataSetChanged()
@@ -64,22 +62,13 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
                     }
                 }
                 Status.Error -> {
-                    display(getString(R.string.error_generic), ctrl)
+                    ctrl.display(getString(R.string.error_generic))
                 }
                 Status.Loading -> {
-                    ctrl.progress?.let { it.visibility = View.VISIBLE }
-                    ctrl.list.visibility = View.GONE
-                    ctrl.feedback.visibility = View.GONE
+                    ctrl.enableLoading()
                 }
             }
         }
         viewModel.loadTracks(0, itemsPerLoad)
-    }
-
-    private fun display(message: String, ctrl: Controls) {
-        ctrl.progress?.let { it.visibility = View.GONE }
-        ctrl.list.visibility = View.GONE
-        ctrl.feedback.visibility = View.VISIBLE
-        ctrl.feedback.text = message
     }
 }

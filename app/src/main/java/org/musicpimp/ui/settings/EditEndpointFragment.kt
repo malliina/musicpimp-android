@@ -39,9 +39,6 @@ class EditEndpointFragment : ResourceFragment(R.layout.edit_endpoint_fragment) {
             activity?.onBackPressed()
         }
         viewModel.editedEndpoint?.let { fill(it, view) }
-        findNavController().currentDestination?.label =
-            if (viewModel.editedEndpoint == null) getString(R.string.title_add_endpoint)
-            else getString(R.string.title_edit_endpoint)
     }
 
     private fun fill(e: Endpoint, on: View) {
