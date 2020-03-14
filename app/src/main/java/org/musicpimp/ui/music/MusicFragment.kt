@@ -1,13 +1,11 @@
 package org.musicpimp.ui.music
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import org.musicpimp.Folder
 import org.musicpimp.FolderId
-import org.musicpimp.R
 
 class MusicFragment : CommonMusicFragment() {
     private val args: MusicFragmentArgs by navArgs()

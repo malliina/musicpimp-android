@@ -1,9 +1,15 @@
 package org.musicpimp.ui.music
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import org.musicpimp.*
+import org.musicpimp.Directory
+import org.musicpimp.FolderId
+import org.musicpimp.PimpApp
+import org.musicpimp.SingleError
 import timber.log.Timber
 
 enum class Status {
@@ -20,16 +26,7 @@ data class Outcome<out T>(val status: Status, val data: T?, val error: SingleErr
     }
 }
 
-class MusicViewModelFactory(val app: Application, val main: MainActivityViewModel) :
-    ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return MusicViewModel(app, main) as T
-    }
-}
-
-class MusicViewModel(val app: Application, private val main: MainActivityViewModel) :
-    AndroidViewModel(app) {
+class MusicViewModel(val app: Application) : AndroidViewModel(app) {
     private val conf = (app as PimpApp).components
     private val dir = MutableLiveData<Outcome<Directory>>()
     val directory: LiveData<Outcome<Directory>> = dir

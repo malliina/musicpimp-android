@@ -1,12 +1,10 @@
 package org.musicpimp.ui.music
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import org.musicpimp.Folder
 import org.musicpimp.FolderId
-import org.musicpimp.R
 
 /**
  * This class exists because I don't know how to get the back button to appear if I use

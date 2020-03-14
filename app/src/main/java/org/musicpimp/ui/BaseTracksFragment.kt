@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.musicpimp.MainActivityViewModel
@@ -21,7 +21,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
     Fragment(), TrackDelegate {
     // Number of tracks to load per "page" (we use infinite scroll)
     protected val itemsPerLoad = 40
-    protected lateinit var mainViewModel: MainActivityViewModel
+    protected val mainViewModel: MainActivityViewModel by activityViewModels()
     protected lateinit var viewAdapter: A
     private lateinit var viewManager: LinearLayoutManager
     protected lateinit var viewModel: V
@@ -41,8 +41,6 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         val ctrl = controls(view)
         viewManager = LinearLayoutManager(context)
         viewAdapter = newAdapter(requireContext())

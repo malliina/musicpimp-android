@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,17 +20,13 @@ import org.musicpimp.ui.ResourceFragment
 import org.musicpimp.ui.init
 
 class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), EndpointsDelegate {
-    private lateinit var mainViewModel: MainActivityViewModel
-    private lateinit var viewModel: SettingsViewModel
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val viewModel: SettingsViewModel by activityViewModels()
     private lateinit var viewAdapter: EndpointsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
-        viewModel =
-            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = EndpointsAdapter(emptyList(), this)
         view.endpoints_list.init(viewManager, viewAdapter)

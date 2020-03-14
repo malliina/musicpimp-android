@@ -23,7 +23,11 @@ fun <VH : RecyclerView.ViewHolder> RecyclerView.init(
     })
 }
 
-class Controls(val progress: MaterialProgressBar?, val list: RecyclerView, val feedback: TextView) {
+class Controls(
+    private val progress: MaterialProgressBar?,
+    val list: RecyclerView,
+    private val feedback: TextView
+) {
     fun enableLoading() {
         progress?.let { it.visibility = View.VISIBLE }
         list.visibility = View.GONE
@@ -44,7 +48,7 @@ class Controls(val progress: MaterialProgressBar?, val list: RecyclerView, val f
     }
 }
 
-abstract class ResourceFragment(private val layoutResource: Int): Fragment() {
+abstract class ResourceFragment(private val layoutResource: Int) : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

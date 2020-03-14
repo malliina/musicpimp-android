@@ -3,8 +3,7 @@ package org.musicpimp.ui.settings
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.activityViewModels
 import kotlinx.android.synthetic.main.edit_endpoint_fragment.*
 import kotlinx.android.synthetic.main.edit_endpoint_fragment.view.*
 import org.musicpimp.*
@@ -15,12 +14,10 @@ import org.musicpimp.ui.ResourceFragment
 import timber.log.Timber
 
 class EditEndpointFragment : ResourceFragment(R.layout.edit_endpoint_fragment) {
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel =
-            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         Timber.i("Editing ${viewModel.editedEndpoint?.id ?: "new endpoint"}")
         view.save_button.setOnClickListener {
             val name = cloud_id_edit_text.text.string()

@@ -6,13 +6,10 @@ import android.widget.SeekBar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.ViewModelProviders
-import androidx.lifecycle.observe
-import kotlinx.android.synthetic.main.fragment_player.view.*
 import kotlinx.android.synthetic.main.fragment_tabbed_player.view.*
-import org.musicpimp.*
+import org.musicpimp.R
+import org.musicpimp.seconds
 import org.musicpimp.ui.ResourceFragment
-import timber.log.Timber
 
 class SeekBarChangeListener(private val vm: PlayerFragment) :
     SeekBar.OnSeekBarChangeListener {

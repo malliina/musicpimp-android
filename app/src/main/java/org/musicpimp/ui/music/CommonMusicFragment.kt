@@ -5,7 +5,8 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,23 +19,17 @@ import timber.log.Timber
 abstract class CommonMusicFragment : ResourceFragment(R.layout.fragment_music), MusicItemDelegate {
     private lateinit var viewAdapter: MusicAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var mainViewModel: MainActivityViewModel
-    protected lateinit var viewModel: MusicViewModel
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
+    protected val viewModel: MusicViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
         viewManager = LinearLayoutManager(context)
         viewAdapter = MusicAdapter(Directory.empty, this)
         view.tracks_view.init(viewManager, viewAdapter)
         if (mainViewModel.components.library == null) {
             display(getString(R.string.no_music), view)
         }
-        viewModel = ViewModelProvider(
-            this,
-            MusicViewModelFactory(requireActivity().application, mainViewModel)
-        ).get(MusicViewModel::class.java)
         viewModel.directory.observe(viewLifecycleOwner) { outcome ->
             when (outcome.status) {
                 Status.Success -> {

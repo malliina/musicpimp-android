@@ -2,8 +2,8 @@ package org.musicpimp.ui.player
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.*
@@ -11,19 +11,13 @@ import org.musicpimp.ui.ResourceFragment
 import timber.log.Timber
 
 class PlayerFragment : ResourceFragment(R.layout.fragment_player) {
-    private lateinit var mainViewModel: MainActivityViewModel
-    private lateinit var viewModel: PlayerViewModel
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val viewModel: PlayerViewModel by viewModels()
 
     var isUserSeeking = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModelFactory(requireActivity().application, mainViewModel)
-        ).get(PlayerViewModel::class.java)
         mainViewModel.timeUpdates.observe(viewLifecycleOwner) { time ->
             val float = time.seconds.toFloat()
             try {

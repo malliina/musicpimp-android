@@ -63,7 +63,7 @@ class PopularFragment :
     override fun newViewModel(fragment: Fragment, app: Application): PopularsViewModel {
         return ViewModelProvider(
             this,
-            PopularsViewModelFactory(requireActivity().application)
+            PopularsViewModelFactory(app)
         ).get(PopularsViewModel::class.java)
     }
 
@@ -96,7 +96,7 @@ class RecentFragment :
     override fun newViewModel(fragment: Fragment, app: Application): RecentsViewModel {
         return ViewModelProvider(
             this,
-            RecentsViewModelFactory(requireActivity().application)
+            RecentsViewModelFactory(app)
         ).get(RecentsViewModel::class.java)
     }
 

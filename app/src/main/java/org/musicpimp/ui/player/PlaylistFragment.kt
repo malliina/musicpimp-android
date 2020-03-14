@@ -20,16 +20,12 @@ import timber.log.Timber
 
 class PlaylistFragment :
     BaseTracksFragment<Track, PlaylistAdapter, PlaylistViewModel>(R.layout.fragment_playlist) {
-    override fun newViewModel(fragment: Fragment, app: Application): PlaylistViewModel {
-        return ViewModelProvider(
-            this,
-            PlaylistViewModelFactory(requireActivity().application, mainViewModel)
-        ).get(PlaylistViewModel::class.java)
-    }
 
-    override fun newAdapter(context: Context): PlaylistAdapter {
-        return PlaylistAdapter(emptyList(), -1, requireContext(), this)
-    }
+    override fun newViewModel(fragment: Fragment, app: Application): PlaylistViewModel =
+        ViewModelProvider(this).get(PlaylistViewModel::class.java)
+
+    override fun newAdapter(context: Context): PlaylistAdapter =
+        PlaylistAdapter(emptyList(), -1, requireContext(), this)
 
     override fun init(
         view: View,

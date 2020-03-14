@@ -16,7 +16,7 @@ interface TrackDelegate {
     fun onTrackMore(track: Track, view: ImageButton, position: Int)
 }
 
-interface MusicItemDelegate: TrackDelegate {
+interface MusicItemDelegate : TrackDelegate {
     fun onFolder(folder: Folder)
     fun onFolderMore(folder: Folder, view: ImageButton)
 }

@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
@@ -20,15 +21,11 @@ import org.musicpimp.ui.ResourceFragment
 import timber.log.Timber
 
 class SettingsFragment : ResourceFragment(R.layout.fragment_settings) {
-    private lateinit var mainViewModel: MainActivityViewModel
-    private lateinit var viewModel: SettingsViewModel
+    private val mainViewModel: MainActivityViewModel by activityViewModels()
+    private val viewModel: SettingsViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainViewModel =
-            activity?.run { ViewModelProvider(this).get(MainActivityViewModel::class.java) }!!
-        viewModel =
-            activity?.run { ViewModelProvider(this).get(SettingsViewModel::class.java) }!!
         val playbackAdapter = DropdownAdapter(requireContext(), mutableListOf())
         val sourceAdapter = DropdownAdapter(requireContext(), mutableListOf())
         view.playback_device_dropdown.setAdapter(playbackAdapter)

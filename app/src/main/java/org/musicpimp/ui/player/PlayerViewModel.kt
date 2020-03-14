@@ -11,16 +11,7 @@ import org.musicpimp.Utils.urlEncode
 import org.musicpimp.backend.OkClient
 import java.io.File
 
-class PlayerViewModelFactory(val app: Application, val main: MainActivityViewModel) :
-    ViewModelProvider.Factory {
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return PlayerViewModel(app, main) as T
-    }
-}
-
-class PlayerViewModel(val app: Application, val main: MainActivityViewModel) :
-    AndroidViewModel(app) {
+class PlayerViewModel(val app: Application) : AndroidViewModel(app) {
     private val conf = (app as PimpApp).components
     private val coversStream = MutableLiveData<Bitmap?>()
     val covers: LiveData<Bitmap?> = coversStream

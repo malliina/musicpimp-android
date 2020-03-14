@@ -16,7 +16,6 @@ import org.musicpimp.ui.playlists.TracksViewModel
 abstract class TopTracksFragment<T : TrackContainer, A : PimpAdapter<T>, V : TracksViewModel<T>>(
     fragmentResource: Int
 ) : BaseTracksFragment<T, A, V>(fragmentResource) {
-
     // Number of items left until more items are loaded
     private val loadMoreThreshold = 20
 
