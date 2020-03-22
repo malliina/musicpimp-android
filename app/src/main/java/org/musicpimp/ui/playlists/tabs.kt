@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_playlists.view.*
 import kotlinx.android.synthetic.main.fragment_popular.view.*
 import kotlinx.android.synthetic.main.fragment_recent.view.*
@@ -67,9 +66,8 @@ class PopularFragment :
         ).get(PopularsViewModel::class.java)
     }
 
-    override fun newAdapter(context: Context): PopularsAdapter {
-        return PopularsAdapter(emptyList(), context, this)
-    }
+    override fun newAdapter(context: Context): PopularsAdapter =
+        PopularsAdapter(emptyList(), context, this)
 
     override fun init(
         view: View,
@@ -77,14 +75,7 @@ class PopularFragment :
         adapter: PopularsAdapter
     ) {
         view.popular_list.init(viewManager, adapter)
-        view.popular_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    lastVisibleIndex.postValue(viewManager.findLastVisibleItemPosition())
-                }
-            }
-        })
+        installInfiniteScroll(view.popular_list)
     }
 
     override fun controls(view: View): Controls =
@@ -100,9 +91,8 @@ class RecentFragment :
         ).get(RecentsViewModel::class.java)
     }
 
-    override fun newAdapter(context: Context): RecentsAdapter {
-        return RecentsAdapter(emptyList(), context, this)
-    }
+    override fun newAdapter(context: Context): RecentsAdapter =
+        RecentsAdapter(emptyList(), context, this)
 
     override fun init(
         view: View,
@@ -110,6 +100,7 @@ class RecentFragment :
         adapter: RecentsAdapter
     ) {
         view.recent_list.init(viewManager, adapter)
+        installInfiniteScroll(view.recent_list)
     }
 
     override fun controls(view: View): Controls =

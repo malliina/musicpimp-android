@@ -7,6 +7,7 @@ import android.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.observe
+import androidx.recyclerview.widget.RecyclerView
 import org.musicpimp.R
 import org.musicpimp.Track
 import org.musicpimp.TrackContainer
@@ -53,5 +54,16 @@ abstract class TopTracksFragment<T : TrackContainer, A : PimpAdapter<T>, V : Tra
             }
         }
         popup.show()
+    }
+
+    fun installInfiniteScroll(list: RecyclerView) {
+        list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    lastVisibleIndex.postValue(viewManager.findLastVisibleItemPosition())
+                }
+            }
+        })
     }
 }

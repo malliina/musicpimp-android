@@ -23,7 +23,7 @@ abstract class BaseTracksFragment<T, A : PimpAdapter<T>, V : TracksViewModel<T>>
     protected val itemsPerLoad = 40
     protected val mainViewModel: MainActivityViewModel by activityViewModels()
     protected lateinit var viewAdapter: A
-    private lateinit var viewManager: LinearLayoutManager
+    protected lateinit var viewManager: LinearLayoutManager
     protected lateinit var viewModel: V
 
     abstract fun newViewModel(fragment: Fragment, app: Application): V
