@@ -1,6 +1,7 @@
 package org.musicpimp.ui.settings
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -61,6 +62,9 @@ class SettingsFragment : ResourceFragment(R.layout.fragment_settings) {
             val action = SettingsFragmentDirections.settingsToEndpoints()
             findNavController().navigate(action)
         }
+        val a = requireActivity()
+        val versionName = a.packageManager.getPackageInfo(a.packageName, PackageManager.GET_ACTIVITIES).versionName
+        view.version_text.text = getString(R.string.version, versionName)
     }
 }
 
