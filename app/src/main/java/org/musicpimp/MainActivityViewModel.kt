@@ -203,10 +203,8 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     private fun withAll(id: FolderId, code: (ts: List<Track>) -> Unit) {
-        components.library?.let { lib ->
-            viewModelScope.launch {
-                code(lib.tracksRecursively(id))
-            }
+        viewModelScope.launch {
+            code(components.library.tracksRecursively(id))
         }
     }
 

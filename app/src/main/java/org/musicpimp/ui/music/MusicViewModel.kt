@@ -32,24 +32,23 @@ class MusicViewModel(val app: Application) : AndroidViewModel(app) {
     val directory: LiveData<Outcome<Directory>> = dir
 
     fun loadFolder(id: FolderId) {
-        conf.library?.let { http ->
-            viewModelScope.launch {
-                val name = http.name
-                dir.value = Outcome.loading()
-                try {
-                    Timber.i("Loading '$id' from '$name'...")
-                    val response = http.folder(id)
-                    dir.value = Outcome.success(response)
-                    val path = response.folder.path
-                    val describe = if (id == FolderId.root || id.isBlank()) "Root folder" else path
-                    Timber.i("Loaded '$describe' from '$name'.")
-                } catch (e: Exception) {
-                    val msg =
-                        if (id == FolderId.root) "Failed to load root directory from '$name'."
-                        else "Failed to load directory '$id' from '$name'."
-                    Timber.e(e, msg)
-                    dir.value = Outcome.error(SingleError.backend(msg))
-                }
+        val http = conf.library
+        viewModelScope.launch {
+            val name = http.name
+            dir.value = Outcome.loading()
+            try {
+                Timber.i("Loading '$id' from '$name'...")
+                val response = http.folder(id)
+                dir.value = Outcome.success(response)
+                val path = response.folder.path
+                val describe = if (id == FolderId.root || id.isBlank()) "Root folder" else path
+                Timber.i("Loaded '$describe' from '$name'.")
+            } catch (e: Exception) {
+                val msg =
+                    if (id == FolderId.root) "Failed to load root directory from '$name'."
+                    else "Failed to load directory '$id' from '$name'."
+                Timber.e(e, msg)
+                dir.value = Outcome.error(SingleError.backend(msg))
             }
         }
     }

@@ -6,7 +6,29 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import org.musicpimp.*
 
-class PimpLibrary(val http: HttpClient, val name: String) {
+interface Library {
+    val name: String
+    val client: HttpClient?
+    suspend fun folder(id: FolderId): Directory
+    suspend fun tracksRecursively(id: FolderId): List<Track>
+    suspend fun popular(from: Int, until: Int): PopularTracks
+    suspend fun recent(from: Int, until: Int): RecentTracks
+}
+
+class EmptyLibrary: Library {
+    companion object {
+        val instance = EmptyLibrary()
+    }
+
+    override val name: String = "Empty"
+    override val client: HttpClient? = null
+    override suspend fun folder(id: FolderId): Directory = Directory.empty
+    override suspend fun tracksRecursively(id: FolderId): List<Track> = emptyList()
+    override suspend fun popular(from: Int, until: Int): PopularTracks = PopularTracks(emptyList())
+    override suspend fun recent(from: Int, until: Int): RecentTracks = RecentTracks(emptyList())
+}
+
+class PimpLibrary(val http: HttpClient, override val name: String): Library {
     companion object {
         val pimpFormat = HeaderValue("application/vnd.musicpimp.v18+json")
 
@@ -28,22 +50,25 @@ class PimpLibrary(val http: HttpClient, val name: String) {
         val recentsAdapter: JsonAdapter<RecentTracks> = moshi.adapter(RecentTracks::class.java)
     }
 
-    suspend fun folder(id: FolderId): Directory {
+    override val client: HttpClient?
+        get() = http
+
+    override suspend fun folder(id: FolderId): Directory {
         val path = if (id == FolderId.root) "/folders" else "/folders/$id"
         return get(path, directoryAdapter)
     }
 
-    suspend fun tracksRecursively(id: FolderId): List<Track> {
+    override suspend fun tracksRecursively(id: FolderId): List<Track> {
         val init = folder(id)
         val sub = init.folders.flatMap { f -> tracksRecursively(f.id) }
         return sub + init.tracks
     }
 
-    suspend fun popular(from: Int, until: Int): PopularTracks {
+    override suspend fun popular(from: Int, until: Int): PopularTracks {
         return get("/player/popular?from=$from&until=$until", popularsAdapter)
     }
 
-    suspend fun recent(from: Int, until: Int): RecentTracks {
+    override suspend fun recent(from: Int, until: Int): RecentTracks {
         return get("/player/recent?from=$from&until=$until", recentsAdapter)
     }
 
