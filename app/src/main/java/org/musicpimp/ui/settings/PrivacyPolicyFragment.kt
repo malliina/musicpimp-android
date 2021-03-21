@@ -2,7 +2,6 @@ package org.musicpimp.ui.settings
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.observe
 import androidx.fragment.app.viewModels
 import kotlinx.android.synthetic.main.fragment_privacy.view.*
 import org.musicpimp.R

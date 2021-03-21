@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.endpoint_item.view.*
 import kotlinx.android.synthetic.main.endpoints_fragment.view.*
-import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
 import org.musicpimp.endpoints.Endpoint
 import org.musicpimp.endpoints.LocalEndpoint
@@ -20,7 +18,6 @@ import org.musicpimp.ui.ResourceFragment
 import org.musicpimp.ui.init
 
 class EndpointsFragment : ResourceFragment(R.layout.endpoints_fragment), EndpointsDelegate {
-    private val mainViewModel: MainActivityViewModel by activityViewModels()
     private val viewModel: SettingsViewModel by activityViewModels()
     private lateinit var viewAdapter: EndpointsAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager

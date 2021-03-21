@@ -6,7 +6,6 @@ import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.observe
 import androidx.recyclerview.widget.RecyclerView
 import org.musicpimp.R
 import org.musicpimp.Track

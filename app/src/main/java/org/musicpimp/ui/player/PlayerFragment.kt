@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.observe
 import kotlinx.android.synthetic.main.fragment_player.view.*
 import org.musicpimp.*
 import org.musicpimp.ui.ResourceFragment

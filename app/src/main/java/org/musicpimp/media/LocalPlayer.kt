@@ -120,7 +120,7 @@ class LocalPlayer(private val appContext: Context) : Player {
 
     fun onTrack(track: Track?) {
         playerTrack = track
-        playerTracks.postValue(track)
+        track?.let { t -> playerTracks.postValue(t) }
     }
 
     fun onState(state: Playstate) {
