@@ -12,7 +12,6 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.musicpimp.MainActivityViewModel
 import org.musicpimp.R
-import org.musicpimp.ui.music.Status
 import org.musicpimp.ui.music.TrackDelegate
 import org.musicpimp.ui.playlists.PimpAdapter
 import org.musicpimp.ui.playlists.TracksViewModel

@@ -10,21 +10,8 @@ import org.musicpimp.Directory
 import org.musicpimp.FolderId
 import org.musicpimp.PimpApp
 import org.musicpimp.SingleError
+import org.musicpimp.ui.Outcome
 import timber.log.Timber
-
-enum class Status {
-    Success,
-    Error,
-    Loading
-}
-
-data class Outcome<out T>(val status: Status, val data: T?, val error: SingleError?) {
-    companion object {
-        fun <T> success(t: T): Outcome<T> = Outcome(Status.Success, t, null)
-        fun error(err: SingleError): Outcome<Nothing> = Outcome(Status.Error, null, err)
-        fun loading(): Outcome<Nothing> = Outcome(Status.Loading, null, null)
-    }
-}
 
 class MusicViewModel(val app: Application) : AndroidViewModel(app) {
     private val conf = (app as PimpApp).components

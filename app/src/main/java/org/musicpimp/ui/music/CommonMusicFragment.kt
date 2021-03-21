@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_music.view.*
 import org.musicpimp.*
 import org.musicpimp.ui.ResourceFragment
+import org.musicpimp.ui.Status
 import org.musicpimp.ui.init
 import timber.log.Timber
 

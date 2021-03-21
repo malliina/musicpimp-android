@@ -129,6 +129,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
 
     private fun updateSource(header: HeaderValue, name: String) {
         components.library = PimpLibrary.build(app, header, name)
+        components.authHeader = header
         Timber.i("Updated backend to '$name'.")
     }
 
@@ -143,6 +144,7 @@ class MainActivityViewModel(val app: Application) : AndroidViewModel(app) {
         } else {
             components.playerSocket = null
             components.player = localPlayer
+            // ?
             localPlayer.list.value
             playlist.postValue(localPlayer.list.value)
         }

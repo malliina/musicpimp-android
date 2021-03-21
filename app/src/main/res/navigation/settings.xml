@@ -13,6 +13,9 @@
         <action android:id="@+id/settings_to_endpoints"
             app:destination="@id/endpoints"
             app:enterAnim="@anim/enter_from_right"/>
+        <action android:id="@+id/settings_to_privacy"
+            app:destination="@id/privacy"
+            app:enterAnim="@anim/enter_from_right"/>
     </fragment>
 
     <fragment
@@ -23,6 +26,13 @@
         <action android:id="@+id/endpoints_to_endpoint"
             app:destination="@id/endpoint_edit"
             app:enterAnim="@anim/enter_from_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/privacy"
+        android:name="org.musicpimp.ui.settings.PrivacyPolicyFragment"
+        android:label="@string/title_privacy"
+        tools:layout="@layout/fragment_privacy">
     </fragment>
 
     <fragment

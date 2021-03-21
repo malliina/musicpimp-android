@@ -1,20 +1,14 @@
 package org.musicpimp.ui.playlists
 
 import android.app.Application
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.*
-import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_popular.view.*
-import kotlinx.android.synthetic.main.item_recent.view.*
 import kotlinx.coroutines.launch
-import org.musicpimp.*
-import org.musicpimp.R
-import org.musicpimp.ui.music.Outcome
-import org.musicpimp.ui.music.TrackDelegate
+import org.musicpimp.PimpApp
+import org.musicpimp.PopularTrack
+import org.musicpimp.RecentTrack
+import org.musicpimp.SingleError
+import org.musicpimp.ui.Outcome
 import timber.log.Timber
-import java.lang.Exception
 
 class PopularsViewModelFactory(val app: Application) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

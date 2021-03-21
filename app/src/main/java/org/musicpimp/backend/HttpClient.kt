@@ -15,13 +15,17 @@ import java.nio.charset.Charset
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
-class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderValue) {
+class HttpClient(ctx: Context, private val headers: Map<String, String>) {
     companion object {
         const val Authorization = "Authorization"
 
-        fun headers(accept: HeaderValue, auth: HeaderValue): Map<String, String> {
+        fun pimpHeaders(accept: HeaderValue, auth: HeaderValue): Map<String, String> {
             val acceptPair = "Accept" to "$accept"
             return mapOf(Authorization to "$auth", acceptPair)
+        }
+
+        fun headered(ctx: Context, accept: HeaderValue, authHeader: HeaderValue) {
+            HttpClient(ctx, pimpHeaders(accept, authHeader))
         }
 
         @Volatile
@@ -30,7 +34,7 @@ class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderVa
         fun getInstance(context: Context, accept: HeaderValue, auth: HeaderValue): HttpClient =
             cache[auth] ?: synchronized(this) {
                 cache.getOrPut(auth) {
-                    HttpClient(context, accept, auth)
+                    HttpClient(context, pimpHeaders(accept, auth))
                 }
             }
     }
@@ -38,7 +42,7 @@ class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderVa
     private val queue: RequestQueue = Volley.newRequestQueue(ctx.applicationContext)
 
     // https://jankotlin.wordpress.com/2017/10/16/volley-for-lazy-kotliniers/
-    private suspend fun getData(url: FullUrl): JSONObject = makeRequest(RequestConf.get(url, authHeader))
+    private suspend fun getData(url: FullUrl): JSONObject = makeRequest(RequestConf.get(url, headers))
 
     suspend fun <T> getJson(url: FullUrl, adapter: JsonAdapter<T>): T {
         val json = getData(url)
@@ -56,23 +60,22 @@ class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderVa
     }
 
     suspend fun post(url: FullUrl, data: JSONObject): JSONObject {
-        return makeRequest(RequestConf(Request.Method.POST, url, authHeader, data))
+        return makeRequest(RequestConf(Request.Method.POST, url, headers, data))
     }
 
     private suspend fun send(url: FullUrl, method: Int, data: JSONObject): JSONObject {
-        return makeRequest(RequestConf(method, url, authHeader, data))
+        return makeRequest(RequestConf(method, url, headers, data))
     }
 
     private suspend fun makeRequest(conf: RequestConf): JSONObject =
         suspendCancellableCoroutine { cont ->
-            RequestWithHeaders(conf, accept, cont).also {
+            RequestWithHeaders(conf, cont).also {
                 queue.add(it)
             }
         }
 
     class RequestWithHeaders(
         private val conf: RequestConf,
-        private val accept: HeaderValue,
         cont: CancellableContinuation<JSONObject>
     ) : JsonObjectRequest(conf.method, conf.url.url, conf.payload,
         Response.Listener { cont.resume(it) },
@@ -93,19 +96,19 @@ class HttpClient(ctx: Context, val accept: HeaderValue, val authHeader: HeaderVa
             else
                 emptyMap()
 
-        override fun getHeaders(): Map<String, String> = headers(accept, conf.auth).plus(csrf)
+        override fun getHeaders(): Map<String, String> = conf.headers.plus(csrf)
     }
 }
 
 data class RequestConf(
     val method: Int,
     val url: FullUrl,
-    val auth: HeaderValue,
+    val headers: Map<String, String>,
     val payload: JSONObject?
 ) {
     companion object {
-        fun get(url: FullUrl, auth: HeaderValue): RequestConf =
-            RequestConf(Request.Method.GET, url, auth, null)
+        fun get(url: FullUrl, headers: Map<String, String>): RequestConf =
+            RequestConf(Request.Method.GET, url, headers, null)
     }
 }
 

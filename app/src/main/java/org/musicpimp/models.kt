@@ -1,6 +1,7 @@
 package org.musicpimp
 
 import android.os.Parcelable
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONException
@@ -235,4 +236,11 @@ data class CloudCredential(val server: CloudId, val username: Username, val pass
 data class DirectCredential(val username: Username, val password: Password) : Credential {
     override val authHeader: HeaderValue
         get() = PimpLibrary.authHeader("Basic", "$username:$password")
+}
+
+@JsonClass(generateAdapter = true)
+data class PrivacyPolicy(val paragraphs: List<String>) {
+    companion object {
+        val json: JsonAdapter<PrivacyPolicy> = Json.moshi.adapter(PrivacyPolicy::class.java)
+    }
 }

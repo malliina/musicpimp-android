@@ -41,7 +41,7 @@ class PimpSocket(url: FullUrl, headers: Map<String, String>, private val delegat
         fun build(auth: HeaderValue, delegate: PlayerDelegate): PimpSocket {
             val socketUrl = baseUrl.append("/ws/playback")
             Timber.i("Setting socketUrl to '$socketUrl'.")
-            return PimpSocket(socketUrl, HttpClient.headers(PimpLibrary.pimpFormat, auth), delegate)
+            return PimpSocket(socketUrl, HttpClient.pimpHeaders(PimpLibrary.pimpFormat, auth), delegate)
         }
     }
 
